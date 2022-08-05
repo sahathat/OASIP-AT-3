@@ -1,7 +1,7 @@
 services:
   oasipdbbooking:
     container_name: oasipdbbooking
-    image: mysql/mysql-server:latest
+    image: mysql/mysql-server:8.0.29
     volumes:
       - type: bind
         source: ./etc/my.cnf
@@ -16,8 +16,8 @@ services:
     ports:
       - "3306:3306"
 
-  backend:
-    container_name: backend
+  backend1:
+    container_name: backend1
     image: backend
     build:
       context: ./At-3-Booking
@@ -29,8 +29,8 @@ services:
       - oasipdbbooking
     restart: on-failure
 
-  server-test:
-    container_name: server-test
+  server-test1:
+    container_name: server-test1
     image: backend-intregate
     build:
       context: ./backend-intregate
@@ -49,7 +49,7 @@ services:
       context: ./OASIP-AT-3-FEnd
     depends_on:
       - oasipdbbooking
-      - backend
+      - backend1
     ports:
       - "80:80"
 
@@ -58,7 +58,7 @@ services:
     container_name: reverseproxy
     depends_on:
       - oasipdbbooking
-      - backend
+      - backend1
       - frontend
     volumes:
       - ./reverse-proxy/nginx.conf:/etc/nginx/nginx.conf
