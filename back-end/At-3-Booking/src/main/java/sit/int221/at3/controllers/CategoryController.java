@@ -2,12 +2,14 @@ package sit.int221.at3.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import sit.int221.at3.dtos.CategoryDto;
-import sit.int221.at3.dtos.EventDto;
+import sit.int221.at3.dtos.category.CategoryDto;
+import sit.int221.at3.dtos.category.CategoryUpdateDto;
+import sit.int221.at3.dtos.event.EventDto;
+import sit.int221.at3.entities.Category;
 import sit.int221.at3.services.CategoryService;
 
+import javax.validation.Valid;
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/api/categories")
@@ -32,5 +34,10 @@ public class CategoryController {
     @GetMapping("/{id}/events")
     public List<EventDto> getAllEventInCategory(@PathVariable Integer id) {
         return CategoryService.getAllEventInCategory(id);
+    }
+
+    @PutMapping("/{id}")
+    public Category configCategory(@PathVariable("id") Integer id, @Valid @RequestBody CategoryUpdateDto category){
+        return CategoryService.configCategory(id, category);
     }
 }
