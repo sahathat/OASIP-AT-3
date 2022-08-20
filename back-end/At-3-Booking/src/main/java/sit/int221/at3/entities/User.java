@@ -1,5 +1,9 @@
 package sit.int221.at3.entities;
 
+import org.hibernate.annotations.Generated;
+import org.hibernate.annotations.GenerationTime;
+import org.hibernate.annotations.Type;
+
 import javax.persistence.*;
 import java.time.ZonedDateTime;
 
@@ -18,20 +22,25 @@ public class User {
     private String email;
 
     @Column(name = "role", nullable = false, length = 10)
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
-    @Column(name = "createdOn", nullable = false)
+    @Generated(value = GenerationTime.INSERT)
+    @Column(name = "createdOn", updatable = false, insertable = false, nullable = false,
+            columnDefinition = "datetime default CURRENT_TIMESTAMP")
     private ZonedDateTime createdOn;
 
-    @Column(name = "updateOn", nullable = false)
-    private ZonedDateTime updateOn;
+    @Generated(value = GenerationTime.ALWAYS)
+    @Column(name = "updatedOn", updatable = false, insertable = false, nullable = false,
+            columnDefinition = "datetime default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
+    private ZonedDateTime updatedOn;
 
-    public ZonedDateTime getUpdateOn() {
-        return updateOn;
+    public ZonedDateTime getUpdatedOn() {
+        return updatedOn;
     }
 
-    public void setUpdateOn(ZonedDateTime updateOn) {
-        this.updateOn = updateOn;
+    public void setUpdatedOn(ZonedDateTime updateOn) {
+        this.updatedOn = updateOn;
     }
 
     public ZonedDateTime getCreatedOn() {
@@ -42,11 +51,11 @@ public class User {
         this.createdOn = createdOn;
     }
 
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 

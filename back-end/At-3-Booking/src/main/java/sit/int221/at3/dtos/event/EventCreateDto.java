@@ -21,7 +21,7 @@ public class EventCreateDto implements Serializable{
     private String bookingName;
 
     @Size(min = 1, max = 100, message = "email should have between 1 to 100 characters")
-    @Email(message = "this is not email format.")
+    @Email(message = "this is not email format")
     private String bookingEmail;
 
     @NotNull(message = "datetime should not null")

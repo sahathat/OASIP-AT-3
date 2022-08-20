@@ -38,14 +38,14 @@ public class CategoryService {
 
     public CategoryDto getCategoryById(Integer id){
         Category category = categoryRepository.findById(id).orElseThrow(
-                ()->new ResponseStatusException(HttpStatus.NOT_FOUND,id +" is Not Exist Please find new id if exist.")
+                ()->new ResponseStatusException(HttpStatus.NOT_FOUND,id +" is Not Exist Please find new id if exist")
         );
         return modelMapper.map(category,CategoryDto.class);
     }
 
     public List<EventDto> getAllEventInCategory(Integer id){
         Category category = categoryRepository.findById(id).orElseThrow(
-                ()->new ResponseStatusException(HttpStatus.NOT_FOUND,id +" is Not Exist Please find new id if exist.")
+                ()->new ResponseStatusException(HttpStatus.NOT_FOUND,id +" is Not Exist Please find new id if exist")
         );
 
         List<Event> events = eventRepository.getEventInCategory(id);
@@ -66,11 +66,11 @@ public class CategoryService {
 
         // check id category
         Category category = categoryRepository.findById(id).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, id + " does not exist please find new id if exist."));
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, id + " does not exist please find new id if exist"));
 
         // check that is unique
         if(checkIsNotUnique(category,updatedCategory)){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "categories name must unique.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "categories name must unique");
         }
 
         // find id when update by mapped field
@@ -91,7 +91,6 @@ public class CategoryService {
 
         // loop check categories by categories id
         boolean[] isNotUnique = {false};
-        System.out.println(isNotUnique[0]);
         categories.forEach(
                 e -> {
                     if (category.getId() != e.getId()) {
@@ -100,7 +99,6 @@ public class CategoryService {
                             isNotUnique[0] = true;
                         }
                     }
-                    System.out.println(isNotUnique[0]);
                 }
         );
 

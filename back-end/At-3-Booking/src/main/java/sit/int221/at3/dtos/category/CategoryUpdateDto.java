@@ -1,16 +1,12 @@
 package sit.int221.at3.dtos.category;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.validation.Constraint;
-import javax.validation.constraints.Future;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.time.ZonedDateTime;
 
 @Getter
