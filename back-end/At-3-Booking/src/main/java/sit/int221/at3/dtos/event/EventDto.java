@@ -1,19 +1,12 @@
-package sit.int221.at3.dtos;
+package sit.int221.at3.dtos.event;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.Value;
+import sit.int221.at3.dtos.category.CategoryDto;
 
 import java.io.Serializable;
-import java.sql.Time;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.Year;
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
 
 @Getter
 @Setter
