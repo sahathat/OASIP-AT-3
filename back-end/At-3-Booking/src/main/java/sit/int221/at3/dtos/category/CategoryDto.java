@@ -1,4 +1,4 @@
-package sit.int221.at3.dtos;
+package sit.int221.at3.dtos.category;
 
 import lombok.Data;
 import lombok.Getter;

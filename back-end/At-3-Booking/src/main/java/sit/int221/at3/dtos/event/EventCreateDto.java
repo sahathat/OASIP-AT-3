@@ -1,12 +1,12 @@
-package sit.int221.at3.dtos;
+package sit.int221.at3.dtos.event;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Future;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
@@ -21,13 +21,14 @@ public class EventCreateDto implements Serializable{
     private String bookingName;
 
     @Size(min = 1, max = 100, message = "email should have between 1 to 100 characters")
-    @Email(message = "this is not email format.")
+    @Email(message = "this is not email format")
     private String bookingEmail;
 
+    @NotNull(message = "datetime should not null")
     @Future(message = "can schedule event by future date only.")
     private ZonedDateTime eventStartTime;
 
-    @NotNull()
+    @NotNull(message = "category id should not null")
     private Integer eventCategoryId;
 
     @JsonIgnore

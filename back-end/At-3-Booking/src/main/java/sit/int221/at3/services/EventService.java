@@ -6,9 +6,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-import sit.int221.at3.dtos.EventCreateDto;
-import sit.int221.at3.dtos.EventDto;
-import sit.int221.at3.dtos.EventUpdateDto;
+import sit.int221.at3.dtos.event.EventCreateDto;
+import sit.int221.at3.dtos.event.EventDto;
+import sit.int221.at3.dtos.event.EventUpdateDto;
 import sit.int221.at3.entities.Category;
 import sit.int221.at3.entities.Event;
 import sit.int221.at3.repositories.CategoryRepository;
@@ -107,10 +107,10 @@ public class EventService {
     }
 
     // update PUT
-    private Event mapEvent(Event existingEvent, EventUpdateDto updateOffice) {
+    private Event mapEvent(Event existingEvent, EventUpdateDto updateEvent) {
         // fields who update
-        existingEvent.setEventStartTime(updateOffice.getEventStartTime());
-        existingEvent.setEventNotes(updateOffice.getEventNotes());
+        existingEvent.setEventStartTime(updateEvent.getEventStartTime());
+        existingEvent.setEventNotes(updateEvent.getEventNotes());
         return existingEvent;
     }
 
