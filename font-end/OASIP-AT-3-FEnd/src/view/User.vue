@@ -5,151 +5,149 @@ import { onBeforeMount, ref } from "vue";
 const { params } = useRoute();
 
 const db = "http://localhost:5000/booking";
-// const eventLink = `${import.meta.env.BASE_URL}api/events`;
-const eventLink = "http://ip21at3.sit.kmutt.ac.th:8081/api/events";
+// const userLink = `${import.meta.env.BASE_URL}api/events`;
+const userLink = "http://ip21at3.sit.kmutt.ac.th:8081/api/users";
 
 const id = params.id;
 const name = ref("");
-const eMail = ref("");
-const category = ref("");
-const startDate = ref("");
-const startTime = ref("");
-const duration = ref("");
-const noteT = ref("");
-const detailBooking = ref({});
-const eventList=ref([])
+const email = ref("");
+const role = ref("");
+const createdOn = ref("");
+const userDetail = ref({});
+const userList=ref([])
+
 const isNotNull = ref(false);
 const myRouoter = useRouter();
-const goReservation = () => myRouoter.push({ name: "ReservationList" });
+const goUserList = () => myRouoter.push({ name: "UserList" });
 
 // timer
-const day = ref();
-const month = ref();
-const year = ref();
-const hours = ref();
-const minutes = ref();
-const date = ref("");
-const time = ref("");
+// const day = ref();
+// const month = ref();
+// const year = ref();
+// const hours = ref();
+// const minutes = ref();
+// const date = ref("");
+// const time = ref("");
 
-let clock = () => {
-  let dateToday = new Date();
-  day.value =
-    dateToday.getDate() < 10
-      ? `0${dateToday.getDate()}`.toString()
-      : dateToday.getDate(); // day
-  month.value =
-    dateToday.getMonth() + 1 < 10
-      ? `0${dateToday.getMonth() + 1}`.toString()
-      : dateToday.getMonth() + 1; // month
-  year.value = dateToday.getFullYear().toString(); // year
+// let clock = () => {
+//   let dateToday = new Date();
+//   day.value =
+//     dateToday.getDate() < 10
+//       ? `0${dateToday.getDate()}`.toString()
+//       : dateToday.getDate(); // day
+//   month.value =
+//     dateToday.getMonth() + 1 < 10
+//       ? `0${dateToday.getMonth() + 1}`.toString()
+//       : dateToday.getMonth() + 1; // month
+//   year.value = dateToday.getFullYear().toString(); // year
 
-  hours.value =
-    dateToday.getHours() < 10
-      ? `0${dateToday.getHours()}`.toString()
-      : dateToday.getHours(); // hour
-  minutes.value =
-    dateToday.getMinutes() < 10
-      ? `0${dateToday.getMinutes()}`.toString()
-      : dateToday.getMinutes(); // minute
+//   hours.value =
+//     dateToday.getHours() < 10
+//       ? `0${dateToday.getHours()}`.toString()
+//       : dateToday.getHours(); // hour
+//   minutes.value =
+//     dateToday.getMinutes() < 10
+//       ? `0${dateToday.getMinutes()}`.toString()
+//       : dateToday.getMinutes(); // minute
 
-  //  combine
-  time.value = `${hours.value}:${minutes.value}`;
-  date.value = `${year.value}-${month.value}-${day.value}`;
-};
-setInterval(clock, 1000);
+//   //  combine
+//   time.value = `${hours.value}:${minutes.value}`;
+//   date.value = `${year.value}-${month.value}-${day.value}`;
+// };
+// setInterval(clock, 1000);
 
 // get every 10 sec
 const getStatus=ref(undefined)
-const resGetEvent=ref(undefined)
+const resUserList=ref(undefined)
 
 setInterval(async ()=>{
-  resGetEvent.value= await fetch(eventLink)
-  if (resGetEvent.value.status === 200) {
-    eventList.value = await resGetEvent.value.json();
+  resUserList.value= await fetch(userLink)
+  if (resUserList.value.status === 200) {
+    userList.value = await resUserList.value.json();
     getStatus.value = true;
   } else getStatus.value = false;
 },10000)
 
-// first get event
-const getEvent =async()=>{
- resGetEvent.value= await fetch(eventLink)
-  if (resGetEvent.value.status === 200) {
-    eventList.value = await resGetEvent.value.json();
+// first get user
+const getUserList =async()=>{
+ resUserList.value= await fetch(userLink)
+  if (resUserList.value.status === 200) {
+    userList.value = await resUserList.value.json();
     getStatus.value = true;
   } else getStatus.value = false;       
 }
 
 // get value
 const getDetail = async () => {
-  const res = await fetch(`${eventLink}/${params.id}`);
+  const res = await fetch(`${userLink}/${params.id}`);
   if (res.status === 200) {
-    detailBooking.value = await res.json();
-    //console.log(detailBooking.value);
+    userDetail.value = await res.json();
+    //console.log(userDetail.value);
 
     //console.log(Date.parse("2022-06-01T15:00:00+07:00"));
-    if (detailBooking.value.id == id) {
+    if (userDetail.value.id == id) {
       isNotNull.value = true;
-      name.value = detailBooking.value.bookingName;
-      eMail.value = detailBooking.value.bookingEmail;
-      category.value = detailBooking.value.categoryName;
-      startDate.value = detailBooking.value.eventStartTime.substring(0, 10);
-      startTime.value = detailBooking.value.eventStartTime.substring(11, 16);
-      duration.value = detailBooking.value.eventDuration;
-      noteT.value = detailBooking.value.eventNotes;
+      name.value = userDetail.value.name;
+      email.value = userDetail.value.email;
+      role.value = userDetail.value.role
+      createdOn.value = userDetail.value.createdOn;
+      console.log(userDetail.value)
     }
   }
 };
 
 onBeforeMount(async()=>{
-       await  getEvent()
+       await getUserList()
        await getDetail()
 });
 
 //remove information
-const removeInfo = async () => {
-  const res = await fetch(`${eventLink}/${id}`, { method: "DELETE" });
+const removeUser = async () => {
+  const res = await fetch(`${userLink}/${id}`, { method: "DELETE" });
   if (res.status === 200) {
     console.log("delete successfully");
-    goReservation();
+    goUserList();
   } else console.log("error");
 };
 
 // assign to edit attribute
 const isEdit = ref(false);
-const editStartTime = ref("");
-const editStartDate = ref("");
-const editNote = ref("");
+const editName = ref("");
+const editEmail = ref("");
+const editRole = ref("");
 
 const editInfo = () => {
   isEdit.value = true;
-  editStartTime.value = startTime.value;
-  editStartDate.value = startDate.value;
-  editNote.value = noteT.value;
+  editName.value = name.value;
+  editEmail.value = email.value;
+  editRole.value = role.value;
 };
 
 const cancel = () => {
   isEdit.value = false;
-  editStartTime.value = "";
-  editStartDate.value = "";
+  editName.value = '';
+  editEmail.value = '';
+  editRole.value = '';
 };
 
 const edit =async()=>{
        let canEdit=undefined
-        const res = await fetch(`${eventLink}/${id}`, {
+        const res = await fetch(`${userLink}/${id}`, {
         method: "PUT",
         headers: {
           "content-type": "application/json",
         },
         body: JSON.stringify({
-          eventStartTime: `${editStartDate.value}T${editStartTime.value}:00+07:00`,
-          eventNotes: editNote.value,
+          name:editName.value,
+          email:editEmail.value,
+          role:editRole.value,
         }),
       });
       if (res.status == 200) {
-        let editDetailNote = await res.json();
-        startDate.value = editDetailNote.eventStartTime.substring(0, 10);
-        startTime.value = editDetailNote.eventStartTime.substring(11, 16);
-        noteT.value = editDetailNote.eventNotes;
+        let editUserDetail = await res.json();
+        name.value = editUserDetail.name;
+        email.value = editUserDetail.email;
+        role.value = editUserDetail.role;
         isEdit.value = false;
         canEdit=true
         editSuccess.value=true
@@ -192,7 +190,7 @@ const betweenDateWarning=ref(undefined)
 const overlap = () => {
   betweenDateWarning.value = undefined;
   let isOverlap = undefined;
-for (let check of eventList.value) {
+for (let check of userList.value) {
     if (check.categoryName == category.value&&check.id!==id) {
 //       console.log(Date.parse(`${editStartDate.value}T${editStartTime.value}:00+07:00`))
 //       console.log(Date.parse(check.eventStartTime))
@@ -291,9 +289,9 @@ const calTime = (hour, minute, addTime) => {
   >
     <!-- no data -->
     <div v-if="isNotNull == false">
-      <h2 class="text-center mb-1 font-bold text-xl">No date</h2>
+      <h2 class="text-center mb-1 font-bold text-xl">No data</h2>
       <div class="w-fit m-auto">
-        <button @click="goReservation" class="custom-btn back block">Go Back</button>
+        <button @click="goUserList" class="custom-btn back block">Go Back</button>
       </div>
     </div>
 
@@ -303,127 +301,89 @@ const calTime = (hour, minute, addTime) => {
       class="p-4 border-double border-4 border-neutral-300 max-w-screen-lg"
     >
       <div class="mx-2 w-full">
-        <h1 class="text-center mb-1 font-bold text-2xl">Reservation</h1>
+        <h1 class="text-center mb-1 font-bold text-2xl">User Information</h1>
         <h3 class="text-center">----------------</h3>
       </div>
-      <div class="flex m-auto my-4 w-full">
+
+      <div class="flex mx-auto my-4 w-full">
+        <div class="px-2 w-4/5 inline-flex my-5 mx-auto">
         <!-- Name -->
-        <div class="px-2 w-1/2 inline-flex">
-          <div class="pr-2 font-semibold flex m-auto text-gray-400">Name :</div>
+          <div class="pr-2 font-semibold flex m-auto text-gray-400"> Username :</div>
           <div
-            class="overflow-hidden overflow-x-scroll border-2 rounded-md p-1.5 pt-2.5 font-normal bg-white flex w-3/4 h-12"
+            v-if="isEdit == false"
+            class="overflow-hidden overflow-x-scroll border-2 rounded-md p-1.5 pt-2.5 font-normal bg-white flex w-2/5 h-12"
           >
             {{ name }}
           </div>
-        </div>
+          <div
+            v-if="isEdit == true"
+            class="edit-color showUp border-2 rounded-md p-1.5 pt-2.5 font-normal bg-white flex w-2/5 h-12"
+          >
+            <input type="text" v-model="editName" />
+          </div>
 
-        <!-- E-mail -->
-        <div class="px-2 w-1/2 inline-flex">
-          <div class="pr-2 font-semibold flex m-auto text-gray-400">
+          <!-- role -->
+          <div class="pr-2 font-semibold flex m-auto text-gray-400"> Role :</div>
+          <div
+            v-if="isEdit == false"
+            class="overflow-hidden overflow-x-scroll border-2  rounded-md p-1.5 pt-2.5 justify-center font-normal bg-amber-400 flex w-1/4 h-12"
+          >
+            {{ role }}
+          </div>
+          <div
+            v-if="isEdit == true"
+            class="edit-color showUp border-2 rounded-md p-1.5 text-center font-normal bg-white inline-block w-1/4 h-12"
+          >
+            <select name="cars" id="cars">
+                <option value="audi">Audi</option>
+            </select>
+          </div>
+        </div>
+      </div>
+          
+      
+      <!-- E-mail -->
+        <div class="w-4/5 inline-flex">
+          <div class="pr-2 font-semibold flex my-auto ml-28 mr-4 text-gray-400">
             E-mail :
           </div>
           <div
-            class="overflow-hidden overflow-x-scroll border-2 rounded-md p-1.5 pt-2.5 font-normal bg-white flex w-3/4 h-12"
-          >
-            {{ eMail }}
-          </div>
-        </div>
-      </div>
-      <!-- start date ,time and duration -->
-      <div class="flex my-4 w-full">
-        <div class="px-1 w-fit block">
-          <div class="p-3 font-semibold inline-block m-auto text-gray-400">
-            Start date :
-          </div>
-          <div
             v-if="isEdit == false"
-            class="border-2 rounded-md p-1.5 font-normal bg-white inline-block w-fit h-10"
+            class="overflow-hidden overflow-x-scroll border-2 rounded-md p-1.5 pt-2.5 font-normal bg-white flex w-2/4 h-12 "
           >
-            {{ startDate }}
+            {{ email }}
           </div>
           <div
             v-if="isEdit == true"
-            class="eidt-color showUp border-2 rounded-md p-1.5 font-normal bg-white inline-block w-fit h-10"
+            class="edit-color showUp border-2 rounded-md p-1.5 font-normal bg-white inline-block w-2/4 h-12"
           >
-            <input type="date" :min="date" v-model="editStartDate" />
+            <input type="text" v-model="editEmail" />
           </div>
         </div>
-        <div class="px-1 w-fit block">
-          <div class="p-3 font-semibold inline-block m-auto w-fit  text-gray-400">
-            Start time :
-          </div>
-          <div
-            v-if="isEdit == false"
-            class="text-black border-2 rounded-md p-1.5 font-normal bg-white inline-block text-center w-20 h-10"
-          >
-            {{ startTime }}
-          </div>
-          <div
-            v-if="isEdit == true"
-            class="eidt-color showUp border-2 rounded-md p-1.5 font-normal bg-white inline-block text-center w-24 h-10"
-          >
-            <input type="time" v-model="editStartTime" />
-          </div>
-        </div>
-        <div class="px-1 w-fit block">
+
+      <!-- created on -->
+      <div class="flex my-8 w-full">
+        <div class="pr-2 font-semibold flex my-auto ml-24 mr-4 text-gray-400">
           <div class="p-3 font-semibold inline-block m-auto text-gray-400">
-            Duration :
+            Created on :
           </div>
           <div
-            class="border-2 text-black rounded-md p-1.5 font-normal bg-white inline-block text-center w-16 h-10"
+            class="border-2 text-black rounded-md p-1.5 font-normal bg-white inline-block text-center w-60 h-10"
           >
-            {{ duration }}
-          </div>
-          <span class="p-3">minutes</span>
-        </div>
-      </div>
-      <!-- category -->
-      <div class="px-2 font-semibold block w-fit">
-        <div class="px-1 w-fit inline-flex">
-          <div class="pr-2 font-semibold inline-block m-auto text-gray-400">
-            Category :
-          </div>
-          <div
-            class="text-ellipsis overflow-hidden border-2 text-black rounded-md py-1.5 px-4 font-normal bg-white inline-block mx-2 w-fit"
-          >
-            {{ category }}
+            {{ createdOn }}
           </div>
         </div>
       </div>
-      <!-- note -->
-      <div class="ml-2 flex my-4 w-full">
-        <div
-          v-if="(noteT !== null && noteT !== '') || isEdit == true"
-          class="inline-block"
-        >
-          <div class="px-2 font-semibold w-fit text-gray-400">Note :</div>
-          <div class="ml-5 w-fit">
-            <textarea
-              readonly
-              v-if="isEdit == false"
-              rows="4"
-              cols="50"
-              class=" text-black block px-3 py-2 placeholder-gray-300 border resize-none rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300"
-              v-model="noteT"
-            >
-            </textarea>
-            <textarea
-              rows="4"
-              cols="50"
-              v-if="isEdit == true"
-              class="eidt-color showUp text-black block px-3 py-2 placeholder-gray-300 border resize-none rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300"
-              v-model="editNote"
-            >
-            </textarea>
-          </div>
-        </div>
+
+    
+        
        <!-- button not edit mode -->
         <div v-if="isEdit == false" class="showUp m-auto w-fit">
           <button @click="editInfo" class="m-4 custom-btn edit">Edit</button>
           <a  href="#remove" class="m-4 custom-btn remove">
             Remove
           </a>
-          <button @click="goReservation"  class="m-4 custom-btn back">Go Back</button>
+          <button @click="goUserList"  class="m-4 custom-btn back">Go Back</button>
         </div>
        <!-- button edit mode -->
         <div v-if="isEdit == true" class="showUp m-auto w-fit">
@@ -434,10 +394,10 @@ const calTime = (hour, minute, addTime) => {
         </div>
       </div>
     </div>
-  </div>
+
 
   <!-- for alert -->
-  <div class="alert-area">
+  <!-- <div class="alert-area">
     <div v-if="isPast == true" class="alert warning text-sm">
       <span class="closebtn" @click="isPast = undefined">x</span>
       <strong class="block">Error!</strong> Can't select past date and time.
@@ -450,7 +410,7 @@ const calTime = (hour, minute, addTime) => {
     
     <div v-if="
           getStatus == false ||
-          eventList.length == 0
+          userList.length == 0
         " class="alert warning text-sm">
           <strong class="block">Warning!</strong> A system error has occurred,please try again.
      </div>
@@ -465,7 +425,7 @@ const calTime = (hour, minute, addTime) => {
           <strong class="block">Success!</strong> Edit data success.
         </div>
 
-  </div>
+  </div> -->
 
          <!-- for submit  -->
   <div id="submit" class="overlay">
@@ -499,7 +459,7 @@ const calTime = (hour, minute, addTime) => {
 
       <div class="option flex m-auto w-full mt-10">
         <a
-          @click="removeInfo"
+          @click="removeUser"
           href="#"
           class="w-full text-center p-2 px-2 bg-gray-200 hover:bg-green-500 font-bold hover:text-white"
           >Yes</a
@@ -601,7 +561,7 @@ const calTime = (hour, minute, addTime) => {
   width: 100%;
   transition: 800ms ease all;
 }
-.eidt-color {
+.edit-color {
   border-color: rgb(252, 140, 252);
 }
 

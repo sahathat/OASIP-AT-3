@@ -386,7 +386,7 @@ onBeforeMount(async () => {
                 class="text-gray-300 font-medium ml-1 text-sm"
                 :style="[name.length > nameLength ? 'color:red' : '']"
               >
-                {{ name.length }}/{{ nameLength }} charector
+                {{ name.length }}/{{ nameLength }} charecters
               </span>
             </div>
             <div>
@@ -414,7 +414,7 @@ onBeforeMount(async () => {
                 class="text-gray-300 font-medium ml-1 text-sm"
                 :style="[eMail.length > emailLength ? 'color:red' : '']"
               >
-                {{ eMail.length }}/{{ emailLength }} charector
+                {{ eMail.length }}/{{ emailLength }} charecters
               </span>
             </div>
             <div>
@@ -546,7 +546,7 @@ onBeforeMount(async () => {
               <span
                 class="text-gray-300"
                 :style="[noteText.length > noteLength ? 'color:red' : '']"
-                >{{ noteText.length }}/{{ noteLength }} charector
+                >{{ noteText.length }}/{{ noteLength }} charecters
               </span>
             </label>
             <textarea
@@ -697,7 +697,7 @@ onBeforeMount(async () => {
         No category details
       </div>
 
-      <div v-else v-for="cat in categoryList">
+      <div v-else v-for="(cat,index) in categoryList" :key="index">
         <ul>
           <li class="text-left">
             <br />
