@@ -10,8 +10,9 @@ const myRouter = useRouter()
 const goHome = ()=>myRouter.push({name:'Home'})
 const goBooking = ()=>myRouter.push({name:'Booking'})
 const goReservationList =()=>myRouter.push({name:'ReservationList'})
+const goCategoriesList =()=>myRouter.push({name:'CategoriesList'})
+const goUserList = ()=>myRouter.push({name:'UserList'})
 const goContactUs = ()=>myRouter.push({name:'ContactUs'})
-
 
 </script>
 
@@ -71,6 +72,20 @@ const goContactUs = ()=>myRouter.push({name:'ContactUs'})
                             hover:bg-gray-900 hover:shadow-lg focus:bg-blue-500 focus:shadow-lg 
                             focus:outline-none focus:ring-0 active:bg-gray-900 active:shadow-lg 
                             transition duration-150 ease-in-out " @click="goReservationList">Reservation</button>
+                                </li>
+                                <li>
+                            <button type="button" class="inline-block px-2 py-2  bg-transparent text-white 
+                            font-medium text-lg leading-tight  rounded 
+                            hover:bg-gray-900 hover:shadow-lg focus:bg-blue-500 focus:shadow-lg 
+                            focus:outline-none focus:ring-0 active:bg-gray-900 active:shadow-lg 
+                            transition duration-150 ease-in-out " @click="goCategoriesList">Categories</button>
+                                </li>
+                                <li>
+                            <button type="button" class="inline-block px-2 py-2  bg-transparent text-white 
+                            font-medium text-lg leading-tight  rounded 
+                            hover:bg-gray-900 hover:shadow-lg focus:bg-blue-500 focus:shadow-lg 
+                            focus:outline-none focus:ring-0 active:bg-gray-900 active:shadow-lg 
+                            transition duration-150 ease-in-out " @click="goUserList">User</button>
                                 </li>
                                 <li>
                             <button type="button" class="inline-block px-2 py-2  bg-transparent text-white 
