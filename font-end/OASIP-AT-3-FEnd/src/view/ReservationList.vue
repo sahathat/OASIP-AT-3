@@ -10,6 +10,8 @@ const filterReservationList = ref([]);
 const db = "http://localhost:5000/booking";
 const eventLink = `${import.meta.env.BASE_URL}api/events`;
 const categoryLink = `${import.meta.env.BASE_URL}api/categories`;
+// const eventLink = "http://ip21at3.sit.kmutt.ac.th:8081/api/events";
+// const categoryLink = "http://ip21at3.sit.kmutt.ac.th:8081/api/categories";
 
 //GET event
 const getStatus = ref(undefined);
@@ -44,7 +46,7 @@ const getCategory = async () => {
     categoryCheck.value = true;
     //console.log(getCategory.value)
   } else {
-    categoryCheck = false;
+    categoryCheck.value = false;
   }
 };
 

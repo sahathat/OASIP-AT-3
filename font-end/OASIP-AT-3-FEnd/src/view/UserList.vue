@@ -5,8 +5,8 @@ const userList = ref([]);
 const userCheck = ref(false);
 
 const db = "http://localhost:5000/booking";
-// const categoryLink = `${import.meta.env.BASE_URL}api/categories`;
-const userLink = "http://ip21at3.sit.kmutt.ac.th:8081/api/users";
+const userLink = `${import.meta.env.BASE_URL}api/users`;
+// const userLink = "http://ip21at3.sit.kmutt.ac.th:8081/api/users";
 
 //GET category
 const getUsers = async () => {

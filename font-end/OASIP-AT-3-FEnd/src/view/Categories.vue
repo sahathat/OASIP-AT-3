@@ -5,8 +5,8 @@ import { onBeforeMount, ref } from "vue";
 const { params } = useRoute();
 
 const db = "http://localhost:5000/booking";
-// const categoryLink = `${import.meta.env.BASE_URL}api/categories`;
-const categoryLink = "http://ip21at3.sit.kmutt.ac.th:8081/api/categories";
+const categoryLink = `${import.meta.env.BASE_URL}api/categories`;
+// const categoryLink = "http://ip21at3.sit.kmutt.ac.th:8081/api/categories";
 
 const id = params.id;
 const name = ref("");
@@ -74,7 +74,7 @@ const editInfo = () => {
   editCategoryName.value = name.value;
   editCategoryDescription.value = description.value;
   editCategoryDuration.value = duration.value;
-  console.log(editCategoryName.value,editCategoryDescription.value,editCategoryDuration.value)
+  // console.log(editCategoryName.value,editCategoryDescription.value,editCategoryDuration.value)
 };
 
 const cancel = () => {
@@ -111,18 +111,18 @@ const edit =async()=>{
        }else {
               canEdit=false
               editSuccess.value=false
-              console.log(`editSuccess = ${editSuccess.value}`)
+              // console.log(`editSuccess = ${editSuccess.value}`)
        }
        return canEdit
 }
 
 // submit
-const isInput=ref(undefined)
-const editSuccess=ref(undefined)
+// const isSuccess=ref(undefined)
+const editSuccess=ref()
 
 const submitt = async () => {
-    edit()
-    this.editSuccess = editSuccess.value
+    await edit()
+    console.log(editSuccess.value)
     goCategoriesList()
     getCategory()
 };

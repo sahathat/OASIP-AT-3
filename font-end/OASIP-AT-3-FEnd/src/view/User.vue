@@ -5,14 +5,15 @@ import { onBeforeMount, ref } from "vue";
 const { params } = useRoute();
 
 const db = "http://localhost:5000/booking";
-// const userLink = `${import.meta.env.BASE_URL}api/events`;
-const userLink = "http://ip21at3.sit.kmutt.ac.th:8081/api/users";
+const userLink = `${import.meta.env.BASE_URL}api/events`;
+// const userLink = "http://ip21at3.sit.kmutt.ac.th:8081/api/users";
 
 const id = params.id;
 const name = ref("");
 const email = ref("");
 const role = ref("");
 const createdOn = ref("");
+const updatedOn = ref("");
 const userDetail = ref({});
 const userList=ref([])
 
@@ -20,6 +21,7 @@ const isNotNull = ref(false);
 const myRouoter = useRouter();
 const goUserList = () => myRouoter.push({ name: "UserList" });
 
+const roles = ['admin','lecturer','student']
 // timer
 // const day = ref();
 // const month = ref();
@@ -83,14 +85,13 @@ const getDetail = async () => {
   if (res.status === 200) {
     userDetail.value = await res.json();
     //console.log(userDetail.value);
-
-    //console.log(Date.parse("2022-06-01T15:00:00+07:00"));
     if (userDetail.value.id == id) {
       isNotNull.value = true;
       name.value = userDetail.value.name;
       email.value = userDetail.value.email;
       role.value = userDetail.value.role
       createdOn.value = userDetail.value.createdOn;
+      updatedOn.value = userDetail.value.updatedOn;
       console.log(userDetail.value)
     }
   }
@@ -160,28 +161,12 @@ const edit =async()=>{
 
 // submit
 const isInput=ref(undefined)
-const isPast =ref(undefined)
-const isOverlap =ref(undefined)
 const editSuccess=ref(undefined)
 
 const submitt = async () => {
-       isInput.value=undefined
-       isPast.value=undefined
-       isOverlap.value=undefined
-       editSuccess.value=undefined
-  if (editStartDate.value !== "" && editStartTime.value !== "") {
-    if (//สำหรับเลือกวันในอนาคต
-      Date.parse(`${editStartDate.value}T${editStartTime.value}:00+07:00`) >
-      Date.parse(`${date.value}T${time.value}:00+07:00`)
-       ) {
-           if(overlap()){
-              isOverlap.value=true
-      } else if(edit()){
-             cancel()
-             setTimeout(()=>editSuccess.value=false,5000)
-      }
-    } else isPast.value=true//alert(`Can't select past date and time `);
-  }else isInput.value=false
+    edit()
+    goUserList()
+    getUserList()
 };
 
 // check overlap
@@ -326,7 +311,7 @@ const calTime = (hour, minute, addTime) => {
           <div class="pr-2 font-semibold flex m-auto text-gray-400"> Role :</div>
           <div
             v-if="isEdit == false"
-            class="overflow-hidden overflow-x-scroll border-2  rounded-md p-1.5 pt-2.5 justify-center font-normal bg-amber-400 flex w-1/4 h-12"
+            class="overflow-hidden overflow-x-scroll border-2 rounded-md p-1.5 pt-2.5 justify-center font-normal bg-amber-400 flex w-1/4 h-12"
           >
             {{ role }}
           </div>
@@ -334,8 +319,15 @@ const calTime = (hour, minute, addTime) => {
             v-if="isEdit == true"
             class="edit-color showUp border-2 rounded-md p-1.5 text-center font-normal bg-white inline-block w-1/4 h-12"
           >
-            <select name="cars" id="cars">
-                <option value="audi">Audi</option>
+            <select v-model="editRole" class="p-0.5 w-9/10 h-8 w-full text-center">
+                  <option value disabled selected>Select Role</option>
+                  <option
+                    v-for="(eachRole, index) in roles"
+                    :key="index"
+                    :value="eachRole"
+                  >
+                    {{ eachRole }}
+                  </option>
             </select>
           </div>
         </div>
@@ -361,10 +353,13 @@ const calTime = (hour, minute, addTime) => {
           </div>
         </div>
 
+        <div class="text-center mt-5"><p> --------------------------------------------------------------- </p></div>
+
       <!-- created on -->
-      <div class="flex my-8 w-full">
-        <div class="pr-2 font-semibold flex my-auto ml-24 mr-4 text-gray-400">
-          <div class="p-3 font-semibold inline-block m-auto text-gray-400">
+      <div class="inline-block">
+      <div class="flex mt-5 mb-3 w-full">
+        <div class="pr-2 flex text-sm my-auto ml-24 mr-4 text-gray-400">
+          <div class="p-3 inline-block m-auto text-gray-400">
             Created on :
           </div>
           <div
@@ -375,8 +370,25 @@ const calTime = (hour, minute, addTime) => {
         </div>
       </div>
 
-    
-        
+      <!-- updated on -->
+      <div 
+        class="flex my-3 w-full"
+        v-if="updatedOn !== undefined"
+        >
+        <div class="pr-2 text-sm flex my-auto ml-24 mr-4 text-gray-400">
+          <div class="p-3 inline-block m-auto text-gray-400">
+            Updated on :
+          </div>
+          <div
+            class="border-2 text-black rounded-md p-1.5 font-normal bg-white inline-block text-center w-60 h-10"
+          >
+            {{ updatedOn }}
+          </div>
+        </div>
+      </div>
+      </div>
+
+
        <!-- button not edit mode -->
         <div v-if="isEdit == false" class="showUp m-auto w-fit">
           <button @click="editInfo" class="m-4 custom-btn edit">Edit</button>

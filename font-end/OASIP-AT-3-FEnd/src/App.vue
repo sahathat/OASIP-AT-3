@@ -13,6 +13,7 @@ const goReservationList =()=>myRouter.push({name:'ReservationList'})
 const goCategoriesList =()=>myRouter.push({name:'CategoriesList'})
 const goUserList = ()=>myRouter.push({name:'UserList'})
 const goContactUs = ()=>myRouter.push({name:'ContactUs'})
+const goCreateUser = ()=>myRouter.push({name:'CreateUser'})
 
 </script>
 
@@ -22,16 +23,16 @@ const goContactUs = ()=>myRouter.push({name:'ContactUs'})
   <router-view></router-view> -->
  
   <div class=" lg:pt-2 md:w-screen h-screen" id="bg_color">
-    <nav class="bg-transparent drop-shadow-md md:rounded-lg md:mx-auto w-3/5">
-                <div class="max-w-screen-xl mx-auto px-4 mx-20 ">
+    <nav class="bg-transparent drop-shadow-md md:rounded-lg md:mx-auto w-full">
+                <div class="max-w-screen-xl mx-auto px-4 ">
                     <div class="md:flex justify-between drop-shadow-lg">
-                        <div class="md:flex space-x-4">
+                        <div class="md:flex space-x-4 w-2/5">
                             <!-- logo -->
                             <div>
                                 <a href="#" class="flex md:items-center py-5 px-0.5 text-gray-700 hover:text-gray-900"
                                     @click="goHome">
                                     <img src="./assets/icon.png" alt="LOGO" :style="logoSize" />
-                                    <span class="font-bold text-xl text-white mx-4">
+                                    <span class="font-bold text-xl text-white ml-5">
                                         <BaseDate :isTime='true' />
                                         
                                         <br>
@@ -47,7 +48,7 @@ const goContactUs = ()=>myRouter.push({name:'ContactUs'})
 
 
                         <!-- secondary nav -->
-                        <div class=" lg:flex items-center space-x-1 px-6 py-3 mx-auto" >
+                        <div class="w-full lg:flex items-center space-x-1 px-6 py-3 mx-auto" >
                             <ul>
 
                                 <li>
@@ -95,6 +96,18 @@ const goContactUs = ()=>myRouter.push({name:'ContactUs'})
                             transition duration-150 ease-in-out " @click="goContactUs">Contact us</button>
                                 </li>
                             </ul>
+                        </div>
+
+                        <!-- third nav -->
+                        <div class="lg:flex items-center space-x-1 w-1/5" >
+                            <button type="button" class="hover:underline bg-white text-gray-800 font-bold rounded-full 
+                            py-4 px-8 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 hover:bg-green-300
+                            duration-300 ease-in-out" @click="goCreateUser"> Sign up </button>
+                        </div>
+                        <div class="lg:flex items-center space-x-1 w-1/5" >
+                            <button type="button" class="hover:underline bg-white text-gray-800 font-bold rounded-full 
+                            py-4 px-8 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 hover:bg-amber-400
+                            duration-300 ease-in-out" @click="goCreateUser"> Sign in </button>
                         </div>
                     </div>
                 </div>

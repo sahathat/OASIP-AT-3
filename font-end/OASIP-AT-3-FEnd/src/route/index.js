@@ -4,13 +4,13 @@ import NotFound from '../view/NotFound.vue'
 import Booking from '../view/Booking.vue'
 import Reservation from '../view/Reservation.vue'
 import ReservationList from '../view/ReservationList.vue'
-<<<<<<< Updated upstream
-=======
+
 import Categories from '../view/Categories.vue'
 import CategoriesList from '../view/CategoriesList.vue'
 import UserInfo from '../view/User.vue'
 import UserList from '../view/UserList.vue'
->>>>>>> Stashed changes
+import CreateUser from '../view/CreateUser.vue'
+
 import ContactUs from '../view/ContactUs.vue'
 const history=createWebHistory(import.meta.env.BASE_URL)
       
@@ -40,8 +40,7 @@ const routes=[
         component: ReservationList
     },
     {
-<<<<<<< Updated upstream
-=======
+
         path:'/categories/:id',
         name:'Categories',
         component: Categories
@@ -62,7 +61,11 @@ const routes=[
         component: UserList
     },
     {
->>>>>>> Stashed changes
+        path:'/create-user',
+        name:'CreateUser',
+        component: CreateUser
+    },
+    {
         path:'/contact-us',
         name:'ContactUs',
         component: ContactUs

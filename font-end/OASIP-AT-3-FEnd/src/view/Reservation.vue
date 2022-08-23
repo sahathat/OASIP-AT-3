@@ -5,8 +5,8 @@ import { onBeforeMount, ref } from "vue";
 const { params } = useRoute();
 
 const db = "http://localhost:5000/booking";
-// const eventLink = `${import.meta.env.BASE_URL}api/events`;
-const eventLink = "http://ip21at3.sit.kmutt.ac.th:8081/api/events";
+const eventLink = `${import.meta.env.BASE_URL}api/events`;
+// const eventLink = "http://ip21at3.sit.kmutt.ac.th:8081/api/events";
 
 const id = params.id;
 const name = ref("");
