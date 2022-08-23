@@ -3,4 +3,3 @@
 - backend
 - reverse proxy
 - docker-compose
-test git
