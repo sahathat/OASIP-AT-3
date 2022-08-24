@@ -1,11 +1,11 @@
 <script setup>
 import { useRoute, useRouter } from "vue-router";
-import { onBeforeMount, ref } from "vue";
+import { onBeforeMount, ref , computed} from "vue";
 
 const { params } = useRoute();
 
 const db = "http://localhost:5000/booking";
-const userLink = `${import.meta.env.BASE_URL}api/events`;
+const userLink = `${import.meta.env.BASE_URL}api/users`;
 // const userLink = "http://ip21at3.sit.kmutt.ac.th:8081/api/users";
 
 const id = params.id;
@@ -22,59 +22,60 @@ const myRouoter = useRouter();
 const goUserList = () => myRouoter.push({ name: "UserList" });
 
 const roles = ['admin','lecturer','student']
+
 // timer
-// const day = ref();
-// const month = ref();
-// const year = ref();
-// const hours = ref();
-// const minutes = ref();
-// const date = ref("");
-// const time = ref("");
+const day = ref();
+const month = ref();
+const year = ref();
+const hours = ref();
+const minutes = ref();
+const date = ref("");
+const time = ref("");
 
-// let clock = () => {
-//   let dateToday = new Date();
-//   day.value =
-//     dateToday.getDate() < 10
-//       ? `0${dateToday.getDate()}`.toString()
-//       : dateToday.getDate(); // day
-//   month.value =
-//     dateToday.getMonth() + 1 < 10
-//       ? `0${dateToday.getMonth() + 1}`.toString()
-//       : dateToday.getMonth() + 1; // month
-//   year.value = dateToday.getFullYear().toString(); // year
+let clock = () => {
+  let dateToday = new Date();
+  day.value =
+    dateToday.getDate() < 10
+      ? `0${dateToday.getDate()}`.toString()
+      : dateToday.getDate(); // day
+  month.value =
+    dateToday.getMonth() + 1 < 10
+      ? `0${dateToday.getMonth() + 1}`.toString()
+      : dateToday.getMonth() + 1; // month
+  year.value = dateToday.getFullYear().toString(); // year
 
-//   hours.value =
-//     dateToday.getHours() < 10
-//       ? `0${dateToday.getHours()}`.toString()
-//       : dateToday.getHours(); // hour
-//   minutes.value =
-//     dateToday.getMinutes() < 10
-//       ? `0${dateToday.getMinutes()}`.toString()
-//       : dateToday.getMinutes(); // minute
+  hours.value =
+    dateToday.getHours() < 10
+      ? `0${dateToday.getHours()}`.toString()
+      : dateToday.getHours(); // hour
+  minutes.value =
+    dateToday.getMinutes() < 10
+      ? `0${dateToday.getMinutes()}`.toString()
+      : dateToday.getMinutes(); // minute
 
-//   //  combine
-//   time.value = `${hours.value}:${minutes.value}`;
-//   date.value = `${year.value}-${month.value}-${day.value}`;
-// };
-// setInterval(clock, 1000);
+  //  combine
+  time.value = `${hours.value}:${minutes.value}`;
+  date.value = `${year.value}-${month.value}-${day.value}`;
+};
+setInterval(clock, 1000);
 
 // get every 10 sec
 const getStatus=ref(undefined)
-const resUserList=ref(undefined)
+const resGetUser=ref(undefined)
 
 setInterval(async ()=>{
-  resUserList.value= await fetch(userLink)
-  if (resUserList.value.status === 200) {
-    userList.value = await resUserList.value.json();
+  resGetUser.value= await fetch(userLink)
+  if (resGetUser.value.status === 200) {
+    userList.value = await resGetUser.value.json();
     getStatus.value = true;
   } else getStatus.value = false;
 },10000)
 
 // first get user
 const getUserList =async()=>{
- resUserList.value= await fetch(userLink)
-  if (resUserList.value.status === 200) {
-    userList.value = await resUserList.value.json();
+ resGetUser.value= await fetch(userLink)
+  if (resGetUser.value.status === 200) {
+    userList.value = await resGetUser.value.json();
     getStatus.value = true;
   } else getStatus.value = false;       
 }
@@ -96,6 +97,32 @@ const getDetail = async () => {
     }
   }
 };
+
+//format date
+const formatDate = (datetime) => { 
+  const date = new Date(datetime)
+  const month = date.getMonth() + 1
+  if(month<10){ return `${date.getDate()}-0${month}-${date.getFullYear()}` }
+  else{ return `${date.getDate()}-${month}-${date.getFullYear()}` }
+}
+
+
+//format time
+const formatTime = (datetime) => { 
+  const time = new Date(datetime)
+  const hour = computed(() => {
+    // console.log(time.getHours());
+    if (time.getHours() < 10) return "0" + time.getHours();
+    else return time.getHours();
+  });
+  const minute = computed(() => {
+    // console.log(time.getMinutes());
+    if (time.getMinutes() < 10) return "0" + time.getMinutes();
+    else return time.getMinutes();
+  });
+  return `${hour.value}.${minute.value}` 
+}
+
 
 onBeforeMount(async()=>{
        await getUserList()
@@ -169,83 +196,6 @@ const submitt = async () => {
     getUserList()
 };
 
-// check overlap
-const betweenDateWarning=ref(undefined)
-
-const overlap = () => {
-  betweenDateWarning.value = undefined;
-  let isOverlap = undefined;
-for (let check of userList.value) {
-    if (check.categoryName == category.value&&check.id!==id) {
-//       console.log(Date.parse(`${editStartDate.value}T${editStartTime.value}:00+07:00`))
-//       console.log(Date.parse(check.eventStartTime))
-//       console.log(Date.parse(`${check.eventStartTime.substring(0,10)}T${calTime(parseInt(check.eventStartTime.substring(11,13)) ,parseInt(check.eventStartTime.substring(14,16)),check.eventDuration)}:00+07:00`))
-//       console.log('cut')
-
-      if (
-        Date.parse(`${editStartDate.value}T${editStartTime.value}:00+07:00`) >=
-        Date.parse(check.eventStartTime) &&
-        Date.parse(`${editStartDate.value}T${editStartTime.value}:00+07:00`) <=
-        Date.parse(
-          `${check.eventStartTime.substring(0, 10)}T${calTime(
-            parseInt(check.eventStartTime.substring(11, 13)),
-            parseInt(check.eventStartTime.substring(14, 16)),
-            check.eventDuration
-          )}:00+07:00`
-        )
-      ) {
-        isOverlap = true;
-        betweenDateWarning.value = String(
-          `Cannot select during ${check.eventStartTime.substring(
-            0,
-            10
-          )} between ${check.eventStartTime.substring(11, 16)} - ${calTime(
-            parseInt(check.eventStartTime.substring(11, 13)),
-            parseInt(check.eventStartTime.substring(14, 16)),
-            check.eventDuration
-          )}`
-        );
-      } else if (
-        Date.parse(
-          `${startDate.value}T${calTime(
-            parseInt(editStartTime.value.substring(0, 2)),
-            parseInt(editStartTime.value.substring(3, 5)),
-            duration.value
-          )}:00+07:00`
-        ) >= Date.parse(check.eventStartTime) &&
-        Date.parse(
-          `${startDate.value}T${calTime(
-            parseInt(editStartTime.value.substring(0, 2)),
-            parseInt(editStartTime.value.substring(3, 5)),
-            duration.value
-          )}`
-        ) <=
-        Date.parse(
-          `${check.eventStartTime.substring(0, 10)}T${calTime(
-            parseInt(check.eventStartTime.substring(11, 13)),
-            parseInt(check.eventStartTime.substring(14, 16)),
-            check.eventDuration
-          )}:00+07:00`
-        )
-      ) {
-        isOverlap = true;
-        betweenDateWarning.value = String(
-          `Your event time is overlapped between ${check.eventStartTime.substring(
-            11,
-            16
-          )} and ${calTime(
-            parseInt(check.eventStartTime.substring(11, 13)),
-            parseInt(check.eventStartTime.substring(14, 16)),
-            check.eventDuration
-          )}
-          ${check.eventStartTime.substring(0, 10)}`
-        );
-      }
-    }
-  }
-  return isOverlap;
-};
-
 
 // function
 const calTime = (hour, minute, addTime) => {
@@ -304,7 +254,7 @@ const calTime = (hour, minute, addTime) => {
             v-if="isEdit == true"
             class="edit-color showUp border-2 rounded-md p-1.5 pt-2.5 font-normal bg-white flex w-2/5 h-12"
           >
-            <input type="text" v-model="editName" />
+            <input type="text" class="w-full h-full" v-model="editName" />
           </div>
 
           <!-- role -->
@@ -349,7 +299,7 @@ const calTime = (hour, minute, addTime) => {
             v-if="isEdit == true"
             class="edit-color showUp border-2 rounded-md p-1.5 font-normal bg-white inline-block w-2/4 h-12"
           >
-            <input type="text" v-model="editEmail" />
+            <input type="text" class="w-full h-full" v-model="editEmail" />
           </div>
         </div>
 
@@ -365,7 +315,8 @@ const calTime = (hour, minute, addTime) => {
           <div
             class="border-2 text-black rounded-md p-1.5 font-normal bg-white inline-block text-center w-60 h-10"
           >
-            {{ createdOn }}
+            <!-- {{ createdOn }} -->
+            Date : {{ formatDate(createdOn) }} , Time : {{ formatTime(createdOn) }}
           </div>
         </div>
       </div>
@@ -382,7 +333,7 @@ const calTime = (hour, minute, addTime) => {
           <div
             class="border-2 text-black rounded-md p-1.5 font-normal bg-white inline-block text-center w-60 h-10"
           >
-            {{ updatedOn }}
+            Date : {{ formatDate(updatedOn) }} , Time : {{ formatTime(updatedOn) }}
           </div>
         </div>
       </div>

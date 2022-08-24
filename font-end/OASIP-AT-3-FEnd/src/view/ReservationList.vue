@@ -297,7 +297,7 @@ const reset = () => {
 <template>
   <!-- for filter -->
   <div
-    class="showUp md:inline-block ml-52 mt-16 bg-gray-200 p-4 ml-20 w-1/3 rounded-l"
+    class="showUp md:inline-block mt-16 bg-gray-200 p-4 ml-20 w-1/3 rounded-l"
     style="height: 475px; width: 25%"
   >
     <div class="border-gray-500 border-4 border-double w-full">
@@ -306,7 +306,7 @@ const reset = () => {
       </h1>
 
       <!-- start date -->
-      <div class="w-full my-1 block my-2">
+      <div class="w-full block my-2">
         <div class="px-3 w-full m-auto block">
           <label for="date" class="font-medium text-sm text-gray-600"
             >Start date :</label
@@ -416,7 +416,7 @@ const reset = () => {
           >
             <th
               scope="row"
-              class="px-6 py-4 font-medium text-gray-900 font-semibold whitespace-nowrap text-ellipsis overflow-hidden"
+              class="px-6 py-4 text-gray-900 font-semibold whitespace-nowrap text-ellipsis overflow-hidden"
             >
               {{ Booking.bookingName }}
             </th>
