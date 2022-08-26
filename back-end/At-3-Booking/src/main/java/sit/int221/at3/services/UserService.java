@@ -4,20 +4,19 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.server.ResponseStatusException;
-import sit.int221.at3.dtos.category.CategoryUpdateDto;
-import sit.int221.at3.dtos.event.EventUpdateDto;
 import sit.int221.at3.dtos.user.UserDto;
+import sit.int221.at3.dtos.user.UserLoginDto;
 import sit.int221.at3.dtos.user.UserModifyDto;
-import sit.int221.at3.entities.Category;
-import sit.int221.at3.entities.Event;
 import sit.int221.at3.entities.Role;
 import sit.int221.at3.entities.User;
 import sit.int221.at3.repositories.UserRepository;
 import sit.int221.at3.utils.ListMapper;
 
-import java.time.ZonedDateTime;
 import java.util.List;
 
 @Service
@@ -111,6 +110,26 @@ public class UserService {
 
         // and save
         return userRepository.saveAndFlush(user);
+    }
+
+    public User findUserByEmail(UserLoginDto userLoginDto) {
+        // List all user
+        List<User> userList = userRepository.findAll();
+
+        // init id is null if can't find that return 404 not found
+        Integer[] id = { 0 };
+
+        // check if email equal List of email
+        userList.forEach(u -> {
+            if(u.getEmail().equals(userLoginDto.getEmail())){
+                id[0] = u.getId();
+            }
+        });
+
+        // find id if user found
+        User user = userRepository.findById(id[0]).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "this email not found. please created"));
+
+        return user;
     }
 
     private boolean checkIsNotUnique(User user, UserModifyDto updateUser){

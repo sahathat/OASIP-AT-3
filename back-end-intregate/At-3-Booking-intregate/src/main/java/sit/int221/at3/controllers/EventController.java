@@ -18,7 +18,6 @@ import java.util.List;
 @RequestMapping("/api/events")
 public class EventController {
     @Autowired
-
     private EventService eventService;
 
     // /api/events [GET]

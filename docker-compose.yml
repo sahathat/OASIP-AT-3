@@ -37,7 +37,7 @@ services:
     ports:
       - "8081:8081"
     environment:
-      - spring.datasource.url=jdbc:mysql://oasipdbbooking:3306/booking
+      - spring.datasource.url=jdbc:mysql://oasipdbbooking:3306/test
     depends_on:
       - oasipdbbooking
     restart: on-failure

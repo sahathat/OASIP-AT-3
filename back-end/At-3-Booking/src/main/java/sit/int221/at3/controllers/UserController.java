@@ -1,8 +1,12 @@
 package sit.int221.at3.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import sit.int221.at3.dtos.user.UserDto;
+import sit.int221.at3.dtos.user.UserLoginDto;
 import sit.int221.at3.dtos.user.UserModifyDto;
 import sit.int221.at3.entities.User;
 import sit.int221.at3.services.UserService;
@@ -29,6 +33,9 @@ public class UserController {
 
     @PostMapping("")
     public User saveUser(@Valid @RequestBody UserModifyDto user){
+        Argon2PasswordEncoder encoder = new Argon2PasswordEncoder(16,27,2,4096,10);
+        user.setPassword(encoder.encode(user.getPassword()));
+        System.out.println(user.getPassword());
         return userService.saveUser(user);
     }
 
@@ -40,5 +47,21 @@ public class UserController {
     @DeleteMapping("/{id}")
     public void deleteUser(@Valid @PathVariable Integer id){
         userService.deleteUser(id);
+    }
+
+    @PostMapping("/matched")
+    public boolean saveUser(@RequestBody UserLoginDto user) throws ResponseStatusException{
+        Argon2PasswordEncoder encoder = new Argon2PasswordEncoder(16,27,2,4096,10);
+
+        User userbyEmail = userService.findUserByEmail(user);
+
+        // check if password that find by this email had encoded is match by raw password
+        boolean isMatched = encoder.matches(user.getPassword(), userbyEmail.getPassword());
+
+        if(!isMatched){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "email or password is not matched");
+        }
+
+        return isMatched;
     }
 }

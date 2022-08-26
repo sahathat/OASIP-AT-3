@@ -25,5 +25,9 @@ public class UserModifyDto implements Serializable {
     @Email(message = "this is not email format")
     private String email;
 
+    @NotNull(message = "password should not null")
+    @Size(min = 8, max = 14, message = "password should have between 8 to 14 characters")
+    private String password;
+
     private Role role;
 }

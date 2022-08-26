@@ -45,7 +45,6 @@ public class EventService {
         Event event = eventRepository.findById(id).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, id + " is not exist please find new id if exist.")
         );
-
         return modelMapper.map(event, EventDto.class);
     }
 

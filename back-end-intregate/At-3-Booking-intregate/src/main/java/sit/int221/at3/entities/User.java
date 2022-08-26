@@ -25,6 +25,17 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @Column(name = "password", nullable = false, length = 90)
+    private String password;
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     @Generated(value = GenerationTime.INSERT)
     @Column(name = "createdOn", updatable = false, insertable = false, nullable = false,
             columnDefinition = "datetime default CURRENT_TIMESTAMP")

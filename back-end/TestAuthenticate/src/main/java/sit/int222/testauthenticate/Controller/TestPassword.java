@@ -14,7 +14,7 @@ public class TestPassword {
 
     @GetMapping("/encrypt")
     public String encrypt() {
-        Argon2PasswordEncoder encoder = new Argon2PasswordEncoder();
+        Argon2PasswordEncoder encoder = new Argon2PasswordEncoder(16,27,2,4096,10);
 
         String password = "ABC123";
 
