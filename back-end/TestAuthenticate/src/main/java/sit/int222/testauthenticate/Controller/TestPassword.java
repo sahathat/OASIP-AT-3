@@ -7,6 +7,7 @@ import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import sit.int222.testauthenticate.dto.User;
 
 @RestController
 @RequestMapping("/api")
@@ -24,10 +25,10 @@ public class TestPassword {
     }
 
     @PostMapping("/match")
-    public String match(@RequestBody String rawPassword) {
+    public String match(@RequestBody User user) {
         String hash = encrypt();
         Argon2PasswordEncoder encoder = new Argon2PasswordEncoder();
-        boolean matches = encoder.matches(rawPassword,hash);
+        boolean matches = encoder.matches(user.getPassword(), hash);
         if(!matches){
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "password does not matched");
         }

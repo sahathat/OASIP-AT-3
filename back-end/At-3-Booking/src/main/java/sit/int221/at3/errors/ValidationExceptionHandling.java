@@ -15,14 +15,6 @@ import java.util.stream.Collectors;
 
 @ControllerAdvice
 public class ValidationExceptionHandling extends ResponseEntityExceptionHandler {
-
-    @ExceptionHandler(Exception.class)
-    @ResponseBody
-    public ResponseEntity<Object> handleExceptions(Exception ex) {
-        ErrorDetailDto errorDetails = new ErrorDetailDto(ex.getMessage());
-        return new ResponseEntity<>(errorDetails,HttpStatus.BAD_REQUEST);
-    }
-
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         List<ErrorMessageDto> validationErrorDetails = ex.getBindingResult()
