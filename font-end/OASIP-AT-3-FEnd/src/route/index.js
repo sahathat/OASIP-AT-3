@@ -10,6 +10,7 @@ import CategoriesList from '../view/CategoriesList.vue'
 import UserInfo from '../view/User.vue'
 import UserList from '../view/UserList.vue'
 import CreateUser from '../view/CreateUser.vue'
+import Login from '../view/Login.vue'
 
 import ContactUs from '../view/ContactUs.vue'
 const history=createWebHistory(import.meta.env.BASE_URL)
@@ -64,6 +65,11 @@ const routes=[
         path:'/create-user',
         name:'CreateUser',
         component: CreateUser
+    },
+    {
+        path:'/login',
+        name:'Login',
+        component: Login
     },
     {
         path:'/contact-us',

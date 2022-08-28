@@ -14,6 +14,7 @@ const goCategoriesList =()=>myRouter.push({name:'CategoriesList'})
 const goUserList = ()=>myRouter.push({name:'UserList'})
 const goContactUs = ()=>myRouter.push({name:'ContactUs'})
 const goCreateUser = ()=>myRouter.push({name:'CreateUser'})
+const goLogin = ()=>myRouter.push({name:'Login'})
 
 </script>
 
@@ -86,7 +87,7 @@ const goCreateUser = ()=>myRouter.push({name:'CreateUser'})
                             font-medium text-lg leading-tight  rounded 
                             hover:bg-gray-900 hover:shadow-lg focus:bg-blue-500 focus:shadow-lg 
                             focus:outline-none focus:ring-0 active:bg-gray-900 active:shadow-lg 
-                            transition duration-150 ease-in-out " @click="goUserList">User</button>
+                            transition duration-150 ease-in-out " @click="goUserList">Users</button>
                                 </li>
                                 <li>
                             <button type="button" class="inline-block px-2 py-2  bg-transparent text-white 
@@ -107,7 +108,7 @@ const goCreateUser = ()=>myRouter.push({name:'CreateUser'})
                         <div class="lg:flex items-center space-x-1 w-1/5" >
                             <button type="button" class="hover:underline bg-white text-gray-800 font-bold rounded-full 
                             py-4 px-8 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 hover:bg-amber-400
-                            duration-300 ease-in-out" @click="goCreateUser"> Sign in </button>
+                            duration-300 ease-in-out" @click="goLogin"> Sign in </button>
                         </div>
                     </div>
                 </div>

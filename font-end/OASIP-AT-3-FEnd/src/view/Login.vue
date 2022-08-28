@@ -10,8 +10,7 @@ const goUserList = () => myRouoter.push({ name: "UserList" });
 const name = ref("");
 const email = ref("");
 const role = ref("");
-const password = ref("");
-const confirmPassword = ref("");
+
 
 const nameLength = 100;
 const emailLength = 50;
@@ -32,7 +31,7 @@ const validateNameisNotNull = ref(undefined);
 const validateNameLength = ref(undefined);
 const validateNameUnique = ref(false)
 const isNameNotUnique = () => {
-    validateNameUnique.value = userList.value.map((user) =>{return user.name.trim()}).includes(name.value.trim())
+    validateNameUnique.value = userList.value.map((user) =>{return user.name.trim()}).includes(username.value.trim())
 }
 
 
@@ -61,8 +60,8 @@ const cancel = () => {
   name.value = "" ;
   email.value = "" ;
   role.value = "" ;
-  password.value = "";
-  confirmPassword.value = "";
+  password.value = "" ;
+  confirmPassword.value = "" ;
   goUserList()
 };
 
@@ -72,9 +71,7 @@ const submitt = async () => {
   if (
     name.value !== "" &&
     email.value !== "" &&
-    role.value !== "" &&
-    password.value !== "" &&
-    confirmPassword .value !== ""
+    role.value !== "" 
   ) {
     if (name.value.length > nameLength) {
       validateNameLength.value = false;
@@ -90,20 +87,12 @@ const submitt = async () => {
       validateEmailValid.value = false;
       //alert('Invalid email address!')
     
-    } else if (isNameNotUnique(name.value) == false) {
-      validateEmailUnique.value = false;
-      //alert('The number of characters in the email exceeded the limit.')
-
-    } else if (isEmailNotUnique(email.value) == false) {
-      validateEmailUnique.value = false;
-      alert('This email address is already exists!')
-    
     }  else if (createUser()) {
         name.value = "";
         email.value = "";
         role.value = "";
-        password.value = "";
-        confirmPassword.value = "";
+        password.value = "" ;
+        confirmPassword.value = "" ;
       // validateEmailisNotNull.value = undefined;
       // validateNameisNotNull.value = undefined;
       // validateRoleisNotNull.value = undefined;
@@ -123,7 +112,7 @@ const submitt = async () => {
     if (role.value == "") {
       validateRoleisNotNull.value = false;
     }
-  }
+  }console.log(addSuccess.value);
 };
 
 // fetch create
@@ -138,8 +127,7 @@ const createUser = async () => {
     body: JSON.stringify({
       name: name.value,
       email: email.value,
-      role: role.value,
-      password:password.value
+      role: role.value
     }),
   });
   if (res.status === 201) {
@@ -185,89 +173,25 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <div class="showUp container mx-auto">
+  <div class="showUp container mx-auto justify-items-center">
     <div
-      class="max-w-screen-md p-5 pb-7 mx-auto mt-14 bg-gray-200 rounded-md shadow-xl"
+      class="max-w-screen-md p-5 pb-7 mt-14 bg-gray-200 rounded-md shadow-xl mx-auto justify-center"
     >
       <div class="text-center">
-        <h1 class="my-3 text-3xl font-semibold text-gray-700"> Sign up</h1>
+        <h1 class="my-3 text-3xl font-semibold text-gray-700"> Sign in</h1>
         <p class="text-gray-400">
-          Fill up the form below to create your account.
+          Fill up the form below to login your account.
         </p>
       </div>
 
-            <div>
-        <!-- name -->
-        <div class="my-3 inline-flex px-4 w-full">
-          <div class="inline-block m-auto">
-            <div class="px-3 w-full">
-              <label for="name" class="font-medium m-auto text-sm text-gray-600"
-                >Full Name</label
-              >
-              <span
-                class="text-gray-300 font-medium ml-1 text-sm"
-                :style="[name.length > nameLength ? 'color:red' : '']"
-              >
-                {{ name.length }}/{{ nameLength }} charecters
-              </span>
-            </div>
-            <div>
-              <input
-                v-model="name"
-                type="text"
-                name="name"
-                placeholder="Somchai Jaidee (AT-3)"
-                required
-                :style="[
-                  validateNameisNotNull == false ? 'border-color:red' : '',
-                ]"
-                class="w-80 px-3 py-2 mx-2 placeholder-gray-300 border border-gray-400 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300"
-              />
-            </div>
-          </div>
-
-          <!-- role -->
-          <div class="mx-4 inline-block m-auto">
-            <div class="px-3 w-full">
-              <label for="category" class="text-sm font-medium text-gray-600"
-                > Role </label
-              >
-            </div>
-            <div>
-              <select
-                id="role"
-                :style="[
-                  validateRoleisNotNull == false ? 'border-color:red' : '',
-                ]"
-                class="text-ellipsis overflow-hidden cursor-pointer w-64 font-medium px-3 py-2 placeholder-gray-300 border border-gray-400 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300"
-                v-model="role"
-              >
-                <option value disabled selected> Select your category </option>
-                <option
-                  v-for="(role,index) in roles"
-                  :key="index"
-                  :value="role"
-                >
-                  {{ role }}
-                </option>
-              </select>
-            </div>
-          </div>
-        </div>
-
+    <div>
         <!-- email -->
         <div class="my-3 inline-flex px-4 w-full">
-          <div class="inline-block ml-9">
+          <div class="inline-block">
             <div class="px-3 w-full">
               <label for="email" class="font-medium text-sm text-gray-600"
                 >Email Address</label
               >
-              <span
-                class="text-gray-300 font-medium ml-1 text-sm"
-                :style="[email.length > emailLength ? 'color:red' : '']"
-              >
-                {{ email.length }}/{{ emailLength }} charecters
-              </span>
             </div>
             <div>
               <input
@@ -301,43 +225,22 @@ onBeforeMount(async () => {
             </div>
             <div>
               <input
-                v-model="password"
+                v-model="name"
                 type="text"
                 name="name"
                 placeholder="Somchai Jaidee (AT-3)"
                 required
-                class="w-80 px-3 py-2 mx-2 placeholder-gray-300 border border-gray-400 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300"
-              />
-            </div>
-          </div>
-
-          <!-- Confirm Password -->
-          <div class="inline-block m-auto">
-            <div class="px-3 w-full">
-              <label for="name" class="font-medium m-auto text-sm text-gray-600">
-                Confirm Password
-              </label>
-              <!-- <span
-                class="text-gray-300 font-medium ml-1 text-sm"
-                :style="[name.length > nameLength ? 'color:red' : '']"
-              >
-                {{ name.length }}/{{ nameLength }} charecters
-              </span> -->
-            </div>
-            <div>
-              <input
-                v-model="confirmPassword"
-                type="text"
-                name="name"
-                placeholder="Somchai Jaidee (AT-3)"
-                required
+                :style="[
+                  validateNameisNotNull == false ? 'border-color:red' : '',
+                ]"
                 class="w-80 px-3 py-2 mx-2 placeholder-gray-300 border border-gray-400 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300"
               />
             </div>
           </div>
         </div>
-        </div>
+    </div>
 
+         
           <!-- submit button -->
           <div class="inline-flex m-auto p-5 w-60">
             <a

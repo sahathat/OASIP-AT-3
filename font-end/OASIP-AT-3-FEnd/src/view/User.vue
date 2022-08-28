@@ -13,7 +13,7 @@ const name = ref("");
 const email = ref("");
 const role = ref("");
 const createdOn = ref("");
-const updatedOn = ref("");
+const updatedOn = ref(undefined);
 const userDetail = ref({});
 const userList=ref([])
 
@@ -171,7 +171,7 @@ const edit =async()=>{
           role:editRole.value,
         }),
       });
-      if (res.status == 200) {
+      if (res.status === 200) {
         let editUserDetail = await res.json();
         name.value = editUserDetail.name;
         email.value = editUserDetail.email;
@@ -324,7 +324,7 @@ const calTime = (hour, minute, addTime) => {
       <!-- updated on -->
       <div 
         class="flex my-3 w-full"
-        v-if="updatedOn !== undefined"
+        v-if="updatedOn !== createdOn"
         >
         <div class="pr-2 text-sm flex my-auto ml-24 mr-4 text-gray-400">
           <div class="p-3 inline-block m-auto text-gray-400">
