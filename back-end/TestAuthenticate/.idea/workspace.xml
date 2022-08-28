@@ -4,11 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1018d986-a7b0-4c54-976d-4bcffb409d71" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/sit/int222/testauthenticate/dto/User.java" afterDir="false" />
+    <list default="true" id="028aec62-0507-45f7-a6a0-5ddc8e375862" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/sit/int222/testauthenticate/Controller/TestAuthentication.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/sit/int222/testauthenticate/Service/UserService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/sit/int222/testauthenticate/config/SecurityConfigurer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/sit/int222/testauthenticate/dto/Response.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/sit/int222/testauthenticate/filter/JwtRequestFilter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/sit/int222/testauthenticate/utils/JwtUtil.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/sit/int222/testauthenticate/Controller/TestPassword.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sit/int222/testauthenticate/Controller/TestPassword.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../../docker-compose.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/sit/int222/testauthenticate/TestAuthenticateApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sit/int222/testauthenticate/TestAuthenticateApplication.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,16 +33,21 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="ProjectId" id="2DhKJA8YhJYIUZS28FwMOjSmYt5" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
-    <ConfirmationsSetting value="2" id="Add" />
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHome" value="Use Maven wrapper" />
+        <option name="useMavenConfig" value="true" />
+      </MavenGeneralSettings>
+    </option>
   </component>
+  <component name="ProjectId" id="2Dsk40K6mbzHRKGXavvMwC1fm8M" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
-    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="RequestMappingsPanelOrder0" value="0" />
     <property name="RequestMappingsPanelOrder1" value="1" />
     <property name="RequestMappingsPanelWidth0" value="75" />
@@ -48,24 +58,39 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
   <component name="RunManager">
-    <configuration name="TestAuthenticateApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <configuration name="TestAuthenticateApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
       <module name="TestAuthenticate" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="sit.int222.testauthenticate.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
       <option name="SPRING_BOOT_MAIN_CLASS" value="sit.int222.testauthenticate.TestAuthenticateApplication" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Spring Boot.TestAuthenticateApplication" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="1018d986-a7b0-4c54-976d-4bcffb409d71" name="Changes" comment="" />
-      <created>1661145810475</created>
+      <changelist id="028aec62-0507-45f7-a6a0-5ddc8e375862" name="Changes" comment="" />
+      <created>1661494991735</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1661145810475</updated>
-      <workItem from="1661145813150" duration="1864000" />
-      <workItem from="1661243854940" duration="5296000" />
+      <updated>1661494991735</updated>
+      <workItem from="1661494995250" duration="377000" />
+      <workItem from="1661496744323" duration="1291000" />
+      <workItem from="1661499924614" duration="2000" />
+      <workItem from="1661578610578" duration="977000" />
+      <workItem from="1661688754623" duration="1567000" />
+      <workItem from="1661690363746" duration="7569000" />
     </task>
     <servers />
   </component>
@@ -82,8 +107,5 @@
         </entry>
       </map>
     </option>
-  </component>
-  <component name="VcsManagerConfiguration">
-    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
   </component>
 </project>

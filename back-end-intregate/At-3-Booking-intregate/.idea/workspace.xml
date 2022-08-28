@@ -4,16 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bcd42d8c-c71e-4a2d-bc91-c85d52172997" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../../back-end/TestAuthenticate/src/main/java/sit/int222/testauthenticate/dto/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../back-end/TestAuthenticate/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../back-end/TestAuthenticate/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../back-end/TestAuthenticate/src/main/java/sit/int222/testauthenticate/Controller/TestPassword.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../back-end/TestAuthenticate/src/main/java/sit/int222/testauthenticate/Controller/TestPassword.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../../docker-compose.yml" afterDir="false" />
-    </list>
+    <list default="true" id="bcd42d8c-c71e-4a2d-bc91-c85d52172997" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
@@ -21,11 +23,15 @@
   <component name="JpbToolWindowState">
     <option name="myId2FirstActivated">
       <map>
+        <entry key="com.haulmont.jpb.jpaInspector" value="true" />
+        <entry key="com.haulmont.jpb.jpaPalette" value="true" />
         <entry key="com.haulmont.jpb.jpaStructure" value="true" />
       </map>
     </option>
     <option name="myId2Visible">
       <map>
+        <entry key="com.haulmont.jpb.jpaInspector" value="true" />
+        <entry key="com.haulmont.jpb.jpaPalette" value="false" />
         <entry key="com.haulmont.jpb.jpaStructure" value="true" />
       </map>
     </option>
@@ -39,15 +45,20 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="DatabaseDriversLRU" value="mysql" />
+    <property name="RequestMappingsPanelOrder0" value="0" />
+    <property name="RequestMappingsPanelOrder1" value="1" />
+    <property name="RequestMappingsPanelWidth0" value="75" />
+    <property name="RequestMappingsPanelWidth1" value="75" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../back-end/TestAuthenticate" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../TestAuthenticate" />
     <property name="nodejs_package_manager_path" value="npm" />
   </component>
   <component name="RunManager">
     <configuration name="At3BookingApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
-      <module name="At-3-Booking" />
+      <module name="At-3-Booking-intregate" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="sit.int221.at3.*" />
@@ -55,6 +66,7 @@
         </pattern>
       </extension>
       <option name="SPRING_BOOT_MAIN_CLASS" value="sit.int221.at3.At3BookingApplication" />
+      <option name="ALTERNATIVE_JRE_PATH" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -74,12 +86,30 @@
       <option name="presentableId" value="Default" />
       <updated>1661145184805</updated>
       <workItem from="1661145194775" duration="647000" />
-      <workItem from="1661168131920" duration="398000" />
-      <workItem from="1661243583707" duration="854000" />
+      <workItem from="1661167767420" duration="41000" />
+      <workItem from="1661168097600" duration="29000" />
+      <workItem from="1661495384709" duration="2501000" />
+      <workItem from="1661498053491" duration="9207000" />
+      <workItem from="1661507713268" duration="137000" />
+      <workItem from="1661508856039" duration="85000" />
+      <workItem from="1661578589600" duration="14000" />
+      <workItem from="1661582101593" duration="816000" />
+      <workItem from="1661688740016" duration="9000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>
