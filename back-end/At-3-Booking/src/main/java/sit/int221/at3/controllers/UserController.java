@@ -32,10 +32,10 @@ public class UserController {
     }
 
     @PostMapping("")
+    @ResponseStatus(HttpStatus.CREATED)
     public User saveUser(@Valid @RequestBody UserModifyDto user){
         Argon2PasswordEncoder encoder = new Argon2PasswordEncoder(16,27,2,4096,10);
         user.setPassword(encoder.encode(user.getPassword()));
-        System.out.println(user.getPassword());
         return userService.saveUser(user);
     }
 

@@ -5,15 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="028aec62-0507-45f7-a6a0-5ddc8e375862" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/sit/int222/testauthenticate/Controller/TestAuthentication.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/sit/int222/testauthenticate/Service/UserService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/sit/int222/testauthenticate/config/SecurityConfigurer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/sit/int222/testauthenticate/dto/Response.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/sit/int222/testauthenticate/filter/JwtRequestFilter.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/sit/int222/testauthenticate/utils/JwtUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/sit/int222/testauthenticate/Controller/TestPassword.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sit/int222/testauthenticate/Controller/TestPassword.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/sit/int222/testauthenticate/TestAuthenticateApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sit/int222/testauthenticate/TestAuthenticateApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/sit/int222/testauthenticate/Controller/TestAuthentication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sit/int222/testauthenticate/Controller/TestAuthentication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/sit/int222/testauthenticate/Service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sit/int222/testauthenticate/Service/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/sit/int222/testauthenticate/config/SecurityConfigurer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sit/int222/testauthenticate/config/SecurityConfigurer.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,6 +24,14 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -91,6 +94,7 @@
       <workItem from="1661578610578" duration="977000" />
       <workItem from="1661688754623" duration="1567000" />
       <workItem from="1661690363746" duration="7569000" />
+      <workItem from="1661775766390" duration="6740000" />
     </task>
     <servers />
   </component>

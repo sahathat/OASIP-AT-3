@@ -7,6 +7,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -30,6 +31,10 @@ public class TestAuthentication {
 
     @RequestMapping(value = "api/authenticate", method = RequestMethod.POST)
     public ResponseEntity<?> createToken(@RequestBody User user) throws Exception {
+
+//        Argon2PasswordEncoder argon2PasswordEncoder = new Argon2PasswordEncoder();
+
+//        user.setPassword(argon2PasswordEncoder.encode(user.getPassword()));
 
         try {
             authenticationManager.authenticate(

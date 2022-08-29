@@ -56,6 +56,7 @@ public class UserController {
 
     @CrossOrigin
     @PostMapping("/matched")
+    @ResponseStatus(HttpStatus.CREATED)
     public boolean saveUser(@RequestBody UserLoginDto user) throws ResponseStatusException{
         Argon2PasswordEncoder encoder = new Argon2PasswordEncoder(16,27,2,4096,10);
 
