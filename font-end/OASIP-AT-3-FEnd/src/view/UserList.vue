@@ -101,25 +101,7 @@ onBeforeMount(async () => {
         </tbody>
       </table>
     </div>
-
-    <!-- for alert -->
-    <!-- <div class="alert-area">
-      <div v-if="noInputFilter == true" class="alert info text-sm">
-        <span class="closebtn" @click="noInputFilter = undefined">x</span>
-        <strong class="block">Info!</strong> Please input information to filter
-      </div>
-
-      <div
-        v-else-if="
-          getStatus == false ||
-          (categoryList.length == 0)
-        "
-        class="alert warning text-sm"
-      >
-        <strong class="block">Warning!</strong> A system error has occurred,
-        please try again.
-      </div>
-    </div> -->
+    
   </div>
 </template>
 

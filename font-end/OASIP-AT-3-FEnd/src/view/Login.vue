@@ -5,177 +5,76 @@ import { useRoute,useRouter } from "vue-router";
 
 const { params } = useRoute();
 const myRouoter = useRouter();
-const goUserList = () => myRouoter.push({ name: "UserList" });
+const goHome = () => myRouoter.push({ name: "Home" });
 
-const name = ref("");
 const email = ref("");
-const role = ref("");
-
-
-const nameLength = 100;
-const emailLength = 50;
+const password = ref("");
+const statusMessage = ref("");
+const status = ref(0)
 
 const db = "http://localhost:5000/booking";
-const userLink= `${import.meta.env.BASE_URL}api/users`;
+const matchedLink = `${import.meta.env.BASE_URL}api/users/matched`;
 // const userLink = "http://ip21at3.sit.kmutt.ac.th:8081/api/users";
 
-
-const userList = ref([]);
-const roles = ['admin','lecturer','student']
-
-const addSuccess = ref(undefined);
-const getStatus = ref(undefined);
-
-// validate name
-const validateNameisNotNull = ref(undefined);
-const validateNameLength = ref(undefined);
-const validateNameUnique = ref(false)
-const isNameNotUnique = () => {
-    validateNameUnique.value = userList.value.map((user) =>{return user.name.trim()}).includes(username.value.trim())
-}
-
-
 // validate email
-const validateEmailisNotNull = ref(undefined);
-const validateEmailLength = ref(undefined);
-const validateEmailUnique = ref(false)
-const validateEmailValid = ref(undefined);
-const valEmail = (input) => {
-  let valid =
-    /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-  if (input.match(valid)) {
-    return true;
-  } else {
-    return false;
-  }
-};
-const isEmailNotUnique  = () => {
-    validateEmailUnique.value = userList.value.map((user) => {return user.email.trim()}).includes(email.value.trim())
+const isEmailEmpty = ref(undefined);
+const validateEmailValid = () => {
+    isEmailEmpty.value = email.value == null || email.value == ''
 }
 
-// validate role
-const validateRoleisNotNull = ref(undefined);
+//validate password
+const isPasswordEmpty = ref(undefined);
+const validationPassword = () => {
+    isPasswordEmpty.value = password.value == null || password.value == ''
+}
+
+//show or hide password
+const showPassword = ref(false);
+const toggleShow = () => {
+    showPassword.value = !showPassword.value;
+};
 
 const cancel = () => {
-  name.value = "" ;
   email.value = "" ;
-  role.value = "" ;
   password.value = "" ;
-  confirmPassword.value = "" ;
-  goUserList()
+  goHome()
 };
 
-// submit
-const submitt = async () => {
-  // addSuccess.value = undefined;
-  if (
-    name.value !== "" &&
-    email.value !== "" &&
-    role.value !== "" 
-  ) {
-    if (name.value.length > nameLength) {
-      validateNameLength.value = false;
-      //alert('The number of characters name is exceeded.')
-    } else if (valEmail(email.value) == false) {
-      validateEmailValid.value = false;
-      //alert('Invalid email address!')
-    } else if (email.value.length > emailLength) {
-      validateEmailLength.value = false;
-      //alert('The number of characters in the email exceeded the limit.')
-
-    } else if (valEmail(email.value) == false) {
-      validateEmailValid.value = false;
-      //alert('Invalid email address!')
-    
-    }  else if (createUser()) {
-        name.value = "";
-        email.value = "";
-        role.value = "";
-        password.value = "" ;
-        confirmPassword.value = "" ;
-      // validateEmailisNotNull.value = undefined;
-      // validateNameisNotNull.value = undefined;
-      // validateRoleisNotNull.value = undefined;
-      // validateEmailLength.value = undefined;
-      // validateNameLength.value = undefined;
-      // validateEmailValid.value = undefined;
-      // addSuccess.value = true;
-    }
+const LoginUser = () => {
+    if (email.value == null || email.value == '' || password.value == null || password.value == '') {
+        isPasswordEmpty.value = email.value == null || email.value == ''
+        isPasswordEmpty.value = password.value == null || password.value == ''
     } else {
-    // alert('Please complete the information.')
-    if (name.value == "") {
-      validateNameisNotNull.value = false;
+        checkMatchTODB(email.value, password.value)
     }
-    if (email.value == "") {
-      validateEmailisNotNull.value = false;
-    }
-    if (role.value == "") {
-      validateRoleisNotNull.value = false;
-    }
-  }console.log(addSuccess.value);
 };
 
-// fetch create
-const isStatus = ref(undefined);
-const createUser = async () => {
-  let createStatus = undefined;
-  const res = await fetch(userLink, {
-    method: "POST",
-    headers: {
-      "content-type": "application/json",
-    },
-    body: JSON.stringify({
-      name: name.value,
-      email: email.value,
-      role: role.value
-    }),
-  });
-  if (res.status === 201) {
-    addSuccess.value = true;
-    createStatus = true;
-    isStatus.value = true;
-    setTimeout(() => (addSuccess.value = false), 5000);
-  } else {
-    createStatus = false;
-    isStatus.value = false;
-  }
-  return createStatus;
-};
+//check password 
+const checkMatchTODB = async () => {
+    console.log('Sign in..');
+    // console.log(email.value)
+    // console.log(password.value)
+    const res = await fetch(matchedLink, {
+        method: "POST",
+        headers: {
+            "content-type": "application/json",
+        },
+        body: JSON.stringify({ email: email.value, password: password.value })
+    });
 
-//GET user
-const getUser = async () => {
-  const res = await fetch(userLink);
-  if (res.status === 200) {
-    userList.value = await res.json();
-    getStatus.value = true;
-  } else {
-    getStatus.value = false;
-  }
-};
-
-const resGetUser = ref(undefined);
-//const countGetEvent=ref(0)
-
-// check every 10 second
-setInterval(async () => {
-  //console.log(countGetEvent.value++)
-  resGetUser.value = await fetch(userLink);
-  if (resGetUser.value.status === 200) {
-    userList.value = await resGetUser.value.json();
-    getStatus.value = true;
-  } else getStatus.value = false;
-}, 10000);
-
-onBeforeMount(async () => {
-  await getUser();
-});
+    console.log(res.status);
+    status.value = res.status
+    statusMessage.value = res.status == 200 ? 'Password Matches !' :
+        res.status == 401 ? 'Password Not Matches !' :
+        res.status == 404 ? 'A user with the specified email DOSE NOT exist !' : ''
+}
 
 </script>
 
 <template>
-  <div class="showUp container mx-auto justify-items-center">
+  <div class="showUp container mx-auto">
     <div
-      class="max-w-screen-md p-5 pb-7 mt-14 bg-gray-200 rounded-md shadow-xl mx-auto justify-center"
+      class="max-w-screen-md p-5 pb-7 mt-14 bg-gray-200 rounded-md shadow-xl mx-auto justify-items-center"
     >
       <div class="text-center">
         <h1 class="my-3 text-3xl font-semibold text-gray-700"> Sign in</h1>
@@ -186,12 +85,16 @@ onBeforeMount(async () => {
 
     <div>
         <!-- email -->
-        <div class="my-3 inline-flex px-4 w-full">
+        <div class="mx-auto my-3 inline-flex px-4 w-full">
           <div class="inline-block">
             <div class="px-3 w-full">
               <label for="email" class="font-medium text-sm text-gray-600"
                 >Email Address</label
               >
+              <span v-if="email == ''"
+                class="text-red-500 font-medium ml-1 text-sm" 
+              > enter your email !!
+              </span>
             </div>
             <div>
               <input
@@ -201,7 +104,7 @@ onBeforeMount(async () => {
                 placeholder="somchai.jai@mail.kmutt.ac.th"
                 required
                 :style="[
-                  validateEmailisNotNull == false ? 'border-color:red' : '',
+                  isEmailEmpty == false ? 'border-color:red' : '',
                 ]"
                 class="w-80 px-3 py-2 mx-2 placeholder-gray-300 border border-gray-400 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300"
               />
@@ -210,31 +113,57 @@ onBeforeMount(async () => {
           </div>
         
         <!-- Password -->
-        <div class="mx-7 my-3 inline-flex px-4 w-full">
+        <div class="mx-auto my-3 inline-flex px-4 w-full">
           <div class="inline-block m-auto mx-2">
             <div class="px-3 w-full">
               <label for="name" class="font-medium m-auto text-sm text-gray-600"
                 >Password</label
               >
-              <!-- <span
-                class="text-gray-300 font-medium ml-1 text-sm"
-                :style="[name.length > nameLength ? 'color:red' : '']"
+              <span v-if="password == ''"
+                class="text-red-500 font-medium ml-1 text-sm" 
               >
-                {{ name.length }}/{{ nameLength }} charecters
-              </span> -->
+                enter your password !!
+              </span>
             </div>
             <div>
+            <!-- open password -->
               <input
-                v-model="name"
+               v-if="showPassword"
+                v-model="password"
                 type="text"
-                name="name"
-                placeholder="Somchai Jaidee (AT-3)"
+                name="password"
                 required
                 :style="[
-                  validateNameisNotNull == false ? 'border-color:red' : '',
+                  isPasswordEmpty == false ? 'border-color:red' : '',
                 ]"
                 class="w-80 px-3 py-2 mx-2 placeholder-gray-300 border border-gray-400 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300"
               />
+
+            <!-- close password -->
+              <input
+               v-if="!showPassword"
+                v-model="password"
+                type="password"
+                name="password"
+                required
+                :style="[
+                  isPasswordEmpty == false ? 'border-color:red' : '',
+                ]"
+                class="w-80 px-3 py-2 mx-2 placeholder-gray-300 border border-gray-400 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300"
+              />
+
+              <!-- button to show/hide password -->
+               <button
+                    class="w-8 h-8 flex-1 px-2 py-2 ml-1 text-gray-600 border border-gray-300 rounded-md focus:ring-gray-500 focus:border-gray-900 sm:text-sm focus:outline-none"
+                    @click="toggleShow">
+                    <span class="icon is-small is-right">
+                        <i class="fas" 
+                            :class="{
+                                'fa-eye-slash': !showPassword,
+                                'fa-eye': showPassword,
+                        }"></i>
+                    </span>
+                </button>
             </div>
           </div>
         </div>
@@ -272,7 +201,7 @@ onBeforeMount(async () => {
 
           <div class="option flex m-auto w-full mt-10">
             <a
-              @click="submitt"
+              @click="checkMatchTODB"
               href="#"
               class="w-full text-center p-2 px-2 bg-gray-200 hover:bg-green-500 font-bold hover:text-white"
               >Yes</a
@@ -288,68 +217,49 @@ onBeforeMount(async () => {
       <!-- for alert -->
       <!-- warning alert-->
       <div class="alert-area">
-        <!-- <div v-if="validateNameisNotNull == false" class="alert text-sm"> -->
-          <!-- <span class="closebtn" @click="validateNameisNotNull = true">x</span> -->
-        <div v-if="name == ''" class="alert warning text-sm">
-          <strong class="block">Warning!</strong> Please input your name.
-        </div>
-
-        <!-- <div v-if="validateNameLength == false" class="alert text-sm"> -->
-          <!-- <span class="closebtn" @click="validateNameLength = true">x</span> -->
-        <div v-else-if="name.length > nameLength" class="alert warning text-sm">
-          <strong class="block">Warning!</strong> The number of characters name is
-          exceeded.
-        </div>
-
-        <div v-else-if="isNameNotUnique == true" class="alert warning text-sm">
-          <strong class="block">Warning!</strong> This name is already exists.
-        </div>
-
-        <!-- <div v-if="validateEmailisNotNull == false" class="alert text-sm"> -->
-          <!-- <span class="closebtn" @click="validateEmailisNotNull = true">x</span> -->
         <div v-if="email == ''" class="alert warning text-sm">
           <strong class="block">Warning!</strong> Please input your email.
         </div>
 
-        <!-- <div v-if="validateEmailValid == false" class="alert text-sm"> -->
-          <!-- <span class="closebtn" @click="validateEmailValid = true">x</span> -->
-        <div v-if="valEmail(email) == false" class="alert warning text-sm">
+         <div v-if="validateEmailValid == false" class="alert text-sm">
+           <span class="closebtn" @click="validateEmailValid = true">x</span> 
+         </div>
+
+        <!-- <div v-if="valEmail(email) == false" class="alert warning text-sm">
           <strong class="block">Warning!</strong> Invalid email address!.
-        </div>
+        </div> -->
 
-        <!-- <div v-if="validateEmailLength == false" class="alert text-sm"> -->
-          <!-- <span class="closebtn" @click="validateEmailLength = true">x</span> -->
-        <div v-if="email.length > emailLength " class="alert warning text-sm">
-          <strong class="block">Warning!</strong> The number of characters email
-          is exceeded.
-        </div>
-
-        <div v-else-if="isEmailNotUnique == true" class="alert warning text-sm">
-          <strong class="block">Warning!</strong> This email is already exists.
+        <div v-else-if="isEmailEmpty == true" class="alert warning text-sm">
+          <strong class="block">Warning!</strong> Please input your email.
         </div>
 
         <!-- <div v-if="validateRoleisNotNull == false" class="alert text-sm"> -->
           <!-- <span class="closebtn" @click="validateRoleisNotNull = true">x</span> -->
-        <div v-if="role == ''" class="alert warning text-sm">
-          <strong class="block">Warning!</strong> Please select role.
+        <div v-if="password == ''" class="alert warning text-sm">
+          <strong class="block">Warning!</strong> Please enter your password.
         </div>
 
         <!-- add success alert-->
-        <div v-if="addSuccess == true" class="alert success text-sm">
+        <!-- <div v-if="addSuccess == true" class="alert success text-sm">
           <span class="closebtn" @click="addSuccess = false">x</span>
           <strong class="block">Success!</strong> Create new user success.
-        </div>
+        </div> -->
 
         <!-- add error alert-->
-        <div v-if="addSuccess == false" class="alert text-sm">
+        <!-- <div v-if="addSuccess == false" class="alert text-sm">
           <span class="closebtn" @click="isStatus = true">x</span>
           <strong class="block">Error!</strong> Cannot create new user.
+        </div> -->
+
         </div>
-
-
       </div>
+        <footer 
+        v-if="status !== 0"
+        class="border-4 bg-amber-500 max-w-screen-md p-5 pb-7 mt-5 rounded-md shadow-xl mx-auto">
+            {{ statusMessage }}
+            <!-- hgfdsafgh -->
+        </footer>
     </div>
-  </div>
 
 </template>
 

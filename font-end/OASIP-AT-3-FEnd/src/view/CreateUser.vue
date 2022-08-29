@@ -31,10 +31,6 @@ const getStatus = ref(undefined);
 const validateNameisNotNull = ref(undefined);
 const validateNameLength = ref(undefined);
 const validateNameUnique = ref(false)
-const isNameNotUnique = () => {
-    validateNameUnique.value = userList.value.map((user) =>{return user.name.trim()}).includes(name.value.trim())
-}
-
 
 // validate email
 const validateEmailisNotNull = ref(undefined);
@@ -50,8 +46,12 @@ const valEmail = (input) => {
     return false;
   }
 };
-const isEmailNotUnique  = () => {
-    validateEmailUnique.value = userList.value.map((user) => {return user.email.trim()}).includes(email.value.trim())
+
+const checkUnique = () => {
+    validateNameUnique.value = userList.value.map((user) =>{return user.name.trim()}).includes(name.value.trim())
+    validateEmailUnique.value = userList.value.map((user) =>{return user.email.trim()}).includes(email.value.trim())
+    // console.log(validateNameUnique.value);
+    // console.log(validateEmailUnique.value);
 }
 
 // validate role
@@ -68,7 +68,13 @@ const cancel = () => {
 
 // submit
 const submitt = async () => {
-  // addSuccess.value = undefined;
+    validateEmailisNotNull.value = undefined;
+    validateNameisNotNull.value = undefined;
+    validateRoleisNotNull.value = undefined;
+    validateEmailLength.value = undefined;
+    validateNameLength.value = undefined;
+    validateEmailValid.value = undefined;
+    addSuccess.value = undefined;
   if (
     name.value !== "" &&
     email.value !== "" &&
@@ -90,27 +96,21 @@ const submitt = async () => {
       validateEmailValid.value = false;
       //alert('Invalid email address!')
     
-    } else if (isNameNotUnique(name.value) == false) {
-      validateEmailUnique.value = false;
-      //alert('The number of characters in the email exceeded the limit.')
-
-    } else if (isEmailNotUnique(email.value) == false) {
-      validateEmailUnique.value = false;
-      alert('This email address is already exists!')
-    
-    }  else if (createUser()) {
+    } 
+    else if (createUser()) {
         name.value = "";
         email.value = "";
         role.value = "";
         password.value = "";
         confirmPassword.value = "";
-      // validateEmailisNotNull.value = undefined;
-      // validateNameisNotNull.value = undefined;
-      // validateRoleisNotNull.value = undefined;
-      // validateEmailLength.value = undefined;
-      // validateNameLength.value = undefined;
-      // validateEmailValid.value = undefined;
-      // addSuccess.value = true;
+        validateEmailisNotNull.value = undefined;
+        validateNameisNotNull.value = undefined;
+        validateRoleisNotNull.value = undefined;
+        validateEmailLength.value = undefined;
+        validateNameLength.value = undefined;
+        validateEmailValid.value = undefined;
+        addSuccess.value = undefined;
+        // addSuccess.value = true;
     }
     } else {
     // alert('Please complete the information.')
@@ -124,6 +124,9 @@ const submitt = async () => {
       validateRoleisNotNull.value = false;
     }
   }
+  // goUserList()
+  console.log(addSuccess.value)
+  console.log(isStatus.value)
 };
 
 // fetch create
@@ -146,8 +149,10 @@ const createUser = async () => {
     addSuccess.value = true;
     createStatus = true;
     isStatus.value = true;
+    console.log(addSuccess.value)
     setTimeout(() => (addSuccess.value = false), 5000);
   } else {
+    addSuccess.value = false;
     createStatus = false;
     isStatus.value = false;
   }
@@ -163,11 +168,9 @@ const getUser = async () => {
   } else {
     getStatus.value = false;
   }
-};
+}
 
 const resGetUser = ref(undefined);
-//const countGetEvent=ref(0)
-
 // check every 10 second
 setInterval(async () => {
   //console.log(countGetEvent.value++)
@@ -341,6 +344,7 @@ onBeforeMount(async () => {
           <!-- submit button -->
           <div class="inline-flex m-auto p-5 w-60">
             <a
+              @click="checkUnique"
               href="#submit"
               class="font-bold text-gray-900 hover:text-white border border-gray-800 hover:border-green-400 hover:scale-110 focus:ring-1 focus:outline-none focus:ring-gray-300 rounded-lg text-sm text-center dark:border-gray-600 dark:text-gray-400 dark:hover:text-white dark:hover:bg-green-400 dark:focus:ring-gray-800 ml-10 p-5"
             >
@@ -398,7 +402,7 @@ onBeforeMount(async () => {
           exceeded.
         </div>
 
-        <div v-else-if="isNameNotUnique == true" class="alert warning text-sm">
+        <div v-else-if="validateNameUnique" class="alert warning text-sm">
           <strong class="block">Warning!</strong> This name is already exists.
         </div>
 
@@ -421,7 +425,7 @@ onBeforeMount(async () => {
           is exceeded.
         </div>
 
-        <div v-else-if="isEmailNotUnique == true" class="alert warning text-sm">
+        <div v-else-if="validateEmailUnique" class="alert warning text-sm">
           <strong class="block">Warning!</strong> This email is already exists.
         </div>
 
@@ -432,14 +436,14 @@ onBeforeMount(async () => {
         </div>
 
         <!-- add success alert-->
-        <div v-if="addSuccess == true" class="alert success text-sm">
+        <div v-else-if="createUser ==true" class="alert success text-sm">
           <span class="closebtn" @click="addSuccess = false">x</span>
           <strong class="block">Success!</strong> Create new user success.
         </div>
 
         <!-- add error alert-->
-        <div v-if="addSuccess == false" class="alert text-sm">
-          <span class="closebtn" @click="isStatus = true">x</span>
+        <div v-if="createUser == false" class="alert text-sm">
+          <span class="closebtn" @click="cancel">x</span>
           <strong class="block">Error!</strong> Cannot create new user.
         </div>
 

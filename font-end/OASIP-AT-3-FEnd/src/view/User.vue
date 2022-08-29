@@ -413,7 +413,7 @@ const calTime = (hour, minute, addTime) => {
     </div>
   </div>
 
-           <!-- for remove  -->
+  <!-- for remove  -->
   <div id="remove" class="overlay">
     <div class="popup2 h-96">
       <h2 class="mb-5 text-xl font-bold bg-white mx-auto w-fit">

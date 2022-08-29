@@ -1,7 +1,7 @@
 <script setup>
 import { useRouter } from "vue-router";
 const myRouter = useRouter();
-const goBooking = () => myRouter.push({ name: "Booking" });
+const goLogin = () => myRouter.push({ name: "Login" });
 </script>
 
 <template>
@@ -21,7 +21,7 @@ const goBooking = () => myRouter.push({ name: "Booking" });
       <div class="w-fit">
         <button
           class="hover:underline bg-white text-gray-800 font-bold rounded-full py-4 px-8 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out"
-          @click="goBooking"
+          @click="goLogin"
         >
           Start
         </button>
