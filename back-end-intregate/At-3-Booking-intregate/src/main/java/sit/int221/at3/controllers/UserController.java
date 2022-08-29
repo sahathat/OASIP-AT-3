@@ -34,6 +34,7 @@ public class UserController {
     }
 
     @CrossOrigin
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("")
     public User saveUser(@Valid @RequestBody UserModifyDto user){
         Argon2PasswordEncoder encoder = new Argon2PasswordEncoder(16,27,2,4096,10);
