@@ -21,6 +21,6 @@ public class UserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         String password = "ABC123";
         Argon2PasswordEncoder passwordEncoder = new Argon2PasswordEncoder();
-        return new User("Test@email.com", "$argon2id$v=19$m=4096,t=3,p=1$BijEalA2m84l/GXyAg8w9w$QJuvolKdWRQq4w2r3DbbafM+6M7JfV//f74pJD7zRLw",new ArrayList<>());
+        return new User("Test@email.com", "ABC123",new ArrayList<>());
     }
 }

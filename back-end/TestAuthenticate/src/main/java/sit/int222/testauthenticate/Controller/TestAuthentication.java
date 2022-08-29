@@ -32,10 +32,6 @@ public class TestAuthentication {
     @RequestMapping(value = "api/authenticate", method = RequestMethod.POST)
     public ResponseEntity<?> createToken(@RequestBody User user) throws Exception {
 
-//        Argon2PasswordEncoder argon2PasswordEncoder = new Argon2PasswordEncoder();
-
-//        user.setPassword(argon2PasswordEncoder.encode(user.getPassword()));
-
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(user.getEmail(),user.getPassword())
