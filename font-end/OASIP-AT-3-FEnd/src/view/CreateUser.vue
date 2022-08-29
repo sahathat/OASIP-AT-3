@@ -230,7 +230,7 @@ onBeforeMount(async () => {
           </div>
 
           <!-- role -->
-          <div class="mx-4 inline-block m-auto">
+          <div class="inline-block my-auto mr-9">
             <div class="px-3 w-full">
               <label for="category" class="text-sm font-medium text-gray-600"
                 > Role </label

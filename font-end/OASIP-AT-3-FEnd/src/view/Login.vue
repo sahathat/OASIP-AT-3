@@ -74,7 +74,7 @@ const checkMatchTODB = async () => {
 <template>
   <div class="showUp container mx-auto">
     <div
-      class="max-w-screen-md p-5 pb-7 mt-14 bg-gray-200 rounded-md shadow-xl mx-auto justify-items-center"
+      class="max-w-screen-sm p-5 pb-7 mt-10 bg-gray-200 rounded-md shadow-xl mx-auto justify-items-center"
     >
       <div class="text-center">
         <h1 class="my-3 text-3xl font-semibold text-gray-700"> Sign in</h1>
@@ -85,7 +85,7 @@ const checkMatchTODB = async () => {
 
     <div>
         <!-- email -->
-        <div class="mx-auto my-3 inline-flex px-4 w-full">
+        <div class="justify-center mx-auto mt-10 my-3 inline-flex px-4 w-full">
           <div class="inline-block">
             <div class="px-3 w-full">
               <label for="email" class="font-medium text-sm text-gray-600"
@@ -113,7 +113,7 @@ const checkMatchTODB = async () => {
           </div>
         
         <!-- Password -->
-        <div class="mx-auto my-3 inline-flex px-4 w-full">
+        <div class="justify-center ml-4 my-3 inline-flex px-4 w-full">
           <div class="inline-block m-auto mx-2">
             <div class="px-3 w-full">
               <label for="name" class="font-medium m-auto text-sm text-gray-600"
@@ -171,17 +171,18 @@ const checkMatchTODB = async () => {
 
          
           <!-- submit button -->
-          <div class="inline-flex m-auto p-5 w-60">
+          <div class="justify-center w-96 mx-auto">
+          <div class="mx-auto w-2/5 justify-center inline-flex p-5">
             <a
               href="#submit"
-              class="font-bold text-gray-900 hover:text-white border border-gray-800 hover:border-green-400 hover:scale-110 focus:ring-1 focus:outline-none focus:ring-gray-300 rounded-lg text-sm text-center dark:border-gray-600 dark:text-gray-400 dark:hover:text-white dark:hover:bg-green-400 dark:focus:ring-gray-800 ml-10 p-5"
+              class="font-bold text-gray-900 hover:text-white border border-gray-800 hover:border-green-400 hover:scale-110 focus:ring-1 focus:outline-none focus:ring-gray-300 rounded-lg text-sm text-center dark:border-gray-600 dark:text-gray-400 dark:hover:text-white dark:hover:bg-green-400 dark:focus:ring-gray-800 p-5"
             >
               Submit !
             </a>
           </div>
 
           <!-- cancel button -->
-          <div class="inline-flex -ml-20 p-5 w-60">
+          <div class="inline-flex p-5 mx-auto w-3/5justify-center">
             <button
               @click="cancel()"
               class="font-bold text-gray-900 hover:text-white border border-gray-800 hover:border-red-400 hover:scale-110 focus:ring-1 focus:outline-none focus:ring-gray-300 rounded-lg text-sm text-center dark:border-gray-600 dark:text-gray-400 dark:hover:text-white dark:hover:bg-red-400 dark:focus:ring-gray-800 p-5"
@@ -189,7 +190,7 @@ const checkMatchTODB = async () => {
               Cancel
             </button>
           </div>
-
+        </div>
       </div>
  
       <!-- for submit  -->
