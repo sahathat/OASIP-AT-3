@@ -15,17 +15,17 @@ const categoryLink = `${import.meta.env.BASE_URL}api/categories`;
 
 //GET event
 const getStatus = ref(undefined);
-const resGetEvent = ref(undefined);
+// const resGetEvent = ref(undefined);
 // get every 10 sec
-setInterval(async () => {
-  getStatus.value = undefined;
-  resGetEvent.value = await fetch(eventLink);
-  if (resGetEvent.value.status === 200) {
-    eventList.value = await resGetEvent.value.json();
-    getStatus.value = true;
-    filterReservationList.value = eventList.value;
-  } else getStatus.value = false;
-}, 10000);
+// setInterval(async () => {
+//   getStatus.value = undefined;
+//   resGetEvent.value = await fetch(eventLink);
+//   if (resGetEvent.value.status === 200) {
+//     eventList.value = await resGetEvent.value.json();
+//     getStatus.value = true;
+//     filterReservationList.value = eventList.value;
+//   } else getStatus.value = false;
+// }, 10000);
 
 // first get event
 const getEvent = async () => {

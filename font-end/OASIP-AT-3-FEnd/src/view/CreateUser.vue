@@ -57,6 +57,14 @@ const checkUnique = () => {
 // validate role
 const validateRoleisNotNull = ref(undefined);
 
+// validate password
+const validatePassword = () => {
+  if(password.value == ''|| password.value == null) { return false; }
+}
+const checkPassword = () => {
+  if(password.value !== confirmPassword.value) { return false; }
+}
+
 const cancel = () => {
   name.value = "" ;
   email.value = "" ;
@@ -68,13 +76,6 @@ const cancel = () => {
 
 // submit
 const submitt = async () => {
-    validateEmailisNotNull.value = undefined;
-    validateNameisNotNull.value = undefined;
-    validateRoleisNotNull.value = undefined;
-    validateEmailLength.value = undefined;
-    validateNameLength.value = undefined;
-    validateEmailValid.value = undefined;
-    addSuccess.value = undefined;
   if (
     name.value !== "" &&
     email.value !== "" &&
@@ -103,13 +104,13 @@ const submitt = async () => {
         role.value = "";
         password.value = "";
         confirmPassword.value = "";
-        validateEmailisNotNull.value = undefined;
-        validateNameisNotNull.value = undefined;
-        validateRoleisNotNull.value = undefined;
-        validateEmailLength.value = undefined;
-        validateNameLength.value = undefined;
-        validateEmailValid.value = undefined;
-        addSuccess.value = undefined;
+        // validateEmailisNotNull.value = undefined;
+        // validateNameisNotNull.value = undefined;
+        // validateRoleisNotNull.value = undefined;
+        // validateEmailLength.value = undefined;
+        // validateNameLength.value = undefined;
+        // validateEmailValid.value = undefined;
+        // addSuccess.value = undefined;
         // addSuccess.value = true;
     }
     } else {
@@ -435,14 +436,24 @@ onBeforeMount(async () => {
           <strong class="block">Warning!</strong> Please select role.
         </div>
 
+        <!-- password alert alert -->
+        <!-- <div v-if="validatePasswordValid == false" class="alert warning text-sm"> -->
+        <div v-if="(password == ''|| password == null) == true" class="alert warning text-sm">
+          <strong class="block">Warning!</strong> Please input valid password.
+        </div>
+        <!-- <div v-if="checkPassword == false" class="alert warning text-sm"> -->
+        <div v-if="(password !== confirmPassword) == true" class="alert warning text-sm">
+          <strong class="block">Warning!</strong> The password is not equal.
+        </div>
+
         <!-- add success alert-->
-        <div v-else-if="createUser ==true" class="alert success text-sm">
+        <div v-else-if="addSuccess == true" class="alert success text-sm">
           <span class="closebtn" @click="addSuccess = false">x</span>
           <strong class="block">Success!</strong> Create new user success.
         </div>
 
         <!-- add error alert-->
-        <div v-if="createUser == false" class="alert text-sm">
+        <div v-if="addSuccess == false" class="alert text-sm">
           <span class="closebtn" @click="cancel">x</span>
           <strong class="block">Error!</strong> Cannot create new user.
         </div>

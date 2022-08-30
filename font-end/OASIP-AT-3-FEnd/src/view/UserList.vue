@@ -40,7 +40,7 @@ onBeforeMount(async () => {
   <!-- for user table -->
   <div
     class="showUp bg-gray-200 md:inline-block mx-auto mt-10 p-4 rounded-r"
-    style="height: 510px; width: 85%"
+    style="height: 510px; width: 70%"
   >
       <p class="text-right mr-2 text-lg font-bold mb-3 text-gray-900">
           The total of users are <span class="text-xl text-red-500">{{ userList.length }}</span> users
