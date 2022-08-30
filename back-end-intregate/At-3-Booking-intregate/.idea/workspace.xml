@@ -5,14 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bcd42d8c-c71e-4a2d-bc91-c85d52172997" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/src/main/java/sit/int221/at3/dtos/category/CategoryUpdateDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sit/int221/at3/dtos/category/CategoryUpdateDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/sit/int221/at3/dtos/event/EventCreateDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sit/int221/at3/dtos/event/EventCreateDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/sit/int221/at3/dtos/event/EventUpdateDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sit/int221/at3/dtos/event/EventUpdateDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/sit/int221/at3/dtos/user/UserModifyDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sit/int221/at3/dtos/user/UserModifyDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/sit/int221/at3/entities/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sit/int221/at3/entities/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/sit/int221/at3/services/EventService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sit/int221/at3/services/EventService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/sit/int221/at3/services/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sit/int221/at3/services/UserService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../TestAuthenticate/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../TestAuthenticate/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../back-end-intregate/At-3-Booking-intregate/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../back-end-intregate/At-3-Booking-intregate/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -105,6 +98,7 @@
       <workItem from="1661782652594" duration="1030000" />
       <workItem from="1661783912919" duration="8000" />
       <workItem from="1661848083254" duration="2952000" />
+      <workItem from="1661851408340" duration="2648000" />
     </task>
     <servers />
   </component>
