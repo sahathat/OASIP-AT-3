@@ -12,7 +12,6 @@ import java.io.Serializable;
 import java.time.ZonedDateTime;
 
 @Getter
-@Setter
 public class EventCreateDto implements Serializable{
 
     private Integer id;
@@ -36,4 +35,32 @@ public class EventCreateDto implements Serializable{
 
     @Size(max=500, message = "note should have between 0 to 500 characters")
     private String eventNotes;
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public void setBookingName(String bookingName) {
+        this.bookingName = bookingName.trim();
+    }
+
+    public void setBookingEmail(String bookingEmail) {
+        this.bookingEmail = bookingEmail.trim();
+    }
+
+    public void setEventStartTime(ZonedDateTime eventStartTime) {
+        this.eventStartTime = eventStartTime;
+    }
+
+    public void setEventCategoryId(Integer eventCategoryId) {
+        this.eventCategoryId = eventCategoryId;
+    }
+
+    public void setEventDuration(Integer eventDuration) {
+        this.eventDuration = eventDuration;
+    }
+
+    public void setEventNotes(String eventNotes) {
+        this.eventNotes = eventNotes.trim();
+    }
 }

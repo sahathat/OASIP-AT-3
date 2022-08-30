@@ -53,8 +53,8 @@ public class UserService {
         }
 
         // if user input event by string " input it " that return "input it"
-        newUser.setName(newUser.getName().trim());
-        newUser.setEmail(newUser.getEmail().trim());
+//        newUser.setName(newUser.getName().trim());
+//        newUser.setEmail(newUser.getEmail().trim());
 
         // mapped event if created
         User user = modelMapper.map(newUser, User.class);
@@ -87,10 +87,6 @@ public class UserService {
     }
 
     public User updateUser(Integer id, UserModifyDto updateUser) {
-        // if user input event by string " input it " that return "input it"
-        updateUser.setName(updateUser.getName().trim());
-        updateUser.setEmail(updateUser.getEmail().trim());
-
         // check id if not found then throw exception.
         User user = userRepository.findById(id).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, id + " does not exist please find new id if exist."));

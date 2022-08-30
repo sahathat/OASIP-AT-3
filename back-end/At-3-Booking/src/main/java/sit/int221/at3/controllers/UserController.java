@@ -20,36 +20,41 @@ public class UserController {
     @Autowired
     UserService userService;
 
+    @CrossOrigin
     @GetMapping()
     public List<UserDto> getUserAll(
             @RequestParam(defaultValue = "name") String params){
         return userService.getUserAll(params);
     }
 
+    @CrossOrigin
     @GetMapping("/{id}")
     public UserDto getUserById(@PathVariable("id") Integer id){
         return userService.getUserById(id);
     }
 
+    @CrossOrigin
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
     public User saveUser(@Valid @RequestBody UserModifyDto user){
         Argon2PasswordEncoder encoder = new Argon2PasswordEncoder(16,27,2,4096,10);
         user.setPassword(encoder.encode(user.getPassword()));
-        System.out.println(user.getPassword());
         return userService.saveUser(user);
     }
 
+    @CrossOrigin
     @PutMapping("/{id}")
     public User updateUser(@PathVariable Integer id,@RequestBody UserModifyDto updateUser){
         return userService.updateUser(id,updateUser);
     }
 
+    @CrossOrigin
     @DeleteMapping("/{id}")
     public void deleteUser(@Valid @PathVariable Integer id){
         userService.deleteUser(id);
     }
 
+    @CrossOrigin
     @PostMapping("/matched")
     public boolean saveUser(@RequestBody UserLoginDto user) throws ResponseStatusException{
         Argon2PasswordEncoder encoder = new Argon2PasswordEncoder(16,27,2,4096,10);

@@ -1,5 +1,6 @@
 package sit.int221.at3.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Generated;
 import org.hibernate.annotations.GenerationTime;
 import org.hibernate.annotations.Type;
@@ -25,6 +26,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @JsonIgnore
     @Column(name = "password", nullable = false, length = 90)
     private String password;
 

@@ -11,7 +11,6 @@ import java.io.Serializable;
 import java.time.ZonedDateTime;
 
 @Getter
-@Setter
 public class EventUpdateDto implements Serializable {
     @JsonIgnore
     private Integer id;
@@ -22,4 +21,16 @@ public class EventUpdateDto implements Serializable {
 
     @Size(max=500, message = "note should have between 0 to 500 characters")
     private String eventNotes;
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public void setEventStartTime(ZonedDateTime eventStartTime) {
+        this.eventStartTime = eventStartTime;
+    }
+
+    public void setEventNotes(String eventNotes) {
+        this.eventNotes = eventNotes.trim();
+    }
 }

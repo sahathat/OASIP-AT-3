@@ -71,11 +71,11 @@ public class EventService {
     public Event save(EventCreateDto newEvent) {
 
         // if user input event by string " input it " that return "input it"
-        newEvent.setBookingName(newEvent.getBookingName().trim());
-        newEvent.setBookingEmail(newEvent.getBookingEmail().trim());
-        if (newEvent.getEventNotes() != null) {
-            newEvent.setEventNotes(newEvent.getEventNotes().trim());
-        }
+//        newEvent.setBookingName(newEvent.getBookingName().trim());
+//        newEvent.setBookingEmail(newEvent.getBookingEmail().trim());
+//        if (newEvent.getEventNotes() != null) {
+//            newEvent.setEventNotes(newEvent.getEventNotes().trim());
+//        }
 
         // find category id if new event are created
         Category category = categoryRepository.findById(newEvent.getEventCategoryId()).orElseThrow(
