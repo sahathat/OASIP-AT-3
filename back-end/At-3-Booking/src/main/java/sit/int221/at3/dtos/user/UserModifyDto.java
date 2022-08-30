@@ -13,7 +13,7 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 @Getter
-@Setter
+//@Setter
 public class UserModifyDto implements Serializable {
     @JsonIgnore
     private Integer id;
@@ -30,4 +30,24 @@ public class UserModifyDto implements Serializable {
     private String password;
 
     private Role role;
+
+    public void setId(Integer id){
+        this.id = id;
+    }
+
+    public void setName(String name){
+        this.name = name.trim();
+    }
+
+    public void setEmail(String email){
+        this.email = email.trim();
+    }
+
+    public void setPassword(String password){
+        this.password = password;
+    }
+
+    public void setRole(Role role){
+        this.role = role;
+    }
 }

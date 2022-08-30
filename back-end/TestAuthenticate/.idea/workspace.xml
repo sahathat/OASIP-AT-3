@@ -6,9 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="028aec62-0507-45f7-a6a0-5ddc8e375862" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/sit/int222/testauthenticate/Controller/TestAuthentication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sit/int222/testauthenticate/Controller/TestAuthentication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/sit/int222/testauthenticate/Service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sit/int222/testauthenticate/Service/UserService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/sit/int222/testauthenticate/config/SecurityConfigurer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sit/int222/testauthenticate/config/SecurityConfigurer.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -95,6 +92,8 @@
       <workItem from="1661688754623" duration="1567000" />
       <workItem from="1661690363746" duration="7569000" />
       <workItem from="1661775766390" duration="6740000" />
+      <workItem from="1661783925912" duration="161000" />
+      <workItem from="1661848028263" duration="47000" />
     </task>
     <servers />
   </component>
