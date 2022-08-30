@@ -10,7 +10,6 @@ import javax.validation.constraints.*;
 import java.time.ZonedDateTime;
 
 @Getter
-@Setter
 public class CategoryUpdateDto {
     @JsonIgnore
     private Integer id;
@@ -24,4 +23,20 @@ public class CategoryUpdateDto {
     @Min(value = 1,message = "time duration can set at least 1")
     @Max(value = 480,message = "time duration can set at most 480")
     private Integer eventCategoryDuration;
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public void setEventCategoryName(String eventCategoryName) {
+        this.eventCategoryName = eventCategoryName.trim();
+    }
+
+    public void setEventCategoryDescription(String eventCategoryDescription) {
+        this.eventCategoryDescription = eventCategoryDescription.trim();
+    }
+
+    public void setEventCategoryDuration(Integer eventCategoryDuration) {
+        this.eventCategoryDuration = eventCategoryDuration;
+    }
 }

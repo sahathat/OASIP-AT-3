@@ -4,7 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bcd42d8c-c71e-4a2d-bc91-c85d52172997" name="Changes" comment="" />
+    <list default="true" id="bcd42d8c-c71e-4a2d-bc91-c85d52172997" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/src/main/java/sit/int221/at3/dtos/category/CategoryUpdateDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sit/int221/at3/dtos/category/CategoryUpdateDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/sit/int221/at3/dtos/event/EventCreateDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sit/int221/at3/dtos/event/EventCreateDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/sit/int221/at3/dtos/event/EventUpdateDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sit/int221/at3/dtos/event/EventUpdateDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/sit/int221/at3/dtos/user/UserModifyDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sit/int221/at3/dtos/user/UserModifyDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/sit/int221/at3/entities/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sit/int221/at3/entities/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/sit/int221/at3/services/EventService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sit/int221/at3/services/EventService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/sit/int221/at3/services/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sit/int221/at3/services/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TestAuthenticate/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../TestAuthenticate/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -58,7 +67,7 @@
   </component>
   <component name="RunManager">
     <configuration name="At3BookingApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
-      <module name="At-3-Booking-intregate" />
+      <module name="At-3-Booking" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="sit.int221.at3.*" />
@@ -66,7 +75,6 @@
         </pattern>
       </extension>
       <option name="SPRING_BOOT_MAIN_CLASS" value="sit.int221.at3.At3BookingApplication" />
-      <option name="ALTERNATIVE_JRE_PATH" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -91,10 +99,12 @@
       <workItem from="1661495384709" duration="2501000" />
       <workItem from="1661498053491" duration="9207000" />
       <workItem from="1661507713268" duration="137000" />
-      <workItem from="1661508856039" duration="85000" />
-      <workItem from="1661578589600" duration="14000" />
-      <workItem from="1661582101593" duration="816000" />
-      <workItem from="1661688740016" duration="9000" />
+      <workItem from="1661507979394" duration="115000" />
+      <workItem from="1661508847231" duration="10000" />
+      <workItem from="1661578968068" duration="3910000" />
+      <workItem from="1661782652594" duration="1030000" />
+      <workItem from="1661783912919" duration="8000" />
+      <workItem from="1661848083254" duration="2952000" />
     </task>
     <servers />
   </component>
