@@ -12,6 +12,11 @@ import java.util.ArrayList;
 public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return new User("Test@email.com","ABC123",new ArrayList<>());
+        if ("Test@gmail.com".equals(email)) {
+            return new User("Test@gmail.com", "$2a$10$slYQmyNdGzTn7ZLBXBChFOC9f6kFjAqPhccnP6DxlWXx2lPk1C3G6",
+                    new ArrayList<>());
+        } else {
+            throw new UsernameNotFoundException("Email not found with username: " + email);
+        }
     }
 }

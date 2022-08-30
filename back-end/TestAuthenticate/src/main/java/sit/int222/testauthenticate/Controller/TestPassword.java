@@ -1,19 +1,10 @@
 package sit.int222.testauthenticate.Controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import sit.int222.testauthenticate.Service.UserService;
-import sit.int222.testauthenticate.dto.Response;
 import sit.int222.testauthenticate.dto.User;
-import sit.int222.testauthenticate.utils.JwtUtil;
 
 @RestController
 @RequestMapping("/api")
@@ -39,10 +30,5 @@ public class TestPassword {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "password does not matched");
         }
         return "yay!!";
-    }
-
-    @RequestMapping(value = "/hello")
-    public String hello(){
-        return "hello";
     }
 }
