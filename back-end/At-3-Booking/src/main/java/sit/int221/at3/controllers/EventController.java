@@ -21,7 +21,6 @@ public class EventController {
     private EventService eventService;
 
     // /api/events [GET]
-    @CrossOrigin
     @GetMapping("")
     public List<EventDto> getEventAll(
             @RequestParam(defaultValue = "eventStartTime") String params) {
@@ -29,39 +28,33 @@ public class EventController {
     }
 
     // /api/events/{id} [GET]
-    @CrossOrigin
     @GetMapping("/{id}")
     public EventDto getEventById (@PathVariable Integer id) {
         return eventService.getEventById(id);
     }
 
-    @CrossOrigin
     @GetMapping("/upcoming")
     public List<EventDto> getEventUpcoming(){
         return eventService.getEventUpcoming();
     }
 
-    @CrossOrigin
     @GetMapping("/past")
     public List<EventDto> getEventPast(){
         return eventService.getEventPast();
     }
 
-    @CrossOrigin
     @GetMapping("/day/{date}")
     public List<EventDto> getEventDay(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
         System.out.println(date);
         return eventService.getEventDay(date);
     }
 
-    @CrossOrigin
     @GetMapping("/day")
     public List<EventDto> getEventToday(){
         return eventService.getEventToday();
     }
 
     // /api/events [POST]
-    @CrossOrigin
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
     public Event create(@Valid @RequestBody EventCreateDto newEvent) {
@@ -69,14 +62,12 @@ public class EventController {
     }
 
     // /api/events/{id} [PUT]
-    @CrossOrigin
     @PutMapping("/{id}")
     public Event putUpdate(@PathVariable("id") Integer id,@Valid @RequestBody EventUpdateDto event) {
         return eventService.update(id, event);
     }
 
     // /api/events/{id} [DELETE]
-    @CrossOrigin
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Integer id) {
         eventService.delete(id);
