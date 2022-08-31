@@ -156,6 +156,7 @@ const cancel = () => {
   editName.value = '';
   editEmail.value = '';
   editRole.value = '';
+  isEdit.value = false;
 };
 
 const edit =async()=>{
@@ -246,7 +247,7 @@ const calTime = (hour, minute, addTime) => {
           <div class="pr-2 font-semibold flex m-auto text-gray-400"> Username :</div>
           <div
             v-if="isEdit == false"
-            class="overflow-hidden overflow-x-scroll border-2 rounded-md p-1.5 pt-2.5 font-normal bg-white flex w-2/5 h-12"
+            class="overflow-hidden overflow-x-scroll border-2 rounded-md p-1.5 pt-2.5 font-normal bg-white flex w-2/5"
           >
             {{ name }}
           </div>
@@ -261,7 +262,7 @@ const calTime = (hour, minute, addTime) => {
           <div class="pr-2 font-semibold flex m-auto text-gray-400"> Role :</div>
           <div
             v-if="isEdit == false"
-            class="overflow-hidden overflow-x-scroll border-2 rounded-md p-1.5 pt-2.5 justify-center font-normal bg-amber-400 flex w-1/4 h-12"
+            class="overflow-hidden overflow-x-scroll border-2 rounded-md p-1.5 pt-2.5 justify-center font-normal m-auto -ml-2 bg-amber-400 flex w-1/4 h-12"
           >
             {{ role }}
           </div>
@@ -286,18 +287,18 @@ const calTime = (hour, minute, addTime) => {
       
       <!-- E-mail -->
         <div class="w-4/5 inline-flex">
-          <div class="pr-2 font-semibold flex my-auto ml-28 mr-4 text-gray-400">
+          <div class="pr-2 font-semibold flex my-auto ml-28 mr-4 w-1/5 text-gray-400">
             E-mail :
           </div>
           <div
             v-if="isEdit == false"
-            class="overflow-hidden overflow-x-scroll border-2 rounded-md p-1.5 pt-2.5 font-normal bg-white flex w-2/4 h-12 "
+            class="overflow-hidden overflow-x-scroll border-2 rounded-md p-1.5 pt-2.5 font-normal bg-white flex w-full h-12 "
           >
             {{ email }}
           </div>
           <div
             v-if="isEdit == true"
-            class="edit-color showUp border-2 rounded-md p-1.5 font-normal bg-white inline-block w-2/4 h-12"
+            class="edit-color showUp overflow-hidden overflow-x-scroll border-2 rounded-md p-1.5 pt-2.5 font-normal bg-white flex w-full h-12 "
           >
             <input type="text" class="w-full h-full" v-model="editEmail" />
           </div>

@@ -40,7 +40,7 @@ onBeforeMount(async () => {
   <!-- for user table -->
   <div
     class="showUp bg-gray-200 md:inline-block mx-auto mt-10 p-4 rounded-r"
-    style="height: 510px; width: 70%"
+    style="height: 510px; width: 80%"
   >
       <p class="text-right mr-2 text-lg font-bold mb-3 text-gray-900">
           The total of users are <span class="text-xl text-red-500">{{ userList.length }}</span> users
@@ -62,7 +62,7 @@ onBeforeMount(async () => {
         >
           <tr>
             <th scope="col" class="px-6 py-3">Username</th>
-            <th scope="col" class="px-3 py-3">E-mail</th>
+            <th scope="col" class="px-3 py-3 w-2/5">E-mail</th>
             <th scope="col" class="px-6 py-3">Role</th>
             <th scope="col" class="px-6 py-3">more detail</th>
           </tr>
@@ -77,7 +77,8 @@ onBeforeMount(async () => {
               scope="row"
               class="px-6 py-4 text-gray-900 font-bold whitespace-nowrap text-ellipsis overflow-hidden"
             >
-              {{ user.name }}
+              {{ user.name.substring(0,20) }}
+              {{ user.name.substring(21,40) }}
             </th>
             <td class="px-1 py-4">
               <div class="block m-auto">

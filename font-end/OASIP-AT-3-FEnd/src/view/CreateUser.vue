@@ -13,6 +13,9 @@ const role = ref("");
 const password = ref("");
 const confirmPassword = ref("");
 
+const cornfirmPasswordLength = 14 ;
+const passwordLength = 14 ;
+
 const nameLength = 100;
 const emailLength = 50;
 
@@ -125,12 +128,14 @@ const submitt = async () => {
       validateRoleisNotNull.value = false;
     }
   }
-  // goUserList()
+  goUserList()
   console.log(addSuccess.value)
   console.log(isStatus.value)
 };
 
 // fetch create
+const statusMessage = ref("");
+const status = ref(0)
 const isStatus = ref(undefined);
 const createUser = async () => {
   let createStatus = undefined;
@@ -146,13 +151,17 @@ const createUser = async () => {
       password:password.value
     }),
   });
+  
   if (res.status === 201) {
+    status.value = 201
     addSuccess.value = true;
     createStatus = true;
+    statusMessage.value = 'Create new user success'
     isStatus.value = true;
     console.log(addSuccess.value)
     setTimeout(() => (addSuccess.value = false), 5000);
   } else {
+    status.value = res.status
     addSuccess.value = false;
     createStatus = false;
     isStatus.value = false;
@@ -296,19 +305,18 @@ onBeforeMount(async () => {
               <label for="name" class="font-medium m-auto text-sm text-gray-600"
                 >Password</label
               >
-              <!-- <span
+              <span
                 class="text-gray-300 font-medium ml-1 text-sm"
-                :style="[name.length > nameLength ? 'color:red' : '']"
+                :style="[password.length > passwordLength ? 'color:red' : '']"
               >
-                {{ name.length }}/{{ nameLength }} charecters
-              </span> -->
+                {{ password.length }}/{{ passwordLength }} charecters
+              </span>
             </div>
             <div>
               <input
                 v-model="password"
-                type="text"
+                type="password"
                 name="name"
-                placeholder="Somchai Jaidee (AT-3)"
                 required
                 class="w-80 px-3 py-2 mx-2 placeholder-gray-300 border border-gray-400 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300"
               />
@@ -321,19 +329,18 @@ onBeforeMount(async () => {
               <label for="name" class="font-medium m-auto text-sm text-gray-600">
                 Confirm Password
               </label>
-              <!-- <span
+              <span
                 class="text-gray-300 font-medium ml-1 text-sm"
-                :style="[name.length > nameLength ? 'color:red' : '']"
+                :style="[confirmPassword.length > cornfirmPasswordLength ? 'color:red' : '']"
               >
-                {{ name.length }}/{{ nameLength }} charecters
-              </span> -->
+                {{ confirmPassword.length }}/{{ cornfirmPasswordLength }} charecters
+              </span>
             </div>
             <div>
               <input
                 v-model="confirmPassword"
-                type="text"
+                type="password"
                 name="name"
-                placeholder="Somchai Jaidee (AT-3)"
                 required
                 class="w-80 px-3 py-2 mx-2 placeholder-gray-300 border border-gray-400 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300"
               />
@@ -443,17 +450,21 @@ onBeforeMount(async () => {
         </div>
         <!-- <div v-if="checkPassword == false" class="alert warning text-sm"> -->
         <div v-if="(password !== confirmPassword) == true" class="alert warning text-sm">
-          <strong class="block">Warning!</strong> The password is not equal.
+          <strong class="block">Warning!</strong> The password DOES NOT match' and let the user enter confirm password again.
+        </div>
+
+        <div v-if="password.length < 8 || password.length > 14" class="alert warning text-sm">
+          <strong class="block">Warning!</strong> The password must have between 8 and 14 characters.
         </div>
 
         <!-- add success alert-->
-        <div v-else-if="addSuccess == true" class="alert success text-sm">
-          <span class="closebtn" @click="addSuccess = false">x</span>
-          <strong class="block">Success!</strong> Create new user success.
+        <div v-else-if="status == 201" class="alert success text-sm">
+          <span class="closebtn" @click="goUserList">x</span>
+          <strong class="block">Success!</strong> create new account success.
         </div>
 
         <!-- add error alert-->
-        <div v-if="addSuccess == false" class="alert text-sm">
+        <div v-if="status !== 201 && status !== 0" class="alert text-sm">
           <span class="closebtn" @click="cancel">x</span>
           <strong class="block">Error!</strong> Cannot create new user.
         </div>
