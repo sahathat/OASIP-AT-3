@@ -38,7 +38,7 @@ services:
       - oasipdbbooking
       - backend1
     ports:
-      - "80:80"
+      - "3000:80"
 
   reverse-proxy:
     image: nginx:1.17.10
@@ -52,5 +52,5 @@ services:
       - ./reverse-proxy/ssl/www-at3.crt:/etc/ssl/certs/www-at3.crt
       - ./reverse-proxy/ssl/privatekey.key:/etc/ssl/private/privatekey.key
     ports:
-      - "8080:80"
+      - "80:80"
       - "443:443"
