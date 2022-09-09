@@ -49,19 +49,19 @@ public class UserController {
         userService.deleteUser(id);
     }
 
-    @PostMapping("/matched")
-    public boolean saveUser(@RequestBody UserLoginDto user) throws ResponseStatusException{
-        Argon2PasswordEncoder encoder = new Argon2PasswordEncoder(16,27,2,4096,10);
-
-        User userbyEmail = userService.findUserByEmail(user);
-
-        // check if password that find by this email had encoded is match by raw password
-        boolean isMatched = encoder.matches(user.getPassword(), userbyEmail.getPassword());
-
-        if(!isMatched){
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "email or password is not matched");
-        }
-
-        return isMatched;
-    }
+//    @PostMapping("/matched")
+//    public boolean saveUser(@RequestBody UserLoginDto user) throws ResponseStatusException{
+//        Argon2PasswordEncoder encoder = new Argon2PasswordEncoder(16,27,2,4096,10);
+//
+//        User userbyEmail = userService.findUserByEmail(user);
+//
+//        // check if password that find by this email had encoded is match by raw password
+//        boolean isMatched = encoder.matches(user.getPassword(), userbyEmail.getPassword());
+//
+//        if(!isMatched){
+//            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "email or password is not matched");
+//        }
+//
+//        return isMatched;
+//    }
 }
