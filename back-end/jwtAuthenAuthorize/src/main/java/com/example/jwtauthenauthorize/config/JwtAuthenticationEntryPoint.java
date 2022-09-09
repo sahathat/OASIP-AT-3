@@ -54,5 +54,4 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 			response.getOutputStream().write(body);
 		}
 	}
-
 }
