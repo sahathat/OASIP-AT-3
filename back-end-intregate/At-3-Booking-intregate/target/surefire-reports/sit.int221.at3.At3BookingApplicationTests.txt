@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: sit.int221.at3.At3BookingApplicationTests
--------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 5.765 s - in sit.int221.at3.At3BookingApplicationTests
