@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import sit.int221.at3.dtos.user.JwtResponse;
+import sit.int221.at3.dtos.user.UserDto;
 import sit.int221.at3.dtos.user.UserLoginDto;
 import sit.int221.at3.dtos.user.UserModifyDto;
 import sit.int221.at3.entities.User;
@@ -21,10 +22,10 @@ import sit.int221.at3.utils.JwtUtil;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
-@CrossOrigin
 public class JwtRequestController {
 
     @Autowired
