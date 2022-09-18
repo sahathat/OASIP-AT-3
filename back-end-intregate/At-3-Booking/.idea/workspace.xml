@@ -19,6 +19,11 @@
         <entry key="com.haulmont.jpb.jpaStructure" value="true" />
       </map>
     </option>
+    <option name="myId2Visible">
+      <map>
+        <entry key="com.haulmont.jpb.jpaStructure" value="true" />
+      </map>
+    </option>
   </component>
   <component name="ProjectId" id="2EvLjre7z9awfAF2r0pJio9974T" />
   <component name="ProjectViewState">
@@ -29,6 +34,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../At-3-Intregate/At-3-Booking" />
   </component>
   <component name="RunManager">
     <configuration name="At3BookingApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
@@ -59,6 +65,7 @@
       <option name="presentableId" value="Default" />
       <updated>1663471261454</updated>
       <workItem from="1663471266236" duration="18000" />
+      <workItem from="1663516793172" duration="72000" />
     </task>
     <servers />
   </component>
