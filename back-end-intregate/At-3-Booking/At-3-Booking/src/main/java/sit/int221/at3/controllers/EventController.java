@@ -16,7 +16,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/events")
-@CrossOrigin
 public class EventController {
     @Autowired
     private EventService eventService;
