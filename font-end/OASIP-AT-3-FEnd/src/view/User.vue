@@ -1,26 +1,28 @@
 <script setup>
 import { useRoute, useRouter } from "vue-router";
-import { onBeforeMount, ref } from "vue";
+import { onBeforeMount, ref , computed} from "vue";
 
 const { params } = useRoute();
 
 const db = "http://localhost:5000/booking";
-const eventLink = `${import.meta.env.BASE_URL}api/events`;
-// const eventLink = "http://localhost:8443/api/events";
+const userLink = `${import.meta.env.BASE_URL}api/users`;
+// const userLink = "http://localhost:8443/api/users";
 
+// ขาดเช็คชื่อ-เมล์ซ้ำ
 const id = params.id;
 const name = ref("");
-const eMail = ref("");
-const category = ref("");
-const startDate = ref("");
-const startTime = ref("");
-const duration = ref("");
-const noteT = ref("");
-const detailBooking = ref({});
-const eventList=ref([])
+const email = ref("");
+const role = ref("");
+const createdOn = ref("");
+const updatedOn = ref(undefined);
+const userDetail = ref({});
+const userList=ref([])
+
 const isNotNull = ref(false);
 const myRouoter = useRouter();
-const goReservation = () => myRouoter.push({ name: "ReservationList" });
+const goUserList = () => myRouoter.push({ name: "UserList" });
+
+const roles = ['admin','lecturer','student']
 
 // timer
 const day = ref();
@@ -60,38 +62,37 @@ setInterval(clock, 1000);
 
 // get every 10 sec
 const getStatus=ref(undefined)
-const resGetEvent=ref(undefined)
+const resGetUser=ref(undefined)
 
 setInterval(async ()=>{
-  const key = localStorage.getItem('key')
-  resGetEvent.value= await fetch(eventLink,{
-    method: 'GET',
+  resGetUser.value= await fetch(userLink, {
+    method: "GET",
     headers: {
             "Authorization":'Bearer ' + key ,
             "Accept": 'application/json',
             "content-type": "application/json",
         }
   })
-  if (resGetEvent.value.status === 200) {
-    eventList.value = await resGetEvent.value.json();
+  if (resGetUser.value.status === 200) {
+    userList.value = await resGetUser.value.json();
     getStatus.value = true;
   } else getStatus.value = false;
 },10000)
 
-// first get event
-const getEvent =async()=>{
+// first get user
+const getUserList =async()=>{
   const key = localStorage.getItem('key')
-
- resGetEvent.value= await fetch(eventLink,{
-    method: 'GET',
+  // console.log(key)
+  resGetUser.value= await fetch(userLink, {
+    method: "GET",
     headers: {
             "Authorization":'Bearer ' + key ,
             "Accept": 'application/json',
             "content-type": "application/json",
         }
   })
-  if (resGetEvent.value.status === 200) {
-    eventList.value = await resGetEvent.value.json();
+  if (resGetUser.value.status === 200) {
+    userList.value = await resGetUser.value.json();
     getStatus.value = true;
   } else getStatus.value = false;       
 }
@@ -99,9 +100,9 @@ const getEvent =async()=>{
 // get value
 const getDetail = async () => {
   const key = localStorage.getItem('key')
-
-  const res = await fetch(`${eventLink}/${params.id}`,{
-    method: 'GET',
+  // console.log(key)
+  const res = await fetch(`${userLink}/${params.id}`, {
+    method: "GET",
     headers: {
             "Authorization":'Bearer ' + key ,
             "Accept": 'application/json',
@@ -109,69 +110,93 @@ const getDetail = async () => {
         }
   });
   if (res.status === 200) {
-    detailBooking.value = await res.json();
-    //console.log(detailBooking.value);
-
-    //console.log(Date.parse("2022-06-01T15:00:00+07:00"));
-    if (detailBooking.value.id == id) {
+    userDetail.value = await res.json();
+    //console.log(userDetail.value);
+    if (userDetail.value.id == id) {
       isNotNull.value = true;
-      name.value = detailBooking.value.bookingName;
-      eMail.value = detailBooking.value.bookingEmail;
-      category.value = detailBooking.value.categoryName;
-      startDate.value = detailBooking.value.eventStartTime.substring(0, 10);
-      startTime.value = detailBooking.value.eventStartTime.substring(11, 16);
-      duration.value = detailBooking.value.eventDuration;
-      noteT.value = detailBooking.value.eventNotes;
+      name.value = userDetail.value.name;
+      email.value = userDetail.value.email;
+      role.value = userDetail.value.role
+      createdOn.value = userDetail.value.createdOn;
+      updatedOn.value = userDetail.value.updatedOn;
+      console.log(userDetail.value)
     }
   }
 };
 
+//format date
+const formatDate = (datetime) => { 
+  const date = new Date(datetime)
+  const month = date.getMonth() + 1
+  if(month<10){ return `${date.getDate()}-0${month}-${date.getFullYear()}` }
+  else{ return `${date.getDate()}-${month}-${date.getFullYear()}` }
+}
+
+
+//format time
+const formatTime = (datetime) => { 
+  const time = new Date(datetime)
+  const hour = computed(() => {
+    // console.log(time.getHours());
+    if (time.getHours() < 10) return "0" + time.getHours();
+    else return time.getHours();
+  });
+  const minute = computed(() => {
+    // console.log(time.getMinutes());
+    if (time.getMinutes() < 10) return "0" + time.getMinutes();
+    else return time.getMinutes();
+  });
+  return `${hour.value}.${minute.value}` 
+}
+
+
 onBeforeMount(async()=>{
-       await  getEvent()
+       await getUserList()
        await getDetail()
 });
 
 //remove information
-const removeInfo = async () => {
+const removeUser = async () => {
   const key = localStorage.getItem('key')
-  const res = await fetch(`${eventLink}/${id}`, { 
+
+  const res = await fetch(`${userLink}/${id}`, { 
     method: "DELETE",
     headers: {
             "Authorization":'Bearer ' + key ,
             "Accept": 'application/json',
             "content-type": "application/json",
-        }
-  })
+    }
+  });
   if (res.status === 200) {
     console.log("delete successfully");
-    goReservation();
+    goUserList();
   } else console.log("error");
 };
 
 // assign to edit attribute
 const isEdit = ref(false);
-const editStartTime = ref("");
-const editStartDate = ref("");
-const editNote = ref("");
+const editName = ref("");
+const editEmail = ref("");
+const editRole = ref("");
 
 const editInfo = () => {
   isEdit.value = true;
-  editStartTime.value = startTime.value;
-  editStartDate.value = startDate.value;
-  editNote.value = noteT.value;
+  editName.value = name.value;
+  editEmail.value = email.value;
+  editRole.value = role.value;
 };
 
 const cancel = () => {
   isEdit.value = false;
-  editStartTime.value = "";
-  editStartDate.value = "";
+  editName.value = '';
+  editEmail.value = '';
+  editRole.value = '';
+  isEdit.value = false;
 };
 
 const edit =async()=>{
-      const key = localStorage.getItem('key')
-
        let canEdit=undefined
-        const res = await fetch(`${eventLink}/${id}`, {
+        const res = await fetch(`${userLink}/${id}`, {
         method: "PUT",
         headers: {
             "Authorization":'Bearer ' + key ,
@@ -179,15 +204,16 @@ const edit =async()=>{
             "content-type": "application/json",
         },
         body: JSON.stringify({
-          eventStartTime: `${editStartDate.value}T${editStartTime.value}:00+07:00`,
-          eventNotes: editNote.value,
+          name:editName.value,
+          email:editEmail.value,
+          role:editRole.value,
         }),
       });
-      if (res.status == 200) {
-        let editDetailNote = await res.json();
-        startDate.value = editDetailNote.eventStartTime.substring(0, 10);
-        startTime.value = editDetailNote.eventStartTime.substring(11, 16);
-        noteT.value = editDetailNote.eventNotes;
+      if (res.status === 200) {
+        let editUserDetail = await res.json();
+        name.value = editUserDetail.name;
+        email.value = editUserDetail.email;
+        role.value = editUserDetail.role;
         isEdit.value = false;
         canEdit=true
         editSuccess.value=true
@@ -200,105 +226,12 @@ const edit =async()=>{
 
 // submit
 const isInput=ref(undefined)
-const isPast =ref(undefined)
-const isOverlap =ref(undefined)
 const editSuccess=ref(undefined)
 
 const submitt = async () => {
-       isInput.value=undefined
-       isPast.value=undefined
-       isOverlap.value=undefined
-       editSuccess.value=undefined
-  if (editStartDate.value !== "" && editStartTime.value !== "") {
-    if (//สำหรับเลือกวันในอนาคต
-      Date.parse(`${editStartDate.value}T${editStartTime.value}:00+07:00`) >
-      Date.parse(`${date.value}T${time.value}:00+07:00`)
-       ) {
-           if(overlap()){
-              isOverlap.value=true
-      } else if(edit()){
-             cancel()
-             setTimeout(()=>editSuccess.value=false,5000)
-      }
-    } else isPast.value=true//alert(`Can't select past date and time `);
-  }else isInput.value=false
-};
-
-// check overlap
-const betweenDateWarning=ref(undefined)
-
-const overlap = () => {
-  betweenDateWarning.value = undefined;
-  let isOverlap = undefined;
-for (let check of eventList.value) {
-    if (check.categoryName == category.value&&check.id!==id) {
-//       console.log(Date.parse(`${editStartDate.value}T${editStartTime.value}:00+07:00`))
-//       console.log(Date.parse(check.eventStartTime))
-//       console.log(Date.parse(`${check.eventStartTime.substring(0,10)}T${calTime(parseInt(check.eventStartTime.substring(11,13)) ,parseInt(check.eventStartTime.substring(14,16)),check.eventDuration)}:00+07:00`))
-//       console.log('cut')
-
-      if (
-        Date.parse(`${editStartDate.value}T${editStartTime.value}:00+07:00`) >=
-        Date.parse(check.eventStartTime) &&
-        Date.parse(`${editStartDate.value}T${editStartTime.value}:00+07:00`) <=
-        Date.parse(
-          `${check.eventStartTime.substring(0, 10)}T${calTime(
-            parseInt(check.eventStartTime.substring(11, 13)),
-            parseInt(check.eventStartTime.substring(14, 16)),
-            check.eventDuration
-          )}:00+07:00`
-        )
-      ) {
-        isOverlap = true;
-        betweenDateWarning.value = String(
-          `Cannot select during ${check.eventStartTime.substring(
-            0,
-            10
-          )} between ${check.eventStartTime.substring(11, 16)} - ${calTime(
-            parseInt(check.eventStartTime.substring(11, 13)),
-            parseInt(check.eventStartTime.substring(14, 16)),
-            check.eventDuration
-          )}`
-        );
-      } else if (
-        Date.parse(
-          `${startDate.value}T${calTime(
-            parseInt(editStartTime.value.substring(0, 2)),
-            parseInt(editStartTime.value.substring(3, 5)),
-            duration.value
-          )}:00+07:00`
-        ) >= Date.parse(check.eventStartTime) &&
-        Date.parse(
-          `${startDate.value}T${calTime(
-            parseInt(editStartTime.value.substring(0, 2)),
-            parseInt(editStartTime.value.substring(3, 5)),
-            duration.value
-          )}`
-        ) <=
-        Date.parse(
-          `${check.eventStartTime.substring(0, 10)}T${calTime(
-            parseInt(check.eventStartTime.substring(11, 13)),
-            parseInt(check.eventStartTime.substring(14, 16)),
-            check.eventDuration
-          )}:00+07:00`
-        )
-      ) {
-        isOverlap = true;
-        betweenDateWarning.value = String(
-          `Your event time is overlapped between ${check.eventStartTime.substring(
-            11,
-            16
-          )} and ${calTime(
-            parseInt(check.eventStartTime.substring(11, 13)),
-            parseInt(check.eventStartTime.substring(14, 16)),
-            check.eventDuration
-          )}
-          ${check.eventStartTime.substring(0, 10)}`
-        );
-      }
-    }
-  }
-  return isOverlap;
+    edit()
+    goUserList()
+    getUserList()
 };
 
 
@@ -329,9 +262,9 @@ const calTime = (hour, minute, addTime) => {
   >
     <!-- no data -->
     <div v-if="isNotNull == false">
-      <h2 class="text-center mb-1 font-bold text-xl">No date</h2>
+      <h2 class="text-center mb-1 font-bold text-xl">No data</h2>
       <div class="w-fit m-auto">
-        <button @click="goReservation" class="custom-btn back block">Go Back</button>
+        <button @click="goUserList" class="custom-btn back block">Go Back</button>
       </div>
     </div>
 
@@ -341,127 +274,117 @@ const calTime = (hour, minute, addTime) => {
       class="p-4 border-double border-4 border-neutral-300 max-w-screen-lg"
     >
       <div class="mx-2 w-full">
-        <h1 class="text-center mb-1 font-bold text-2xl">Reservation</h1>
+        <h1 class="text-center mb-1 font-bold text-2xl">User Information</h1>
         <h3 class="text-center">----------------</h3>
       </div>
-      <div class="flex m-auto my-4 w-full">
+
+      <div class="flex mx-auto my-4 w-full">
+        <div class="px-2 w-4/5 inline-flex my-5 mx-auto">
         <!-- Name -->
-        <div class="px-2 w-1/2 inline-flex">
-          <div class="pr-2 font-semibold flex m-auto text-gray-400">Name :</div>
+          <div class="pr-2 font-semibold flex m-auto text-gray-400"> Username :</div>
           <div
-            class="overflow-hidden overflow-x-scroll border-2 rounded-md p-1.5 pt-2.5 font-normal bg-white flex w-3/4 h-12"
+            v-if="isEdit == false"
+            class="overflow-hidden overflow-x-scroll border-2 rounded-md p-1.5 pt-2.5 font-normal bg-white flex w-2/5"
           >
             {{ name }}
           </div>
-        </div>
+          <div
+            v-if="isEdit == true"
+            class="edit-color showUp border-2 rounded-md p-1.5 pt-2.5 font-normal bg-white flex w-2/5 h-12"
+          >
+            <input type="text" class="w-full h-full" v-model="editName" />
+          </div>
 
-        <!-- E-mail -->
-        <div class="px-2 w-1/2 inline-flex">
-          <div class="pr-2 font-semibold flex m-auto text-gray-400">
+          <!-- role -->
+          <div class="pr-2 font-semibold flex m-auto text-gray-400"> Role :</div>
+          <div
+            v-if="isEdit == false"
+            class="overflow-hidden overflow-x-scroll border-2 rounded-md p-1.5 pt-2.5 justify-center font-normal m-auto -ml-2 bg-amber-400 flex w-1/4 h-12"
+          >
+            {{ role }}
+          </div>
+          <div
+            v-if="isEdit == true"
+            class="edit-color showUp border-2 rounded-md p-1.5 text-center font-normal bg-white inline-block w-1/4 h-12"
+          >
+            <select v-model="editRole" class="p-0.5 w-9/10 h-8 w-full text-center">
+                  <option value disabled selected>Select Role</option>
+                  <option
+                    v-for="(eachRole, index) in roles"
+                    :key="index"
+                    :value="eachRole"
+                  >
+                    {{ eachRole }}
+                  </option>
+            </select>
+          </div>
+        </div>
+      </div>
+          
+      
+      <!-- E-mail -->
+        <div class="w-4/5 inline-flex">
+          <div class="pr-2 font-semibold flex my-auto ml-28 mr-4 w-1/5 text-gray-400">
             E-mail :
           </div>
           <div
-            class="overflow-hidden overflow-x-scroll border-2 rounded-md p-1.5 pt-2.5 font-normal bg-white flex w-3/4 h-12"
-          >
-            {{ eMail }}
-          </div>
-        </div>
-      </div>
-      <!-- start date ,time and duration -->
-      <div class="flex my-4 w-full">
-        <div class="px-1 w-fit block">
-          <div class="p-3 font-semibold inline-block m-auto text-gray-400">
-            Start date :
-          </div>
-          <div
             v-if="isEdit == false"
-            class="border-2 rounded-md p-1.5 font-normal bg-white inline-block w-fit h-10"
+            class="overflow-hidden overflow-x-scroll border-2 rounded-md p-1.5 pt-2.5 font-normal bg-white flex w-full h-12 "
           >
-            {{ startDate }}
+            {{ email }}
           </div>
           <div
             v-if="isEdit == true"
-            class="eidt-color showUp border-2 rounded-md p-1.5 font-normal bg-white inline-block w-fit h-10"
+            class="edit-color showUp overflow-hidden overflow-x-scroll border-2 rounded-md p-1.5 pt-2.5 font-normal bg-white flex w-full h-12 "
           >
-            <input type="date" :min="date" v-model="editStartDate" />
+            <input type="text" class="w-full h-full" v-model="editEmail" />
           </div>
         </div>
-        <div class="px-1 w-fit block">
-          <div class="p-3 font-semibold inline-block m-auto w-fit  text-gray-400">
-            Start time :
+
+        <div class="text-center mt-5"><p> --------------------------------------------------------------- </p></div>
+
+      <!-- created on -->
+      <div class="inline-block">
+      <div class="flex mt-5 mb-3 w-full">
+        <div class="pr-2 flex text-sm my-auto ml-24 mr-4 text-gray-400">
+          <div class="p-3 inline-block m-auto text-gray-400">
+            Created on :
           </div>
           <div
-            v-if="isEdit == false"
-            class="text-black border-2 rounded-md p-1.5 font-normal bg-white inline-block text-center w-20 h-10"
+            class="border-2 text-black rounded-md p-1.5 font-normal bg-white inline-block text-center w-60 h-10"
           >
-            {{ startTime }}
-          </div>
-          <div
-            v-if="isEdit == true"
-            class="eidt-color showUp border-2 rounded-md p-1.5 font-normal bg-white inline-block text-center w-24 h-10"
-          >
-            <input type="time" v-model="editStartTime" />
-          </div>
-        </div>
-        <div class="px-1 w-fit block">
-          <div class="p-3 font-semibold inline-block m-auto text-gray-400">
-            Duration :
-          </div>
-          <div
-            class="border-2 text-black rounded-md p-1.5 font-normal bg-white inline-block text-center w-16 h-10"
-          >
-            {{ duration }}
-          </div>
-          <span class="p-3">minutes</span>
-        </div>
-      </div>
-      <!-- category -->
-      <div class="px-2 font-semibold block w-fit">
-        <div class="px-1 w-fit inline-flex">
-          <div class="pr-2 font-semibold inline-block m-auto text-gray-400">
-            Category :
-          </div>
-          <div
-            class="text-ellipsis overflow-hidden border-2 text-black rounded-md py-1.5 px-4 font-normal bg-white inline-block mx-2 w-fit"
-          >
-            {{ category }}
+            <!-- {{ createdOn }} -->
+            Date : {{ formatDate(createdOn) }} , Time : {{ formatTime(createdOn) }}
           </div>
         </div>
       </div>
-      <!-- note -->
-      <div class="ml-2 flex my-4 w-full">
-        <div
-          v-if="(noteT !== null && noteT !== '') || isEdit == true"
-          class="inline-block"
+
+      <!-- updated on -->
+      <div 
+        class="flex my-3 w-full"
+        v-if="updatedOn !== createdOn"
         >
-          <div class="px-2 font-semibold w-fit text-gray-400">Note :</div>
-          <div class="ml-5 w-fit">
-            <textarea
-              readonly
-              v-if="isEdit == false"
-              rows="4"
-              cols="50"
-              class=" text-black block px-3 py-2 placeholder-gray-300 border resize-none rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300"
-              v-model="noteT"
-            >
-            </textarea>
-            <textarea
-              rows="4"
-              cols="50"
-              v-if="isEdit == true"
-              class="eidt-color showUp text-black block px-3 py-2 placeholder-gray-300 border resize-none rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300"
-              v-model="editNote"
-            >
-            </textarea>
+        <div class="pr-2 text-sm flex my-auto ml-24 mr-4 text-gray-400">
+          <div class="p-3 inline-block m-auto text-gray-400">
+            Updated on :
+          </div>
+          <div
+            class="border-2 text-black rounded-md p-1.5 font-normal bg-white inline-block text-center w-60 h-10"
+          >
+            Date : {{ formatDate(updatedOn) }} , Time : {{ formatTime(updatedOn) }}
           </div>
         </div>
+      </div>
+      </div>
+
+
        <!-- button not edit mode -->
         <div v-if="isEdit == false" class="showUp m-auto w-fit">
           <button @click="editInfo" class="m-4 custom-btn edit">Edit</button>
           <a  href="#remove" class="m-4 custom-btn remove">
             Remove
           </a>
-          <button @click="goReservation"  class="m-4 custom-btn back">Go Back</button>
+          <button @click="goUserList"  class="m-4 custom-btn back">Go Back</button>
         </div>
        <!-- button edit mode -->
         <div v-if="isEdit == true" class="showUp m-auto w-fit">
@@ -472,10 +395,10 @@ const calTime = (hour, minute, addTime) => {
         </div>
       </div>
     </div>
-  </div>
+
 
   <!-- for alert -->
-  <div class="alert-area">
+  <!-- <div class="alert-area">
     <div v-if="isPast == true" class="alert warning text-sm">
       <span class="closebtn" @click="isPast = undefined">x</span>
       <strong class="block">Error!</strong> Can't select past date and time.
@@ -488,7 +411,7 @@ const calTime = (hour, minute, addTime) => {
     
     <div v-if="
           getStatus == false ||
-          eventList.length == 0
+          userList.length == 0
         " class="alert warning text-sm">
           <strong class="block">Warning!</strong> A system error has occurred,please try again.
      </div>
@@ -503,7 +426,7 @@ const calTime = (hour, minute, addTime) => {
           <strong class="block">Success!</strong> Edit data success.
         </div>
 
-  </div>
+  </div> -->
 
          <!-- for submit  -->
   <div id="submit" class="overlay">
@@ -528,7 +451,7 @@ const calTime = (hour, minute, addTime) => {
     </div>
   </div>
 
-           <!-- for remove  -->
+  <!-- for remove  -->
   <div id="remove" class="overlay">
     <div class="popup2 h-96">
       <h2 class="mb-5 text-xl font-bold bg-white mx-auto w-fit">
@@ -537,7 +460,7 @@ const calTime = (hour, minute, addTime) => {
 
       <div class="option flex m-auto w-full mt-10">
         <a
-          @click="removeInfo"
+          @click="removeUser"
           href="#"
           class="w-full text-center p-2 px-2 bg-gray-200 hover:bg-green-500 font-bold hover:text-white"
           >Yes</a
@@ -639,7 +562,7 @@ const calTime = (hour, minute, addTime) => {
   width: 100%;
   transition: 800ms ease all;
 }
-.eidt-color {
+.edit-color {
   border-color: rgb(252, 140, 252);
 }
 

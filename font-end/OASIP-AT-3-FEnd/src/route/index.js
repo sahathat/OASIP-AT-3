@@ -4,6 +4,14 @@ import NotFound from '../view/NotFound.vue'
 import Booking from '../view/Booking.vue'
 import Reservation from '../view/Reservation.vue'
 import ReservationList from '../view/ReservationList.vue'
+
+import Categories from '../view/Categories.vue'
+import CategoriesList from '../view/CategoriesList.vue'
+import UserInfo from '../view/User.vue'
+import UserList from '../view/UserList.vue'
+import CreateUser from '../view/CreateUser.vue'
+import Login from '../view/Login.vue'
+
 import ContactUs from '../view/ContactUs.vue'
 const history=createWebHistory(import.meta.env.BASE_URL)
       
@@ -20,22 +28,63 @@ const routes=[
     {
         path:'/booking',
         name:'Booking',
-        component: Booking
-    },
+        component: Booking,
+        meta: { auth:true }
+    }, 
     {
         path:'/reservation/:id',
         name:'Reservation',
-        component: Reservation
+        component: Reservation,
+        meta: { auth:true }
     },
     {
         path:'/reservation-list',
         name:'ReservationList',
-        component: ReservationList
+        component: ReservationList,
+        meta: { auth:true }
+    },
+    {
+
+        path:'/categories/:id',
+        name:'Categories',
+        component: Categories,
+        meta: { auth:true }
+    },
+    {
+        path:'/categories-list',
+        name:'CategoriesList',
+        component: CategoriesList,
+        meta: { auth:false }
+    },
+    {
+        path:'/user-info/:id',
+        name:'UserInfo',
+        component: UserInfo,
+        meta: { auth:true }
+    },
+    {
+        path:'/user-list',
+        name:'UserList',
+        component: UserList,
+        meta: { auth:true }
+    },
+    {
+        path:'/create-user',
+        name:'CreateUser',
+        component: CreateUser,
+        meta: { auth:false }
+    },
+    {
+        path:'/login',
+        name:'Login',
+        component: Login,
+        meta: { auth:false }
     },
     {
         path:'/contact-us',
         name:'ContactUs',
-        component: ContactUs
+        component: ContactUs,
+        meta: { auth:false }
     }
 ]
 

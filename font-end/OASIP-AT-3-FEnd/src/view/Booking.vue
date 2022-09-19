@@ -18,6 +18,8 @@ const noteLength = 500;
 const db = "http://localhost:5000/booking";
 const eventLink = `${import.meta.env.BASE_URL}api/events`;
 const categoryLink = `${import.meta.env.BASE_URL}api/categories`;
+// const eventLink = "http://localhost:8443/api/events";
+// const categoryLink = "http://localhost:8443/api/categories";
 
 const eventList = ref([]);
 const categoryList = ref([]);
@@ -280,10 +282,15 @@ const submitt = () => {
 const isStatus = ref(undefined);
 const addBooking = async () => {
   let createStatus = undefined;
+  const key = localStorage.getItem('key')
+  // console.log(key)
+
   const res = await fetch(eventLink, {
     method: "POST",
     headers: {
-      "content-type": "application/json",
+            "Authorization":'Bearer ' + key ,
+            "Accept": 'application/json',
+            "content-type": "application/json",
     },
     body: JSON.stringify({
       bookingName: name.value,
@@ -312,7 +319,15 @@ const addBooking = async () => {
 
 // first get Category
 const getCategory = async () => {
-  const res = await fetch(categoryLink);
+  const key = localStorage.getItem('key')
+  const res = await fetch(categoryLink,{
+    method: "GET",
+    headers: {
+            "Authorization":'Bearer ' + key ,
+            "Accept": 'application/json',
+            "content-type": "application/json",
+    }
+  });
   if (res.status === 200) {
     categoryList.value = await res.json();
     getStatus.value = true;
@@ -327,8 +342,16 @@ const resGetEvent = ref(undefined);
 
 // check every 10 second
 setInterval(async () => {
+  const key = localStorage.getItem('key')
   //console.log(countGetEvent.value++)
-  resGetEvent.value = await fetch(eventLink);
+  resGetEvent.value = await fetch(eventLink,{
+    method: "GET",
+    headers: {
+            "Authorization":'Bearer ' + key ,
+            "Accept": 'application/json',
+            "content-type": "application/json",
+    }
+  });
   if (resGetEvent.value.status === 200) {
     eventList.value = await resGetEvent.value.json();
     getStatus.value = true;
@@ -337,7 +360,15 @@ setInterval(async () => {
 
 // first get event
 const getEvent = async () => {
-  const res = await fetch(eventLink);
+  const key = localStorage.getItem('key')
+  const res = await fetch(eventLink,{
+    method: "GET",
+    headers: {
+            "Authorization":'Bearer ' + key ,
+            "Accept": 'application/json',
+            "content-type": "application/json",
+    }
+  });
   if (res.status === 200) {
     eventList.value = await res.json();
     getStatus.value = true;
@@ -386,7 +417,7 @@ onBeforeMount(async () => {
                 class="text-gray-300 font-medium ml-1 text-sm"
                 :style="[name.length > nameLength ? 'color:red' : '']"
               >
-                {{ name.length }}/{{ nameLength }} charector
+                {{ name.length }}/{{ nameLength }} charecters
               </span>
             </div>
             <div>
@@ -414,7 +445,7 @@ onBeforeMount(async () => {
                 class="text-gray-300 font-medium ml-1 text-sm"
                 :style="[eMail.length > emailLength ? 'color:red' : '']"
               >
-                {{ eMail.length }}/{{ emailLength }} charector
+                {{ eMail.length }}/{{ emailLength }} charecters
               </span>
             </div>
             <div>
@@ -546,7 +577,7 @@ onBeforeMount(async () => {
               <span
                 class="text-gray-300"
                 :style="[noteText.length > noteLength ? 'color:red' : '']"
-                >{{ noteText.length }}/{{ noteLength }} charector
+                >{{ noteText.length }}/{{ noteLength }} charecters
               </span>
             </label>
             <textarea
@@ -697,7 +728,7 @@ onBeforeMount(async () => {
         No category details
       </div>
 
-      <div v-else v-for="cat in categoryList">
+      <div v-else v-for="(cat,index) in categoryList" :key="index">
         <ul>
           <li class="text-left">
             <br />

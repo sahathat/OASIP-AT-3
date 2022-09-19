@@ -10,41 +10,63 @@ const filterReservationList = ref([]);
 const db = "http://localhost:5000/booking";
 const eventLink = `${import.meta.env.BASE_URL}api/events`;
 const categoryLink = `${import.meta.env.BASE_URL}api/categories`;
+// const eventLink = "http://localhost:8443/api/events";
+// const categoryLink = "http://localhost:8443/api/categories";
 
 //GET event
 const getStatus = ref(undefined);
-const resGetEvent = ref(undefined);
+// const resGetEvent = ref(undefined);
 // get every 10 sec
-setInterval(async () => {
-  getStatus.value = undefined;
-  resGetEvent.value = await fetch(eventLink);
-  if (resGetEvent.value.status === 200) {
-    eventList.value = await resGetEvent.value.json();
-    getStatus.value = true;
-    filterReservationList.value = eventList.value;
-  } else getStatus.value = false;
-}, 10000);
+// setInterval(async () => {
+//   getStatus.value = undefined;
+//   resGetEvent.value = await fetch(eventLink);
+//   if (resGetEvent.value.status === 200) {
+//     eventList.value = await resGetEvent.value.json();
+//     getStatus.value = true;
+//     filterReservationList.value = eventList.value;
+//   } else getStatus.value = false;
+// }, 10000);
 
 // first get event
 const getEvent = async () => {
-  const res = await fetch(eventLink);
-  //const res = await fetch(`${import.meta.env.VITE_BASE_URL}/events?page=0&pageSize=1`)
+  // get localStorage
+  const key = localStorage.getItem('key')
+  console.log(key)
+
+  const res = await fetch(eventLink, {
+        method: "GET",
+        headers: {
+            "Authorization":'Bearer ' + key ,
+            "Accept": 'application/json',
+            "content-type": "application/json",
+        }
+    });
+
   if (res.status === 200) {
     eventList.value = await res.json();
     filterReservationList.value = eventList.value;
     //console.log(bookingList.value)
-  }
+  } 
 };
 
 //GET category
 const getCategory = async () => {
-  const res = await fetch(categoryLink);
+  const key = localStorage.getItem('key')
+
+  const res = await fetch(categoryLink, {
+        method: "GET",
+        headers: {
+            "Authorization":'Bearer ' + key ,
+            "Accept": 'application/json',
+            "content-type": "application/json",
+        }
+    })
   if (res.status === 200) {
     categoryList.value = await res.json();
     categoryCheck.value = true;
     //console.log(getCategory.value)
   } else {
-    categoryCheck = false;
+    categoryCheck.value = false;
   }
 };
 
@@ -295,7 +317,7 @@ const reset = () => {
 <template>
   <!-- for filter -->
   <div
-    class="showUp md:inline-block ml-52 mt-16 bg-gray-200 p-4 ml-20 w-1/3 rounded-l"
+    class="showUp md:inline-block mt-16 bg-gray-200 p-4 ml-20 w-1/3 rounded-l"
     style="height: 475px; width: 25%"
   >
     <div class="border-gray-500 border-4 border-double w-full">
@@ -304,7 +326,7 @@ const reset = () => {
       </h1>
 
       <!-- start date -->
-      <div class="w-full my-1 block my-2">
+      <div class="w-full block my-2">
         <div class="px-3 w-full m-auto block">
           <label for="date" class="font-medium text-sm text-gray-600"
             >Start date :</label
@@ -414,7 +436,7 @@ const reset = () => {
           >
             <th
               scope="row"
-              class="px-6 py-4 font-medium text-gray-900 font-semibold whitespace-nowrap text-ellipsis overflow-hidden"
+              class="px-6 py-4 text-gray-900 font-semibold whitespace-nowrap text-ellipsis overflow-hidden"
             >
               {{ Booking.bookingName }}
             </th>
