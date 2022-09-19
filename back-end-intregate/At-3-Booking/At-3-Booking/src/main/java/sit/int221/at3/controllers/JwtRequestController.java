@@ -11,6 +11,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import sit.int221.at3.dtos.user.JwtResponse;
 import sit.int221.at3.dtos.user.UserDto;
 import sit.int221.at3.dtos.user.UserLoginDto;
@@ -66,6 +67,9 @@ public class JwtRequestController {
 
     public Map<String, Object> getMapFromIoJsonwebtokenClaims(DefaultClaims claims) {
         Map<String, Object> expectedMap = new HashMap<String, Object>();
+        if(claims == null){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Need login or jwt expire before use refresh");
+        }
         for (Map.Entry<String, Object> entry : claims.entrySet()) {
             expectedMap.put(entry.getKey(), entry.getValue());
         }
