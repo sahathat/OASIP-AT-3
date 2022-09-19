@@ -9,10 +9,11 @@ const db = "http://localhost:5000/booking";
 const categoryLink = `${import.meta.env.BASE_URL}api/categories`;
 // const categoryLink = "http://localhost:8443/api/categories";
 
+const key = localStorage.getItem('key')
+
 //GET category
 const getCategory = async () => {
-  const key = localStorage.getItem('key')
-
+  key = localStorage.getItem('key')
   const res = await fetch(categoryLink, {
     method: "GET",
     headers: {

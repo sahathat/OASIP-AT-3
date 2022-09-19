@@ -17,7 +17,7 @@ const startTime = ref("");
 const duration = ref("");
 const noteT = ref("");
 const detailBooking = ref({});
-const eventList=ref([])
+const eventList = ref([]);
 const isNotNull = ref(false);
 const myRouoter = useRouter();
 const goReservation = () => myRouoter.push({ name: "ReservationList" });
@@ -59,54 +59,56 @@ let clock = () => {
 setInterval(clock, 1000);
 
 // get every 10 sec
-const getStatus=ref(undefined)
-const resGetEvent=ref(undefined)
+const getStatus = ref(undefined);
+const resGetEvent = ref(undefined);
 
-setInterval(async ()=>{
-  const key = localStorage.getItem('key')
-  resGetEvent.value= await fetch(eventLink,{
-    method: 'GET',
+const key = localStorage.getItem("key");
+
+setInterval(async () => {
+  key = localStorage.getItem("key");
+  resGetEvent.value = await fetch(eventLink, {
+    method: "GET",
     headers: {
-            "Authorization":'Bearer ' + key ,
-            "Accept": 'application/json',
-            "content-type": "application/json",
-        }
-  })
+      Authorization: "Bearer " + key,
+      Accept: "application/json",
+      "content-type": "application/json",
+    },
+  });
   if (resGetEvent.value.status === 200) {
     eventList.value = await resGetEvent.value.json();
     getStatus.value = true;
   } else getStatus.value = false;
-},10000)
+}, 10000);
 
 // first get event
-const getEvent =async()=>{
-  const key = localStorage.getItem('key')
+const getEvent = async () => {
+  key = localStorage.getItem("key");
 
- resGetEvent.value= await fetch(eventLink,{
-    method: 'GET',
+  resGetEvent.value = await fetch(eventLink, {
+    method: "GET",
     headers: {
-            "Authorization":'Bearer ' + key ,
-            "Accept": 'application/json',
-            "content-type": "application/json",
-        }
-  })
+      Authorization: "Bearer " + key,
+      Accept: "application/json",
+      "content-type": "application/json",
+    },
+  });
   if (resGetEvent.value.status === 200) {
     eventList.value = await resGetEvent.value.json();
     getStatus.value = true;
-  } else getStatus.value = false;       
-}
+  } else getStatus.value = false;
+};
 
 // get value
 const getDetail = async () => {
-  const key = localStorage.getItem('key')
+  key = localStorage.getItem("key");
 
-  const res = await fetch(`${eventLink}/${params.id}`,{
-    method: 'GET',
+  const res = await fetch(`${eventLink}/${params.id}`, {
+    method: "GET",
     headers: {
-            "Authorization":'Bearer ' + key ,
-            "Accept": 'application/json',
-            "content-type": "application/json",
-        }
+      Authorization: "Bearer " + key,
+      Accept: "application/json",
+      "content-type": "application/json",
+    },
   });
   if (res.status === 200) {
     detailBooking.value = await res.json();
@@ -126,22 +128,22 @@ const getDetail = async () => {
   }
 };
 
-onBeforeMount(async()=>{
-       await  getEvent()
-       await getDetail()
+onBeforeMount(async () => {
+  await getEvent();
+  await getDetail();
 });
 
 //remove information
 const removeInfo = async () => {
-  const key = localStorage.getItem('key')
-  const res = await fetch(`${eventLink}/${id}`, { 
+  key = localStorage.getItem("key");
+  const res = await fetch(`${eventLink}/${id}`, {
     method: "DELETE",
     headers: {
-            "Authorization":'Bearer ' + key ,
-            "Accept": 'application/json',
-            "content-type": "application/json",
-        }
-  })
+      Authorization: "Bearer " + key,
+      Accept: "application/json",
+      "content-type": "application/json",
+    },
+  });
   if (res.status === 200) {
     console.log("delete successfully");
     goReservation();
@@ -167,87 +169,88 @@ const cancel = () => {
   editStartDate.value = "";
 };
 
-const edit =async()=>{
-      const key = localStorage.getItem('key')
+const edit = async () => {
+  key = localStorage.getItem("key");
 
-       let canEdit=undefined
-        const res = await fetch(`${eventLink}/${id}`, {
-        method: "PUT",
-        headers: {
-            "Authorization":'Bearer ' + key ,
-            "Accept": 'application/json',
-            "content-type": "application/json",
-        },
-        body: JSON.stringify({
-          eventStartTime: `${editStartDate.value}T${editStartTime.value}:00+07:00`,
-          eventNotes: editNote.value,
-        }),
-      });
-      if (res.status == 200) {
-        let editDetailNote = await res.json();
-        startDate.value = editDetailNote.eventStartTime.substring(0, 10);
-        startTime.value = editDetailNote.eventStartTime.substring(11, 16);
-        noteT.value = editDetailNote.eventNotes;
-        isEdit.value = false;
-        canEdit=true
-        editSuccess.value=true
-       }else {
-              canEdit=false
-              editSuccess.value=false
-       }
-       return canEdit
-}
+  let canEdit = undefined;
+  const res = await fetch(`${eventLink}/${id}`, {
+    method: "PUT",
+    headers: {
+      Authorization: "Bearer " + key,
+      Accept: "application/json",
+      "content-type": "application/json",
+    },
+    body: JSON.stringify({
+      eventStartTime: `${editStartDate.value}T${editStartTime.value}:00+07:00`,
+      eventNotes: editNote.value,
+    }),
+  });
+  if (res.status == 200) {
+    let editDetailNote = await res.json();
+    startDate.value = editDetailNote.eventStartTime.substring(0, 10);
+    startTime.value = editDetailNote.eventStartTime.substring(11, 16);
+    noteT.value = editDetailNote.eventNotes;
+    isEdit.value = false;
+    canEdit = true;
+    editSuccess.value = true;
+  } else {
+    canEdit = false;
+    editSuccess.value = false;
+  }
+  return canEdit;
+};
 
 // submit
-const isInput=ref(undefined)
-const isPast =ref(undefined)
-const isOverlap =ref(undefined)
-const editSuccess=ref(undefined)
+const isInput = ref(undefined);
+const isPast = ref(undefined);
+const isOverlap = ref(undefined);
+const editSuccess = ref(undefined);
 
 const submitt = async () => {
-       isInput.value=undefined
-       isPast.value=undefined
-       isOverlap.value=undefined
-       editSuccess.value=undefined
+  isInput.value = undefined;
+  isPast.value = undefined;
+  isOverlap.value = undefined;
+  editSuccess.value = undefined;
   if (editStartDate.value !== "" && editStartTime.value !== "") {
-    if (//สำหรับเลือกวันในอนาคต
+    if (
+      //สำหรับเลือกวันในอนาคต
       Date.parse(`${editStartDate.value}T${editStartTime.value}:00+07:00`) >
       Date.parse(`${date.value}T${time.value}:00+07:00`)
-       ) {
-           if(overlap()){
-              isOverlap.value=true
-      } else if(edit()){
-             cancel()
-             setTimeout(()=>editSuccess.value=false,5000)
+    ) {
+      if (overlap()) {
+        isOverlap.value = true;
+      } else if (edit()) {
+        cancel();
+        setTimeout(() => (editSuccess.value = false), 5000);
       }
-    } else isPast.value=true//alert(`Can't select past date and time `);
-  }else isInput.value=false
+    } else isPast.value = true; //alert(`Can't select past date and time `);
+  } else isInput.value = false;
 };
 
 // check overlap
-const betweenDateWarning=ref(undefined)
+const betweenDateWarning = ref(undefined);
 
 const overlap = () => {
   betweenDateWarning.value = undefined;
   let isOverlap = undefined;
-for (let check of eventList.value) {
-    if (check.categoryName == category.value&&check.id!==id) {
-//       console.log(Date.parse(`${editStartDate.value}T${editStartTime.value}:00+07:00`))
-//       console.log(Date.parse(check.eventStartTime))
-//       console.log(Date.parse(`${check.eventStartTime.substring(0,10)}T${calTime(parseInt(check.eventStartTime.substring(11,13)) ,parseInt(check.eventStartTime.substring(14,16)),check.eventDuration)}:00+07:00`))
-//       console.log('cut')
+  for (let check of eventList.value) {
+    if (check.categoryName == category.value && check.id !== id) {
+      //       console.log(Date.parse(`${editStartDate.value}T${editStartTime.value}:00+07:00`))
+      //       console.log(Date.parse(check.eventStartTime))
+      //       console.log(Date.parse(`${check.eventStartTime.substring(0,10)}T${calTime(parseInt(check.eventStartTime.substring(11,13)) ,parseInt(check.eventStartTime.substring(14,16)),check.eventDuration)}:00+07:00`))
+      //       console.log('cut')
 
       if (
         Date.parse(`${editStartDate.value}T${editStartTime.value}:00+07:00`) >=
-        Date.parse(check.eventStartTime) &&
+          Date.parse(check.eventStartTime) &&
         Date.parse(`${editStartDate.value}T${editStartTime.value}:00+07:00`) <=
-        Date.parse(
-          `${check.eventStartTime.substring(0, 10)}T${calTime(
-            parseInt(check.eventStartTime.substring(11, 13)),
-            parseInt(check.eventStartTime.substring(14, 16)),
-            check.eventDuration
-          )}:00+07:00`
-        )
+          Date.parse(
+            `${check.eventStartTime.substring(0, 10)}T${calTime(
+              parseInt(check.eventStartTime.substring(11, 13)),
+              parseInt(check.eventStartTime.substring(14, 16)),
+              check.eventDuration
+            )}:00+07:00`
+          )
       ) {
         isOverlap = true;
         betweenDateWarning.value = String(
@@ -275,13 +278,13 @@ for (let check of eventList.value) {
             duration.value
           )}`
         ) <=
-        Date.parse(
-          `${check.eventStartTime.substring(0, 10)}T${calTime(
-            parseInt(check.eventStartTime.substring(11, 13)),
-            parseInt(check.eventStartTime.substring(14, 16)),
-            check.eventDuration
-          )}:00+07:00`
-        )
+          Date.parse(
+            `${check.eventStartTime.substring(0, 10)}T${calTime(
+              parseInt(check.eventStartTime.substring(11, 13)),
+              parseInt(check.eventStartTime.substring(14, 16)),
+              check.eventDuration
+            )}:00+07:00`
+          )
       ) {
         isOverlap = true;
         betweenDateWarning.value = String(
@@ -301,7 +304,6 @@ for (let check of eventList.value) {
   return isOverlap;
 };
 
-
 // function
 const calTime = (hour, minute, addTime) => {
   let sum = undefined;
@@ -312,7 +314,7 @@ const calTime = (hour, minute, addTime) => {
   // console.log(`this is hour : ${h}`)
   if (m >= 60) {
     h = h + 1;
-    m = m-60;
+    m = m - 60;
   }
   h = h < 10 ? `0${h}` : h;
   m = m < 10 ? `0${m}` : m;
@@ -331,7 +333,9 @@ const calTime = (hour, minute, addTime) => {
     <div v-if="isNotNull == false">
       <h2 class="text-center mb-1 font-bold text-xl">No date</h2>
       <div class="w-fit m-auto">
-        <button @click="goReservation" class="custom-btn back block">Go Back</button>
+        <button @click="goReservation" class="custom-btn back block">
+          Go Back
+        </button>
       </div>
     </div>
 
@@ -387,7 +391,9 @@ const calTime = (hour, minute, addTime) => {
           </div>
         </div>
         <div class="px-1 w-fit block">
-          <div class="p-3 font-semibold inline-block m-auto w-fit  text-gray-400">
+          <div
+            class="p-3 font-semibold inline-block m-auto w-fit text-gray-400"
+          >
             Start time :
           </div>
           <div
@@ -441,7 +447,7 @@ const calTime = (hour, minute, addTime) => {
               v-if="isEdit == false"
               rows="4"
               cols="50"
-              class=" text-black block px-3 py-2 placeholder-gray-300 border resize-none rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300"
+              class="text-black block px-3 py-2 placeholder-gray-300 border resize-none rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300"
               v-model="noteT"
             >
             </textarea>
@@ -455,19 +461,17 @@ const calTime = (hour, minute, addTime) => {
             </textarea>
           </div>
         </div>
-       <!-- button not edit mode -->
+        <!-- button not edit mode -->
         <div v-if="isEdit == false" class="showUp m-auto w-fit">
           <button @click="editInfo" class="m-4 custom-btn edit">Edit</button>
-          <a  href="#remove" class="m-4 custom-btn remove">
-            Remove
-          </a>
-          <button @click="goReservation"  class="m-4 custom-btn back">Go Back</button>
-        </div>
-       <!-- button edit mode -->
-        <div v-if="isEdit == true" class="showUp m-auto w-fit">
-          <button @click="cancel" class="m-4 custom-btn remove">
-            Cancel
+          <a href="#remove" class="m-4 custom-btn remove"> Remove </a>
+          <button @click="goReservation" class="m-4 custom-btn back">
+            Go Back
           </button>
+        </div>
+        <!-- button edit mode -->
+        <div v-if="isEdit == true" class="showUp m-auto w-fit">
+          <button @click="cancel" class="m-4 custom-btn remove">Cancel</button>
           <a href="#submit" class="m-4 custom-btn edit">Submit</a>
         </div>
       </div>
@@ -481,31 +485,31 @@ const calTime = (hour, minute, addTime) => {
       <strong class="block">Error!</strong> Can't select past date and time.
     </div>
 
-    <div v-if="isInput == true" class="alert  text-sm">
+    <div v-if="isInput == true" class="alert text-sm">
       <span class="closebtn" @click="isInput = undefined">x</span>
       <strong class="block">Error!</strong> Please input information.
     </div>
-    
-    <div v-if="
-          getStatus == false ||
-          eventList.length == 0
-        " class="alert warning text-sm">
-          <strong class="block">Warning!</strong> A system error has occurred,please try again.
-     </div>
 
-       <div v-if="isOverlap== true" class="alert warning text-sm">
-          <span class="closebtn" @click="isOverlap = undefined">x</span>
-          <strong class="block">Warning!</strong> {{ betweenDateWarning }}
-       </div>
+    <div
+      v-if="getStatus == false || eventList.length == 0"
+      class="alert warning text-sm"
+    >
+      <strong class="block">Warning!</strong> A system error has occurred,please
+      try again.
+    </div>
 
-       <div v-if="editSuccess == true" class="alert success text-sm">
-          <span class="closebtn" @click="editSuccess = false">x</span>
-          <strong class="block">Success!</strong> Edit data success.
-        </div>
+    <div v-if="isOverlap == true" class="alert warning text-sm">
+      <span class="closebtn" @click="isOverlap = undefined">x</span>
+      <strong class="block">Warning!</strong> {{ betweenDateWarning }}
+    </div>
 
+    <div v-if="editSuccess == true" class="alert success text-sm">
+      <span class="closebtn" @click="editSuccess = false">x</span>
+      <strong class="block">Success!</strong> Edit data success.
+    </div>
   </div>
 
-         <!-- for submit  -->
+  <!-- for submit  -->
   <div id="submit" class="overlay">
     <div class="popup2 h-96">
       <h2 class="mb-5 text-xl font-bold bg-white mx-auto w-fit">
@@ -528,7 +532,7 @@ const calTime = (hour, minute, addTime) => {
     </div>
   </div>
 
-           <!-- for remove  -->
+  <!-- for remove  -->
   <div id="remove" class="overlay">
     <div class="popup2 h-96">
       <h2 class="mb-5 text-xl font-bold bg-white mx-auto w-fit">
@@ -759,7 +763,7 @@ const calTime = (hour, minute, addTime) => {
   right: 0;
   background-color: transparent;
   width: 18%;
-  
+
   margin-right: 10px;
 }
 
@@ -782,7 +786,6 @@ const calTime = (hour, minute, addTime) => {
 .alert.success {
   background-color: #ac00d7;
 }
-
 
 .alert.warning {
   background-color: #ff9800;

@@ -62,6 +62,8 @@ const valEmail = (input) => {
   }
 };
 
+const key = localStorage.getItem('key')
+
 // overlap
 const betweenDateWarning = ref(undefined);
 
@@ -282,7 +284,6 @@ const submitt = () => {
 const isStatus = ref(undefined);
 const addBooking = async () => {
   let createStatus = undefined;
-  const key = localStorage.getItem('key')
   // console.log(key)
 
   const res = await fetch(eventLink, {
@@ -319,7 +320,7 @@ const addBooking = async () => {
 
 // first get Category
 const getCategory = async () => {
-  const key = localStorage.getItem('key')
+  key = localStorage.getItem('key')
   const res = await fetch(categoryLink,{
     method: "GET",
     headers: {
@@ -342,8 +343,7 @@ const resGetEvent = ref(undefined);
 
 // check every 10 second
 setInterval(async () => {
-  const key = localStorage.getItem('key')
-  //console.log(countGetEvent.value++)
+  key = localStorage.getItem('key')
   resGetEvent.value = await fetch(eventLink,{
     method: "GET",
     headers: {
@@ -360,7 +360,7 @@ setInterval(async () => {
 
 // first get event
 const getEvent = async () => {
-  const key = localStorage.getItem('key')
+  key = localStorage.getItem('key')
   const res = await fetch(eventLink,{
     method: "GET",
     headers: {

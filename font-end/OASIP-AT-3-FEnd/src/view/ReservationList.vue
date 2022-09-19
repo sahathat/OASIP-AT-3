@@ -13,26 +13,34 @@ const categoryLink = `${import.meta.env.BASE_URL}api/categories`;
 // const eventLink = "http://localhost:8443/api/events";
 // const categoryLink = "http://localhost:8443/api/categories";
 
+// get localStorage
+const key = localStorage.getItem('key')
+
 //GET event
 const getStatus = ref(undefined);
-// const resGetEvent = ref(undefined);
+const resGetEvent = ref(undefined);
 // get every 10 sec
-// setInterval(async () => {
-//   getStatus.value = undefined;
-//   resGetEvent.value = await fetch(eventLink);
-//   if (resGetEvent.value.status === 200) {
-//     eventList.value = await resGetEvent.value.json();
-//     getStatus.value = true;
-//     filterReservationList.value = eventList.value;
-//   } else getStatus.value = false;
-// }, 10000);
+setInterval(async () => {
+  key = localStorage.getItem('key')
+  getStatus.value = undefined;
+  resGetEvent.value = await fetch(eventLink, {
+        method: "GET",
+        headers: {
+            "Authorization":'Bearer ' + key ,
+            "Accept": 'application/json',
+            "content-type": "application/json",
+        }
+    });
+  if (resGetEvent.value.status === 200) {
+    eventList.value = await resGetEvent.value.json();
+    getStatus.value = true;
+    filterReservationList.value = eventList.value;
+  } else getStatus.value = false;
+}, 10000);
 
 // first get event
 const getEvent = async () => {
-  // get localStorage
-  const key = localStorage.getItem('key')
-  console.log(key)
-
+  key = localStorage.getItem('key')
   const res = await fetch(eventLink, {
         method: "GET",
         headers: {
@@ -51,8 +59,7 @@ const getEvent = async () => {
 
 //GET category
 const getCategory = async () => {
-  const key = localStorage.getItem('key')
-
+  key = localStorage.getItem('key')
   const res = await fetch(categoryLink, {
         method: "GET",
         headers: {

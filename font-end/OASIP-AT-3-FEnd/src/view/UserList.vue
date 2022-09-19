@@ -8,10 +8,11 @@ const db = "http://localhost:5000/booking";
 const userLink = `${import.meta.env.BASE_URL}api/users`;
 // const userLink = "http://localhost:8443/api/users";
 
+const key = localStorage.getItem('key')
+
 //GET users
 const getUsers = async () => {
-  const key = localStorage.getItem('key')
-
+  key = localStorage.getItem('key')
   const res = await fetch(userLink, {
     method: "GET",
     headers: {

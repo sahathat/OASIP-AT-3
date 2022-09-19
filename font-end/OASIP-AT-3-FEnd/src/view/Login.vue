@@ -55,8 +55,6 @@ const LoginUser = () => {
 //check password 
 const checkMatchTODB = async () => {
     console.log('Sign in..');
-    // console.log(email.value)
-    // console.log(password.value)
     const res = await fetch(signinLink, {
         method: "POST",
         headers: {
@@ -78,10 +76,6 @@ const checkMatchTODB = async () => {
         res.status == 404 ? 'A user with the specified email DOSE NOT exist !' : ''
     // console.log(this.token)
 }
-
-
-
-
 
 </script>
 
