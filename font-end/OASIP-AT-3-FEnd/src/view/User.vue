@@ -33,9 +33,6 @@ const minutes = ref();
 const date = ref("");
 const time = ref("");
 
-// jwt
-const key = localStorage.getItem('key')
-
 let clock = () => {
   let dateToday = new Date();
   day.value =
@@ -68,7 +65,7 @@ const getStatus=ref(undefined)
 const resGetUser=ref(undefined)
 
 setInterval(async ()=>{
-  key = localStorage.getItem('key')
+  const key = localStorage.getItem('key')
   resGetUser.value= await fetch(userLink, {
     method: "GET",
     headers: {
@@ -85,7 +82,7 @@ setInterval(async ()=>{
 
 // first get user
 const getUserList =async()=>{
-  key = localStorage.getItem('key')
+  const key = localStorage.getItem('key')
   resGetUser.value= await fetch(userLink, {
     method: "GET",
     headers: {
@@ -102,7 +99,7 @@ const getUserList =async()=>{
 
 // get value
 const getDetail = async () => {
-  key = localStorage.getItem('key')
+  const key = localStorage.getItem('key')
   const res = await fetch(`${userLink}/${params.id}`, {
     method: "GET",
     headers: {
@@ -159,7 +156,7 @@ onBeforeMount(async()=>{
 
 //remove information
 const removeUser = async () => {
-  key = localStorage.getItem('key')
+  const key = localStorage.getItem('key')
   const res = await fetch(`${userLink}/${id}`, { 
     method: "DELETE",
     headers: {

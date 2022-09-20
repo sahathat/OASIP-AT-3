@@ -26,7 +26,7 @@ const getStatus=ref(undefined)
 const resGetCategory=ref(undefined)
 
 setInterval(async ()=>{
-  key = localStorage.getItem('key')
+  const key = localStorage.getItem('key')
   resGetCategory.value= await fetch(categoryLink, {
     method: "GET",
     headers: {
@@ -43,7 +43,7 @@ setInterval(async ()=>{
 
 // first get event
 const getCategory =async()=>{
-  key = localStorage.getItem('key')
+  const key = localStorage.getItem('key')
   resGetCategory.value= await fetch(categoryLink, {
     method: "GET",
     headers: {
@@ -60,7 +60,7 @@ const getCategory =async()=>{
 
 // get value
 const getDetail = async () => {
-  key = localStorage.getItem('key')
+  const key = localStorage.getItem('key')
   const res = await fetch(`${categoryLink}/${params.id}`, {
     method: "GET",
     headers: {

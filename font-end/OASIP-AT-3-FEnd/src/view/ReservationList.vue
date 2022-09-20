@@ -13,15 +13,12 @@ const categoryLink = `${import.meta.env.BASE_URL}api/categories`;
 // const eventLink = "http://localhost:8443/api/events";
 // const categoryLink = "http://localhost:8443/api/categories";
 
-// get localStorage
-const key = localStorage.getItem('key')
-
 //GET event
 const getStatus = ref(undefined);
 const resGetEvent = ref(undefined);
 // get every 10 sec
 setInterval(async () => {
-  key = localStorage.getItem('key')
+  const key = localStorage.getItem('key')
   getStatus.value = undefined;
   resGetEvent.value = await fetch(eventLink, {
         method: "GET",
@@ -40,7 +37,7 @@ setInterval(async () => {
 
 // first get event
 const getEvent = async () => {
-  key = localStorage.getItem('key')
+  const key = localStorage.getItem('key')
   const res = await fetch(eventLink, {
         method: "GET",
         headers: {
@@ -59,7 +56,7 @@ const getEvent = async () => {
 
 //GET category
 const getCategory = async () => {
-  key = localStorage.getItem('key')
+  const key = localStorage.getItem('key')
   const res = await fetch(categoryLink, {
         method: "GET",
         headers: {

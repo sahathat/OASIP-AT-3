@@ -62,10 +62,8 @@ setInterval(clock, 1000);
 const getStatus = ref(undefined);
 const resGetEvent = ref(undefined);
 
-const key = localStorage.getItem("key");
-
 setInterval(async () => {
-  key = localStorage.getItem("key");
+  const key = localStorage.getItem("key");
   resGetEvent.value = await fetch(eventLink, {
     method: "GET",
     headers: {
@@ -82,8 +80,7 @@ setInterval(async () => {
 
 // first get event
 const getEvent = async () => {
-  key = localStorage.getItem("key");
-
+  const key = localStorage.getItem("key");
   resGetEvent.value = await fetch(eventLink, {
     method: "GET",
     headers: {
@@ -100,8 +97,7 @@ const getEvent = async () => {
 
 // get value
 const getDetail = async () => {
-  key = localStorage.getItem("key");
-
+  const key = localStorage.getItem("key");
   const res = await fetch(`${eventLink}/${params.id}`, {
     method: "GET",
     headers: {
@@ -135,7 +131,7 @@ onBeforeMount(async () => {
 
 //remove information
 const removeInfo = async () => {
-  key = localStorage.getItem("key");
+  const key = localStorage.getItem("key");
   const res = await fetch(`${eventLink}/${id}`, {
     method: "DELETE",
     headers: {
@@ -170,7 +166,7 @@ const cancel = () => {
 };
 
 const edit = async () => {
-  key = localStorage.getItem("key");
+  const key = localStorage.getItem("key");
 
   let canEdit = undefined;
   const res = await fetch(`${eventLink}/${id}`, {

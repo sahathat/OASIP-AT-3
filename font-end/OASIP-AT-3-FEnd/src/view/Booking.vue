@@ -284,8 +284,7 @@ const submitt = () => {
 const isStatus = ref(undefined);
 const addBooking = async () => {
   let createStatus = undefined;
-  // console.log(key)
-
+  const key = localStorage.getItem('key')
   const res = await fetch(eventLink, {
     method: "POST",
     headers: {
@@ -320,7 +319,7 @@ const addBooking = async () => {
 
 // first get Category
 const getCategory = async () => {
-  key = localStorage.getItem('key')
+  const key = localStorage.getItem('key')
   const res = await fetch(categoryLink,{
     method: "GET",
     headers: {
@@ -343,7 +342,7 @@ const resGetEvent = ref(undefined);
 
 // check every 10 second
 setInterval(async () => {
-  key = localStorage.getItem('key')
+  const key = localStorage.getItem('key')
   resGetEvent.value = await fetch(eventLink,{
     method: "GET",
     headers: {
@@ -360,7 +359,7 @@ setInterval(async () => {
 
 // first get event
 const getEvent = async () => {
-  key = localStorage.getItem('key')
+  const key = localStorage.getItem('key')
   const res = await fetch(eventLink,{
     method: "GET",
     headers: {

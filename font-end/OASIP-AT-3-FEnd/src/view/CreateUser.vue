@@ -23,8 +23,6 @@ const db = "http://localhost:5000/booking";
 const userLink= `${import.meta.env.BASE_URL}api/users`;
 // const userLink = 'http://localhost:8443/api/users';
 
-const key = localStorage.getItem('key')
-
 const userList = ref([]);
 const roles = ['admin','lecturer','student']
 
@@ -173,7 +171,7 @@ const createUser = async () => {
 // ขาดแจ้งเตือนตอนadd ว่าได้หรือไม่
 //GET user
 const getUser = async () => {
-  key = localStorage.getItem('key')
+  const key = localStorage.getItem('key')
   const res = await fetch(userLink, {
     method: "GET",
     headers: {
@@ -192,7 +190,7 @@ const getUser = async () => {
 const resGetUser = ref(undefined);
 // check every 10 second
 setInterval(async () => {
-  key = localStorage.getItem('key')
+  const key = localStorage.getItem('key')
   resGetUser.value = await fetch(userLink, {
     method: "GET",
     headers: {
