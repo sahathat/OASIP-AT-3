@@ -6,6 +6,7 @@ import { useRoute,useRouter } from "vue-router";
 const { params } = useRoute();
 const myRouoter = useRouter();
 const goSignin = () => myRouoter.push({ name: "Login" });
+const goHome = () => myRouoter.push({ name: "Home" });
 
 const name = ref("");
 const email = ref("");
@@ -22,6 +23,8 @@ const emailLength = 50;
 const db = "http://localhost:5000/booking";
 const userLink= `${import.meta.env.BASE_URL}api/users`;
 // const userLink = 'http://localhost:8443/api/users';
+
+
 
 const userList = ref([]);
 const roles = ['admin','lecturer','student']
@@ -73,7 +76,7 @@ const cancel = () => {
   role.value = "" ;
   password.value = "";
   confirmPassword.value = "";
-  goUserList()
+  goHome()
 };
 
 // submit
@@ -190,6 +193,7 @@ const getUser = async () => {
 const resGetUser = ref(undefined);
 // check every 10 second
 setInterval(async () => {
+  //console.log(countGetEvent.value++)
   const key = localStorage.getItem('key')
   resGetUser.value = await fetch(userLink, {
     method: "GET",

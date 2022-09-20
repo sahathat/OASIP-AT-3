@@ -6,7 +6,8 @@ import { useRoute,useRouter } from "vue-router";
 const { params } = useRoute();
 const myRouoter = useRouter();
 const goHome = () => myRouoter.push({ name: "Home" });
-const goUserList = () => myRouoter.push({ name: "UserList" });
+const goBooking = () => myRouoter.push({ name: "Booking" });
+const goSignup = () => myRouoter.push({ name: "CreateUser" });
 
 const email = ref("");
 const password = ref("");
@@ -55,6 +56,8 @@ const LoginUser = () => {
 //check password 
 const checkMatchTODB = async () => {
     console.log('Sign in..');
+    // console.log(email.value)
+    // console.log(password.value)
     const res = await fetch(signinLink, {
         method: "POST",
         headers: {
@@ -71,11 +74,15 @@ const checkMatchTODB = async () => {
     localStorage.setItem('key',jwt.token)
 
     status.value = res.status
-    statusMessage.value = res.status == 200 ? 'Password Matches !' :
+    statusMessage.value = res.status == 200 ? 'Password Matches !' && goBooking() :
         res.status == 401 ? 'Password Not Matches !' :
         res.status == 404 ? 'A user with the specified email DOSE NOT exist !' : ''
     // console.log(this.token)
 }
+
+
+
+
 
 </script>
 
@@ -179,8 +186,8 @@ const checkMatchTODB = async () => {
 
          
           <!-- submit button -->
-          <div class="justify-center w-96 mx-auto">
-          <div class="mx-auto w-2/5 justify-center inline-flex p-5">
+          <div class="justify-center w-full mx-auto">
+          <div class="mx-auto ml-16 w-2/5 justify-center inline-flex p-5">
             <a
               href="#submit"
               class="font-bold text-gray-900 hover:text-white border border-gray-800 hover:border-green-400 hover:scale-110 focus:ring-1 focus:outline-none focus:ring-gray-300 rounded-lg text-sm text-center dark:border-gray-600 dark:text-gray-400 dark:hover:text-white dark:hover:bg-green-400 dark:focus:ring-gray-800 p-5"
@@ -190,12 +197,21 @@ const checkMatchTODB = async () => {
           </div>
 
           <!-- cancel button -->
-          <div class="inline-flex p-5 mx-auto w-3/5justify-center">
+          <div class="inline-flex p-5 -ml-16 w-1/5 justify-center">
             <button
               @click="cancel()"
               class="font-bold text-gray-900 hover:text-white border border-gray-800 hover:border-red-400 hover:scale-110 focus:ring-1 focus:outline-none focus:ring-gray-300 rounded-lg text-sm text-center dark:border-gray-600 dark:text-gray-400 dark:hover:text-white dark:hover:bg-red-400 dark:focus:ring-gray-800 p-5"
             >
               Cancel
+            </button>
+          </div>
+
+          <div class="inline-flex p-5 mx-auto w-2/5 justify-start text-sm">
+            <button 
+              @click="goSignup()" 
+              class="hover:text-blue-600 underline"
+              >
+              Create a new account ?
             </button>
           </div>
         </div>

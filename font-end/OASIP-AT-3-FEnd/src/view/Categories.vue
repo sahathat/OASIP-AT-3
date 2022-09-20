@@ -19,7 +19,6 @@ const categoryDetail = ref({})
 const myRouoter = useRouter();
 const goCategoriesList = () => myRouoter.push({ name: "CategoriesList" });
 
-const key = localStorage.getItem('key')
 
 // get every 10 sec
 const getStatus=ref(undefined)
@@ -27,6 +26,7 @@ const resGetCategory=ref(undefined)
 
 setInterval(async ()=>{
   const key = localStorage.getItem('key')
+
   resGetCategory.value= await fetch(categoryLink, {
     method: "GET",
     headers: {
@@ -44,7 +44,9 @@ setInterval(async ()=>{
 // first get event
 const getCategory =async()=>{
   const key = localStorage.getItem('key')
-  resGetCategory.value= await fetch(categoryLink, {
+  // console.log(key)
+
+ resGetCategory.value= await fetch(categoryLink, {
     method: "GET",
     headers: {
             "Authorization":'Bearer ' + key ,
@@ -61,6 +63,7 @@ const getCategory =async()=>{
 // get value
 const getDetail = async () => {
   const key = localStorage.getItem('key')
+
   const res = await fetch(`${categoryLink}/${params.id}`, {
     method: "GET",
     headers: {

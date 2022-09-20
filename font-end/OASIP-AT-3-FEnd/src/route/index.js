@@ -12,6 +12,9 @@ import UserList from '../view/UserList.vue'
 import CreateUser from '../view/CreateUser.vue'
 import Login from '../view/Login.vue'
 
+// import store from '../store/store'
+// import { IS_USER_AUTHENTICATION_GETTER } from '../store/storeconstants'
+
 import ContactUs from '../view/ContactUs.vue'
 const history=createWebHistory(import.meta.env.BASE_URL)
       
@@ -88,5 +91,18 @@ const routes=[
     }
 ]
 
-const router=createRouter({history,routes})
+const router = createRouter({history,routes})
+
+// router.beforeEach((to,from,next) => {
+//     if(to.meta.auth && !store.gettes[`auth/${IS_USER_AUTHENTICATION_GETTER}`]){
+//         next('/login')
+//     }
+//     else if( !to.meta.auth && store.gettes[`auth/${IS_USER_AUTHENTICATION_GETTER}`]){
+//         next('booking')
+//     }
+//     else{
+//         next()
+//     }
+// })
+
 export default router

@@ -62,8 +62,6 @@ const valEmail = (input) => {
   }
 };
 
-const key = localStorage.getItem('key')
-
 // overlap
 const betweenDateWarning = ref(undefined);
 
@@ -285,6 +283,8 @@ const isStatus = ref(undefined);
 const addBooking = async () => {
   let createStatus = undefined;
   const key = localStorage.getItem('key')
+  // console.log(key)
+
   const res = await fetch(eventLink, {
     method: "POST",
     headers: {
@@ -343,6 +343,7 @@ const resGetEvent = ref(undefined);
 // check every 10 second
 setInterval(async () => {
   const key = localStorage.getItem('key')
+  //console.log(countGetEvent.value++)
   resGetEvent.value = await fetch(eventLink,{
     method: "GET",
     headers: {

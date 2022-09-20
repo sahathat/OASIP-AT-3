@@ -12,6 +12,7 @@ const categoryLink = `${import.meta.env.BASE_URL}api/categories`;
 //GET category
 const getCategory = async () => {
   const key = localStorage.getItem('key')
+
   const res = await fetch(categoryLink, {
     method: "GET",
     headers: {

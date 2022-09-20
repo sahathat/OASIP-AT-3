@@ -11,6 +11,7 @@ const userLink = `${import.meta.env.BASE_URL}api/users`;
 //GET users
 const getUsers = async () => {
   const key = localStorage.getItem('key')
+
   const res = await fetch(userLink, {
     method: "GET",
     headers: {

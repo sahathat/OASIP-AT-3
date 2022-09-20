@@ -83,6 +83,7 @@ setInterval(async ()=>{
 // first get user
 const getUserList =async()=>{
   const key = localStorage.getItem('key')
+  // console.log(key)
   resGetUser.value= await fetch(userLink, {
     method: "GET",
     headers: {
@@ -100,6 +101,7 @@ const getUserList =async()=>{
 // get value
 const getDetail = async () => {
   const key = localStorage.getItem('key')
+  // console.log(key)
   const res = await fetch(`${userLink}/${params.id}`, {
     method: "GET",
     headers: {
@@ -157,6 +159,7 @@ onBeforeMount(async()=>{
 //remove information
 const removeUser = async () => {
   const key = localStorage.getItem('key')
+
   const res = await fetch(`${userLink}/${id}`, { 
     method: "DELETE",
     headers: {
