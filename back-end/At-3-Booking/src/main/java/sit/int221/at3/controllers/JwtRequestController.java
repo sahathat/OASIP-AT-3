@@ -50,6 +50,7 @@ public class JwtRequestController {
 
         UserDetails userdetails = userDetailsService.loadUserByUsername(authenticationRequest.getEmail());
         String token = jwtUtil.generateToken(userdetails);
+        System.out.println(jwtUtil.getRolesFromToken(token));
         return ResponseEntity.ok(new JwtResponse(token));
     }
 

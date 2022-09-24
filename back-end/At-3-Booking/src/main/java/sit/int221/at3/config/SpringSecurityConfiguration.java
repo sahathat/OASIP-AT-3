@@ -49,8 +49,8 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter{
     public void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-//                .antMatchers("/helloadmin").hasRole("ADMIN")
-//                .antMatchers("/hellostudent").hasAnyRole("STUDENT","ADMIN")
+                .antMatchers("/api/events/**").hasAnyRole("admin","student")
+                .antMatchers("/api/userList/**").hasRole("admin")
                 .antMatchers("/api/users/signin","/api/users/signup","/api/users/refresh").permitAll()
                 .anyRequest().authenticated()
                 .and().exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).

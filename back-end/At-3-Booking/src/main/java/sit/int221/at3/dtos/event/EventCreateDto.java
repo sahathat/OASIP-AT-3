@@ -61,6 +61,6 @@ public class EventCreateDto implements Serializable{
     }
 
     public void setEventNotes(String eventNotes) {
-        this.eventNotes = eventNotes.trim();
+        this.eventNotes = eventNotes == null ? null : eventNotes.trim();
     }
 }

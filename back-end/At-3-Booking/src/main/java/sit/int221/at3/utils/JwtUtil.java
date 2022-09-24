@@ -7,6 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import sit.int221.at3.entities.Role;
 
 import java.util.*;
 
@@ -37,13 +38,13 @@ public class JwtUtil {
 
 		Collection<? extends GrantedAuthority> roles = userDetails.getAuthorities();
 
-		if (roles.contains(new SimpleGrantedAuthority("admin"))) {
+		if (roles.contains(new SimpleGrantedAuthority(String.valueOf(Role.admin)))) {
 			claims.put("isAdmin", true);
 		}
-		if (roles.contains(new SimpleGrantedAuthority("lecturer"))) {
+		if (roles.contains(new SimpleGrantedAuthority(String.valueOf(Role.lecturer)))) {
 			claims.put("isLecturer", true);
 		}
-		if (roles.contains(new SimpleGrantedAuthority("student"))) {
+		if (roles.contains(new SimpleGrantedAuthority(String.valueOf(Role.student)))) {
 			claims.put("isStudent", true);
 		}
 		
@@ -85,15 +86,15 @@ public class JwtUtil {
 
 
 		if (isAdmin != null && isAdmin) {
-			roles = Arrays.asList(new SimpleGrantedAuthority("admin"));
+			roles = Arrays.asList(new SimpleGrantedAuthority("ROLE_" + Role.admin));
 		}
 
 		if (isLecturer != null && isLecturer) {
-			roles = Arrays.asList(new SimpleGrantedAuthority("lecturer"));
+			roles = Arrays.asList(new SimpleGrantedAuthority("ROLE_" + Role.lecturer));
 		}
 
 		if (isStudent != null && isStudent) {
-			roles = Arrays.asList(new SimpleGrantedAuthority("student"));
+			roles = Arrays.asList(new SimpleGrantedAuthority("ROLE_" + Role.student));
 		}
 		return roles;
 
