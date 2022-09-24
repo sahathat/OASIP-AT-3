@@ -33,7 +33,7 @@ public class CategoryUpdateDto {
     }
 
     public void setEventCategoryDescription(String eventCategoryDescription) {
-        this.eventCategoryDescription = eventCategoryDescription.trim();
+        this.eventCategoryDescription = eventCategoryDescription == null ? null : eventCategoryDescription.trim();
     }
 
     public void setEventCategoryDuration(Integer eventCategoryDuration) {

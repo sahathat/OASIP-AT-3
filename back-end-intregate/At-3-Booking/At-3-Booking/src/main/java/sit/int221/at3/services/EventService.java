@@ -4,6 +4,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import sit.int221.at3.dtos.event.EventCreateDto;
@@ -11,11 +13,13 @@ import sit.int221.at3.dtos.event.EventDto;
 import sit.int221.at3.dtos.event.EventUpdateDto;
 import sit.int221.at3.entities.Category;
 import sit.int221.at3.entities.Event;
+import sit.int221.at3.entities.Role;
 import sit.int221.at3.repositories.CategoryRepository;
 import sit.int221.at3.repositories.EventRepository;
 import sit.int221.at3.utils.ListMapper;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -70,13 +74,6 @@ public class EventService {
 
     public Event save(EventCreateDto newEvent) {
 
-        // if user input event by string " input it " that return "input it"
-//        newEvent.setBookingName(newEvent.getBookingName().trim());
-//        newEvent.setBookingEmail(newEvent.getBookingEmail().trim());
-//        if (newEvent.getEventNotes() != null) {
-//            newEvent.setEventNotes(newEvent.getEventNotes().trim());
-//        }
-
         // find category id if new event are created
         Category category = categoryRepository.findById(newEvent.getEventCategoryId()).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, newEvent.getEventCategoryId() + " is not exist please find new id if exist.")
@@ -96,10 +93,19 @@ public class EventService {
         return eventRepository.saveAndFlush(event);
     }
 
-    public void delete(Integer id) {
+    public void delete(Integer id, Authentication authentication) {
+
+
         // check id if not found then throw exception.
-        eventRepository.findById(id).orElseThrow(
+        Event event = eventRepository.findById(id).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, id + " does not exist please find new id if exist."));
+
+        // check email by authorize student role
+        List<SimpleGrantedAuthority> student = Arrays.asList(new SimpleGrantedAuthority(String.valueOf("ROLE_"+ Role.student)));
+
+        if (authentication.getAuthorities().equals(student) && !authentication.getName().equals(event.getBookingEmail())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "id of email event should same by student email");
+        }
 
         // and delete id.
         eventRepository.deleteById(id);
@@ -113,7 +119,7 @@ public class EventService {
         return existingEvent;
     }
 
-    public Event update(Integer id, EventUpdateDto updateEvent) {
+    public Event update(Integer id, EventUpdateDto updateEvent, Authentication authentication) {
         // check id if not found then throw exception.
         Event event = eventRepository.findById(id).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, id + " does not exist please find new id if exist."));
@@ -126,6 +132,13 @@ public class EventService {
             return modelMapper.map(updateEvent, Event.class);
         });
 
+        // check email by authorize student role
+        List<SimpleGrantedAuthority> student = Arrays.asList(new SimpleGrantedAuthority(String.valueOf("ROLE_"+ Role.student)));
+
+        if (authentication.getAuthorities().equals(student) && !authentication.getName().equals(event.getBookingEmail())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "id of email event should same by student email");
+        }
+
         // find id of category
         Category category = categoryRepository.findById(event.getEventCategory().getId()).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, " eventcategory id does not exist please find new id if exist."));
@@ -133,11 +146,6 @@ public class EventService {
         // check if date on category is nonoverlap
         if (!checkNonOverLap(event, category)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "datetime should non overlap by categories");
-        }
-
-        // if user input event by string " input it " that return "input it"
-        if (event.getEventNotes() != null) {
-            event.setEventNotes(event.getEventNotes().trim());
         }
 
         // and save

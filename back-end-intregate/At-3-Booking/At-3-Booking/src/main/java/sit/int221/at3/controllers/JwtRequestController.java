@@ -11,9 +11,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 import sit.int221.at3.dtos.user.JwtResponse;
-import sit.int221.at3.dtos.user.UserDto;
 import sit.int221.at3.dtos.user.UserLoginDto;
 import sit.int221.at3.dtos.user.UserModifyDto;
 import sit.int221.at3.entities.User;
@@ -23,7 +21,6 @@ import sit.int221.at3.utils.JwtUtil;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -53,6 +50,7 @@ public class JwtRequestController {
 
         UserDetails userdetails = userDetailsService.loadUserByUsername(authenticationRequest.getEmail());
         String token = jwtUtil.generateToken(userdetails);
+        System.out.println(jwtUtil.getRolesFromToken(token));
         return ResponseEntity.ok(new JwtResponse(token));
     }
 
@@ -67,9 +65,6 @@ public class JwtRequestController {
 
     public Map<String, Object> getMapFromIoJsonwebtokenClaims(DefaultClaims claims) {
         Map<String, Object> expectedMap = new HashMap<String, Object>();
-        if(claims == null){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Need login or jwt expire before use refresh");
-        }
         for (Map.Entry<String, Object> entry : claims.entrySet()) {
             expectedMap.put(entry.getKey(), entry.getValue());
         }
