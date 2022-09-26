@@ -6,15 +6,19 @@ import { useRoute,useRouter } from "vue-router";
 const { params } = useRoute();
 const myRouoter = useRouter();
 const goHome = () => myRouoter.push({ name: "Home" });
+const goBooking = () => myRouoter.push({ name: "Booking" });
+const goSignup = () => myRouoter.push({ name: "CreateUser" });
 
 const email = ref("");
 const password = ref("");
 const statusMessage = ref("");
 const status = ref(0)
 
+const token = ref('')
+
 const db = "http://localhost:5000/booking";
-const matchedLink = `${import.meta.env.BASE_URL}api/users/matched`;
-// const userLink = "http://ip21at3.sit.kmutt.ac.th:8081/api/users";
+// const signinLink = 'http://localhost:8443/api/users/signin';
+const signinLink = `${import.meta.env.BASE_URL}api/users/signin`;
 
 // validate email
 const isEmailEmpty = ref(undefined);
@@ -54,20 +58,32 @@ const checkMatchTODB = async () => {
     console.log('Sign in..');
     // console.log(email.value)
     // console.log(password.value)
-    const res = await fetch(matchedLink, {
+    const res = await fetch(signinLink, {
         method: "POST",
         headers: {
             "content-type": "application/json",
         },
         body: JSON.stringify({ email: email.value, password: password.value })
-    });
-
+    })
     console.log(res.status);
+    //get token
+    const jwt = await res.json()
+    console.log(jwt.token)
+    
+    // set localStorage
+    localStorage.setItem('key',jwt.token)
+    localStorage.setItem('token','accessToken')
+
     status.value = res.status
-    statusMessage.value = res.status == 200 ? 'Password Matches !' :
-        res.status == 401 ? 'Password Not Matches !' :
-        res.status == 404 ? 'A user with the specified email DOSE NOT exist !' : ''
+    statusMessage.value = res.status == 200 ? 'Login Successful !' :
+        res.status == 401 ? 'Password Incorrect !' :
+        res.status == 404 ? 'A user with the specified email DOES NOT exist and allow the user to edit the email' : ''
+    // console.log(this.token)
 }
+
+
+
+
 
 </script>
 
@@ -171,8 +187,8 @@ const checkMatchTODB = async () => {
 
          
           <!-- submit button -->
-          <div class="justify-center w-96 mx-auto">
-          <div class="mx-auto w-2/5 justify-center inline-flex p-5">
+          <div class="justify-center w-full mx-auto">
+          <div class="mx-auto ml-16 w-2/5 justify-center inline-flex p-5">
             <a
               href="#submit"
               class="font-bold text-gray-900 hover:text-white border border-gray-800 hover:border-green-400 hover:scale-110 focus:ring-1 focus:outline-none focus:ring-gray-300 rounded-lg text-sm text-center dark:border-gray-600 dark:text-gray-400 dark:hover:text-white dark:hover:bg-green-400 dark:focus:ring-gray-800 p-5"
@@ -182,12 +198,21 @@ const checkMatchTODB = async () => {
           </div>
 
           <!-- cancel button -->
-          <div class="inline-flex p-5 mx-auto w-3/5justify-center">
+          <div class="inline-flex p-5 -ml-16 w-1/5 justify-center">
             <button
               @click="cancel()"
               class="font-bold text-gray-900 hover:text-white border border-gray-800 hover:border-red-400 hover:scale-110 focus:ring-1 focus:outline-none focus:ring-gray-300 rounded-lg text-sm text-center dark:border-gray-600 dark:text-gray-400 dark:hover:text-white dark:hover:bg-red-400 dark:focus:ring-gray-800 p-5"
             >
               Cancel
+            </button>
+          </div>
+
+          <div class="inline-flex p-5 mx-auto w-2/5 justify-start text-sm">
+            <button 
+              @click="goSignup()" 
+              class="hover:text-blue-600 underline"
+              >
+              Create a new account ?
             </button>
           </div>
         </div>
@@ -239,18 +264,6 @@ const checkMatchTODB = async () => {
         <div v-if="password == ''" class="alert warning text-sm">
           <strong class="block">Warning!</strong> Please enter your password.
         </div>
-
-        <!-- add success alert-->
-        <!-- <div v-if="addSuccess == true" class="alert success text-sm">
-          <span class="closebtn" @click="addSuccess = false">x</span>
-          <strong class="block">Success!</strong> Create new user success.
-        </div> -->
-
-        <!-- add error alert-->
-        <!-- <div v-if="addSuccess == false" class="alert text-sm">
-          <span class="closebtn" @click="isStatus = true">x</span>
-          <strong class="block">Error!</strong> Cannot create new user.
-        </div> -->
 
         </div>
       </div>

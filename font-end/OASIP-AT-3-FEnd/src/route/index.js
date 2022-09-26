@@ -12,6 +12,9 @@ import UserList from '../view/UserList.vue'
 import CreateUser from '../view/CreateUser.vue'
 import Login from '../view/Login.vue'
 
+// import store from '../store/store'
+// import { IS_USER_AUTHENTICATION_GETTER } from '../store/storeconstants'
+
 import ContactUs from '../view/ContactUs.vue'
 const history=createWebHistory(import.meta.env.BASE_URL)
       
@@ -28,55 +31,78 @@ const routes=[
     {
         path:'/booking',
         name:'Booking',
-        component: Booking
-    },
+        component: Booking,
+        meta: { auth:true }
+    }, 
     {
         path:'/reservation/:id',
         name:'Reservation',
-        component: Reservation
+        component: Reservation,
+        meta: { auth:true }
     },
     {
         path:'/reservation-list',
         name:'ReservationList',
-        component: ReservationList
+        component: ReservationList,
+        meta: { auth:true }
     },
     {
 
         path:'/categories/:id',
         name:'Categories',
-        component: Categories
+        component: Categories,
+        meta: { auth:true }
     },
     {
         path:'/categories-list',
         name:'CategoriesList',
-        component: CategoriesList
+        component: CategoriesList,
+        meta: { auth:false }
     },
     {
         path:'/user-info/:id',
         name:'UserInfo',
-        component: UserInfo
+        component: UserInfo,
+        meta: { auth:true }
     },
     {
         path:'/user-list',
         name:'UserList',
-        component: UserList
+        component: UserList,
+        meta: { auth:true }
     },
     {
         path:'/create-user',
         name:'CreateUser',
-        component: CreateUser
+        component: CreateUser,
+        meta: { auth:false }
     },
     {
         path:'/login',
         name:'Login',
-        component: Login
+        component: Login,
+        meta: { auth:false }
     },
     {
         path:'/contact-us',
         name:'ContactUs',
-        component: ContactUs
+        component: ContactUs,
+        meta: { auth:false }
     }
 ]
 
-const router=createRouter({history,routes})
+const router = createRouter({history,routes})
+
+// router.beforeEach((to,from,next) => {
+//     if(to.meta.auth && !store.gettes[`auth/${IS_USER_AUTHENTICATION_GETTER}`]){
+//         next('/login')
+//     }
+//     else if( !to.meta.auth && store.gettes[`auth/${IS_USER_AUTHENTICATION_GETTER}`]){
+//         next('booking')
+//     }
+//     else{
+//         next()
+//     }
+// })
+
 export default router

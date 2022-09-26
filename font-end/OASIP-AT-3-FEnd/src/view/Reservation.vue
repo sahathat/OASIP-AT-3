@@ -6,7 +6,9 @@ const { params } = useRoute();
 
 const db = "http://localhost:5000/booking";
 const eventLink = `${import.meta.env.BASE_URL}api/events`;
-// const eventLink = "http://ip21at3.sit.kmutt.ac.th:8081/api/events";
+const eventLink = `${import.meta.env.BASE_URL}api/users/refresh`;
+// const eventLink = "http://localhost:8443/api/events";
+// const refreshLink = "http://localhost:8443/api/users/refresh";
 
 const id = params.id;
 const name = ref("");
@@ -19,8 +21,10 @@ const noteT = ref("");
 const detailBooking = ref({});
 const eventList=ref([])
 const isNotNull = ref(false);
+
 const myRouoter = useRouter();
 const goReservation = () => myRouoter.push({ name: "ReservationList" });
+const goHome = () => myRouoter.push({ name: "Home" });
 
 // timer
 const day = ref();
@@ -59,29 +63,77 @@ let clock = () => {
 setInterval(clock, 1000);
 
 // get every 10 sec
-const getStatus=ref(undefined)
-const resGetEvent=ref(undefined)
+// const getStatus=ref(undefined)
+// const resGetEvent=ref(undefined)
 
-setInterval(async ()=>{
-  resGetEvent.value= await fetch(eventLink)
-  if (resGetEvent.value.status === 200) {
-    eventList.value = await resGetEvent.value.json();
-    getStatus.value = true;
-  } else getStatus.value = false;
-},10000)
+// setInterval(async ()=>{
+//   const key = localStorage.getItem('key')
+//   resGetEvent.value= await fetch(eventLink,{
+//     method: 'GET',
+//     headers: {
+//             "Authorization":'Bearer ' + key ,
+//             "Accept": 'application/json',
+//             "content-type": "application/json",
+//         }
+//   })
+//   if (resGetEvent.value.status === 200) {
+//     eventList.value = await resGetEvent.value.json();
+//     getStatus.value = true;
+//   } else getStatus.value = false;
+// },10000)
 
-// first get event
-const getEvent =async()=>{
- resGetEvent.value= await fetch(eventLink)
-  if (resGetEvent.value.status === 200) {
-    eventList.value = await resGetEvent.value.json();
-    getStatus.value = true;
-  } else getStatus.value = false;       
-}
+//GET event
+const getEvent = async () => {
+  const key = localStorage.getItem('key')
+  const res = await fetch(eventLink, {
+    method: "GET",
+    headers: {
+            "Authorization":'Bearer ' + key ,
+            "Accept": 'application/json',
+            "content-type": "application/json",
+        }
+  });
+  if (res.status === 200) {
+    eventList.value = await res.json();
+  } 
+  // refresh token ----------------------------- //
+  else if (res.status === 401 && localStorage.getItem('token')==='accessToken') {
+    console.log('test...')
+    const resForRefresh = await fetch(refreshLink, {
+      headers: {
+        Authorization: "Bearer " + key ,
+        isRefreshToken: true ,
+      },
+    })
+      const jwt = await resForRefresh.json()
+      console.log(jwt)
+      if(resForRefresh.status === 200){
+        // set localStorage
+        localStorage.setItem('key',jwt.token)
+        localStorage.setItem('token','refreshToken')
+        getEvent()
+      }
+    }else if(res.status === 401 && localStorage.getItem('token')==='refreshToken'){
+        localStorage.removeItem('key')
+        localStorage.removeItem('token')
+        goHome()
+        console.log('เข้า')
+    }
+    // ----------------------------------------- //
+};
 
 // get value
 const getDetail = async () => {
-  const res = await fetch(`${eventLink}/${params.id}`);
+  const key = localStorage.getItem('key')
+
+  const res = await fetch(`${eventLink}/${params.id}`,{
+    method: 'GET',
+    headers: {
+            "Authorization":'Bearer ' + key ,
+            "Accept": 'application/json',
+            "content-type": "application/json",
+        }
+  });
   if (res.status === 200) {
     detailBooking.value = await res.json();
     //console.log(detailBooking.value);
@@ -98,6 +150,29 @@ const getDetail = async () => {
       noteT.value = detailBooking.value.eventNotes;
     }
   }
+  // refresh token ----------------------------------------------------------- //
+      else if (res.status === 401 && localStorage.getItem('token')==='accessToken') {
+          console.log('test...')
+          const resForRefresh = await fetch(refreshLink, {
+            headers: {
+            Authorization: "Bearer " + key,
+            isRefreshToken: true ,
+            },
+            })
+          const jwt = await resForRefresh.json()
+          console.log(jwt)
+          if(resForRefresh.status === 200){
+              // set localStorage
+              localStorage.setItem('key',jwt.token)
+              localStorage.setItem('token','refreshToken')
+              getDetail()
+          }
+      } else if(res.status === 401 && localStorage.getItem('token')==='refreshToken'){
+          localStorage.removeItem('key')
+          localStorage.removeItem('token')
+          goHome()
+        // console.log('เข้า')
+      } 
 };
 
 onBeforeMount(async()=>{
@@ -107,11 +182,44 @@ onBeforeMount(async()=>{
 
 //remove information
 const removeInfo = async () => {
-  const res = await fetch(`${eventLink}/${id}`, { method: "DELETE" });
+  const key = localStorage.getItem('key')
+  const res = await fetch(`${eventLink}/${id}`, { 
+    method: "DELETE",
+    headers: {
+            "Authorization":'Bearer ' + key ,
+            "Accept": 'application/json',
+            "content-type": "application/json",
+        }
+  })
   if (res.status === 200) {
     console.log("delete successfully");
     goReservation();
-  } else console.log("error");
+  } 
+  // refresh token ----------------------------------------------------------- //
+    else if (res.status === 401 && localStorage.getItem('token')==='accessToken') {
+        console.log('test...')
+        const resForRefresh = await fetch(refreshLink, {
+            headers: {
+            Authorization: "Bearer " + key,
+            isRefreshToken: true ,
+            },
+            })
+        const jwt = await resForRefresh.json()
+        console.log(jwt)
+        if(resForRefresh.status === 200){
+              // set localStorage
+              localStorage.setItem('key',jwt.token)
+              localStorage.setItem('token','refreshToken')
+              getDetail()
+        }
+      } else if(res.status === 401 && localStorage.getItem('token')==='refreshToken'){
+          localStorage.removeItem('key')
+          localStorage.removeItem('token')
+          goHome()
+        // console.log('เข้า')
+      } 
+      // ----------------------------------------------------------------------- //
+      else console.log("error");
 };
 
 // assign to edit attribute
@@ -134,11 +242,15 @@ const cancel = () => {
 };
 
 const edit =async()=>{
+      const key = localStorage.getItem('key')
+
        let canEdit=undefined
         const res = await fetch(`${eventLink}/${id}`, {
         method: "PUT",
         headers: {
-          "content-type": "application/json",
+            "Authorization":'Bearer ' + key ,
+            "Accept": 'application/json',
+            "content-type": "application/json",
         },
         body: JSON.stringify({
           eventStartTime: `${editStartDate.value}T${editStartTime.value}:00+07:00`,
@@ -153,7 +265,32 @@ const edit =async()=>{
         isEdit.value = false;
         canEdit=true
         editSuccess.value=true
-       }else {
+       }
+       // refresh token ----------------------------------------------------------- //
+      else if (res.status === 401 && localStorage.getItem('token')==='accessToken') {
+          console.log('test...')
+          const resForRefresh = await fetch(refreshLink, {
+            headers: {
+            Authorization: "Bearer " + key,
+            isRefreshToken: true ,
+            },
+            })
+          const jwt = await resForRefresh.json()
+          console.log(jwt)
+          if(resForRefresh.status === 200){
+              // set localStorage
+              localStorage.setItem('key',jwt.token)
+              localStorage.setItem('token','refreshToken')
+              getDetail()
+          }
+      } else if(res.status === 401 && localStorage.getItem('token')==='refreshToken'){
+          localStorage.removeItem('key')
+          localStorage.removeItem('token')
+          goHome()
+        // console.log('เข้า')
+      } 
+      // ------------------------------------------------------------------------- //
+        else {
               canEdit=false
               editSuccess.value=false
        }

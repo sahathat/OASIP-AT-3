@@ -5,7 +5,8 @@ import { useRoute,useRouter } from "vue-router";
 
 const { params } = useRoute();
 const myRouoter = useRouter();
-const goUserList = () => myRouoter.push({ name: "UserList" });
+const goSignin = () => myRouoter.push({ name: "Login" });
+const goHome = () => myRouoter.push({ name: "Home" });
 
 const name = ref("");
 const email = ref("");
@@ -21,7 +22,8 @@ const emailLength = 50;
 
 const db = "http://localhost:5000/booking";
 const userLink= `${import.meta.env.BASE_URL}api/users`;
-// const userLink = "http://ip21at3.sit.kmutt.ac.th:8081/api/users";
+// const userLink = 'http://localhost:8443/api/users';
+
 
 
 const userList = ref([]);
@@ -74,7 +76,7 @@ const cancel = () => {
   role.value = "" ;
   password.value = "";
   confirmPassword.value = "";
-  goUserList()
+  goHome()
 };
 
 // submit
@@ -128,7 +130,7 @@ const submitt = async () => {
       validateRoleisNotNull.value = false;
     }
   }
-  goUserList()
+   goSignin()
   console.log(addSuccess.value)
   console.log(isStatus.value)
 };
@@ -139,7 +141,7 @@ const status = ref(0)
 const isStatus = ref(undefined);
 const createUser = async () => {
   let createStatus = undefined;
-  const res = await fetch(userLink, {
+  const res = await fetch(`${userLink}/signup`, {
     method: "POST",
     headers: {
       "content-type": "application/json",
@@ -169,9 +171,17 @@ const createUser = async () => {
   return createStatus;
 };
 
+// ขาดแจ้งเตือนตอนadd ว่าได้หรือไม่
 //GET user
 const getUser = async () => {
-  const res = await fetch(userLink);
+  const key = localStorage.getItem('key')
+  const res = await fetch(userLink, {
+    method: "GET",
+    headers: {
+          "Authorization":'Bearer ' + key ,
+          "Accept": 'application/json',
+          "content-type": "application/json",
+    }});
   if (res.status === 200) {
     userList.value = await res.json();
     getStatus.value = true;
@@ -184,7 +194,14 @@ const resGetUser = ref(undefined);
 // check every 10 second
 setInterval(async () => {
   //console.log(countGetEvent.value++)
-  resGetUser.value = await fetch(userLink);
+  const key = localStorage.getItem('key')
+  resGetUser.value = await fetch(userLink, {
+    method: "GET",
+    headers: {
+            "Authorization":'Bearer ' + key ,
+            "Accept": 'application/json',
+            "content-type": "application/json"
+  }});
   if (resGetUser.value.status === 200) {
     userList.value = await resGetUser.value.json();
     getStatus.value = true;
@@ -200,7 +217,7 @@ onBeforeMount(async () => {
 <template>
   <div class="showUp container mx-auto">
     <div
-      class="max-w-screen-md p-5 pb-7 mx-auto mt-14 bg-gray-200 rounded-md shadow-xl"
+      class="max-w-screen-md p-5 pb-7 mx-auto mt-10 bg-gray-200 rounded-md shadow-xl"
     >
       <div class="text-center">
         <h1 class="my-3 text-3xl font-semibold text-gray-700"> Sign up</h1>

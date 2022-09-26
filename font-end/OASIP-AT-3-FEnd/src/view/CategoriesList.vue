@@ -1,25 +1,56 @@
 <script setup>
-import { computed, onBeforeUpdate } from "vue";
-import { ref, onBeforeMount } from "vue";
-import { useRouter } from "vue-router";
+import { ref, onBeforeMount, onUpdated } from "vue";
+import { useRoute,useRouter } from "vue-router";
 const categoryList = ref([]);
 const categoryCheck = ref(false);
 
+const { params } = useRoute();
+const myRouoter = useRouter();
+const goHome = () => myRouoter.push({ name: "Home" });
+
 const db = "http://localhost:5000/booking";
 const categoryLink = `${import.meta.env.BASE_URL}api/categories`;
-// const categoryLink = "http://ip21at3.sit.kmutt.ac.th:8081/api/categories";
+const refreshLink = `${import.meta.env.BASE_URL}api/users/refresh`;
+// const categoryLink = "http://localhost:8443/api/categories";
+// const refreshLink  = "http://localhost:8443/api/users/refresh";
 
 //GET category
 const getCategory = async () => {
-  const res = await fetch(categoryLink);
+  const key = localStorage.getItem('key')
+  const res = await fetch(categoryLink, {
+    method: "GET",
+    headers: {
+            "Authorization":'Bearer ' + key ,
+            "Accept": 'application/json',
+            "content-type": "application/json",
+        }
+  });
   if (res.status === 200) {
     categoryList.value = await res.json();
-    categoryCheck.value = true;
-    //console.log(getCategory.value)
-  } else {
-    categoryCheck.value = false;
-  }
+  } else if (res.status === 401 && localStorage.getItem('token')==='accessToken') {
+    console.log('test...')
+    const resForRefresh = await fetch(refreshLink, {
+      headers: {
+        Authorization: "Bearer " + key,
+        isRefreshToken: true ,
+      },
+    })
+      const jwt = await resForRefresh.json()
+      console.log(jwt)
+      if(resForRefresh.status === 200){
+        // set localStorage
+        localStorage.setItem('key',jwt.token)
+        localStorage.setItem('token','refreshToken')
+        getCategory()
+      }
+    }else if(res.status === 401 && localStorage.getItem('token')==='refreshToken'){
+        localStorage.removeItem('key')
+        localStorage.removeItem('token')
+        goHome()
+        // console.log('เข้า')
+    }
 };
+
 
 //router
 const myRouter = useRouter();
@@ -32,6 +63,9 @@ const goCategories= (input) =>
   });
 
 onBeforeMount(async () => {
+  await getCategory();
+});
+onUpdated(async () => {
   await getCategory();
 });
 

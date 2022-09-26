@@ -1,53 +1,98 @@
 <script setup>
-import { computed, onBeforeUpdate } from "vue";
-import { ref, onBeforeMount } from "vue";
-import { useRouter } from "vue-router";
+import { ref, onBeforeMount, onUpdated } from "vue";
+import { useRoute,useRouter } from "vue-router";
 const eventList = ref([]);
 const categoryList = ref([]);
-const categoryCheck = ref(false);
 const filterReservationList = ref([]);
+
+const { params } = useRoute();
+const myRouoter = useRouter();
+const goHome = () => myRouoter.push({ name: "Home" });
 
 const db = "http://localhost:5000/booking";
 const eventLink = `${import.meta.env.BASE_URL}api/events`;
 const categoryLink = `${import.meta.env.BASE_URL}api/categories`;
-// const eventLink = "http://ip21at3.sit.kmutt.ac.th:8081/api/events";
-// const categoryLink = "http://ip21at3.sit.kmutt.ac.th:8081/api/categories";
+const refreshLink = `${import.meta.env.BASE_URL}api/users/refresh`;
+// const eventLink = "http://localhost:8443/api/events";
+// const categoryLink = "http://localhost:8443/api/categories";
+// const refreshLink = "http://localhost:8443/api/users/refresh";
 
 //GET event
-const getStatus = ref(undefined);
-// const resGetEvent = ref(undefined);
-// get every 10 sec
-// setInterval(async () => {
-//   getStatus.value = undefined;
-//   resGetEvent.value = await fetch(eventLink);
-//   if (resGetEvent.value.status === 200) {
-//     eventList.value = await resGetEvent.value.json();
-//     getStatus.value = true;
-//     filterReservationList.value = eventList.value;
-//   } else getStatus.value = false;
-// }, 10000);
-
-// first get event
 const getEvent = async () => {
-  const res = await fetch(eventLink);
-  //const res = await fetch(`${import.meta.env.VITE_BASE_URL}/events?page=0&pageSize=1`)
+  const key = localStorage.getItem('key')
+  const res = await fetch(eventLink, {
+    method: "GET",
+    headers: {
+            "Authorization":'Bearer ' + key ,
+            "Accept": 'application/json',
+            "content-type": "application/json",
+        }
+  });
   if (res.status === 200) {
     eventList.value = await res.json();
-    filterReservationList.value = eventList.value;
-    //console.log(bookingList.value)
-  }
+    filterReservationList.value = eventList.value
+  } else if (res.status === 401 && localStorage.getItem('token')==='accessToken') {
+    console.log('test...')
+    const resForRefresh = await fetch(refreshLink, {
+      headers: {
+        Authorization: "Bearer " + key ,
+        isRefreshToken: true ,
+      },
+    })
+      const jwt = await resForRefresh.json()
+      console.log(jwt)
+      if(resForRefresh.status === 200){
+        // set localStorage
+        localStorage.setItem('key',jwt.token)
+        localStorage.setItem('token','refreshToken')
+        getEvent()
+      }
+    }else if(res.status === 401 && localStorage.getItem('token')==='refreshToken'){
+        localStorage.removeItem('key')
+        localStorage.removeItem('token')
+        goHome()
+        // console.log('เข้า')
+    }
 };
 
 //GET category
 const getCategory = async () => {
-  const res = await fetch(categoryLink);
+  const key = localStorage.getItem('key')
+  const res = await fetch(categoryLink, {
+    method: "GET",
+    headers: {
+            "Authorization":'Bearer ' + key ,
+            "Accept": 'application/json',
+            "content-type": "application/json",
+        }
+  });
   if (res.status === 200) {
     categoryList.value = await res.json();
-    categoryCheck.value = true;
-    //console.log(getCategory.value)
-  } else {
-    categoryCheck.value = false;
-  }
+  } 
+  // refresh ------------------------------------------ //
+  else if (res.status === 401 && localStorage.getItem('token')==='accessToken') {
+    console.log('test...')
+    const resForRefresh = await fetch(refreshLink, {
+      headers: {
+        Authorization: "Bearer " + key,
+        isRefreshToken: true ,
+      },
+    })
+      const jwt = await resForRefresh.json()
+      console.log(jwt)
+      if(resForRefresh.status === 200){
+        // set localStorage
+        localStorage.setItem('key',jwt.token)
+        localStorage.setItem('token','refreshToken')
+        getCategory()
+      }
+    }else if(res.status === 401 && localStorage.getItem('token')==='refreshToken'){
+        localStorage.removeItem('key')
+        localStorage.removeItem('token')
+        goHome()
+        // console.log('เข้า')
+    }
+    // ----------------------------------------- //
 };
 
 //router
@@ -61,6 +106,11 @@ const goReservation = (input) =>
   });
 
 onBeforeMount(async () => {
+  await getEvent();
+  await getCategory();
+});
+
+onUpdated(async () => {
   await getEvent();
   await getCategory();
 });

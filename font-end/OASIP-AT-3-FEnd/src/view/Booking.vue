@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from "@vue/reactivity";
 import { onBeforeMount, onUpdated, ref } from "vue";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 
 const name = ref("");
 const eMail = ref("");
@@ -11,6 +11,10 @@ const startTime = ref("");
 const noteText = ref("");
 const cateId = ref("");
 
+const { params } = useRoute();
+const myRouoter = useRouter();
+const goHome = () => myRouoter.push({ name: "Home" });
+
 const nameLength = 100;
 const emailLength = 100;
 const noteLength = 500;
@@ -18,6 +22,10 @@ const noteLength = 500;
 const db = "http://localhost:5000/booking";
 const eventLink = `${import.meta.env.BASE_URL}api/events`;
 const categoryLink = `${import.meta.env.BASE_URL}api/categories`;
+const refreshLink = `${import.meta.env.BASE_URL}api/users/refresh`;
+// const eventLink = "http://localhost:8443/api/events";
+// const categoryLink = "http://localhost:8443/api/categories";
+// const refreshLink = "http://localhost:8443/api/users/refresh";
 
 const eventList = ref([]);
 const categoryList = ref([]);
@@ -280,10 +288,15 @@ const submitt = () => {
 const isStatus = ref(undefined);
 const addBooking = async () => {
   let createStatus = undefined;
+  const key = localStorage.getItem('key')
+  // console.log(key)
+
   const res = await fetch(eventLink, {
     method: "POST",
     headers: {
-      "content-type": "application/json",
+            "Authorization":'Bearer ' + key ,
+            "Accept": 'application/json',
+            "content-type": "application/json",
     },
     body: JSON.stringify({
       bookingName: name.value,
@@ -297,11 +310,37 @@ const addBooking = async () => {
     addSuccess.value = true;
     createStatus = true;
     isStatus.value = true;
+    console.log('เข้า')
     setTimeout(() => (addSuccess.value = false), 5000);
   } else if (res.status === 400) {
     validateBetweenDate.value = true;
     isStatus.value = false;
-  } else {
+  }
+  // refresh token ----------------------------------------------------------- //
+    else if (res.status === 401 && localStorage.getItem('token')==='accessToken') {
+          console.log('test...')
+          const resForRefresh = await fetch(refreshLink, {
+            headers: {
+            Authorization: "Bearer " + key,
+            isRefreshToken: true ,
+            },
+            })
+          const jwt = await resForRefresh.json()
+          console.log(jwt)
+          if(resForRefresh.status === 200){
+              // set localStorage
+              localStorage.setItem('key',jwt.token)
+              localStorage.setItem('token','refreshToken')
+              addBooking()
+          }
+    } else if(res.status === 401 && localStorage.getItem('token')==='refreshToken'){
+          localStorage.removeItem('key')
+          localStorage.removeItem('token')
+          goHome()
+        // console.log('เข้า')
+    } 
+  // ------------------------------------------------------------------------- //
+    else {
     createStatus = false;
     isStatus.value = false;
   }
@@ -312,40 +351,108 @@ const addBooking = async () => {
 
 // first get Category
 const getCategory = async () => {
-  const res = await fetch(categoryLink);
+  const key = localStorage.getItem('key')
+  const res = await fetch(categoryLink,{
+    method: "GET",
+    headers: {
+            "Authorization":'Bearer ' + key ,
+            "Accept": 'application/json',
+            "content-type": "application/json",
+    }
+  });
   if (res.status === 200) {
     categoryList.value = await res.json();
     getStatus.value = true;
-  } else {
-    getStatus.value = false;
-  }
+  } 
+  // refresh token ----------------------------------------------------------- //
+    else if (res.status === 401 && localStorage.getItem('token')==='accessToken') {
+      console.log('test...')
+         const resForRefresh = await fetch(refreshLink, {
+            headers: {
+            Authorization: "Bearer " + key,
+            isRefreshToken: true ,
+            },
+            })
+          const jwt = await resForRefresh.json()
+          console.log(jwt)
+          if(resForRefresh.status === 200){
+              // set localStorage
+              localStorage.setItem('key',jwt.token)
+              localStorage.setItem('token','refreshToken')
+              getCategory()
+          }
+    } else if(res.status === 401 && localStorage.getItem('token')==='refreshToken'){
+          localStorage.removeItem('key')
+          localStorage.removeItem('token')
+          goHome()
+        // console.log('เข้า')
+    } 
+    // ------------------------------------------------------------------------- //
+      else {
+        getStatus.value = false;
+    }
 };
 
 // get event
-const resGetEvent = ref(undefined);
-//const countGetEvent=ref(0)
+// const resGetEvent = ref(undefined);
+// //const countGetEvent=ref(0)
 
-// check every 10 second
-setInterval(async () => {
-  //console.log(countGetEvent.value++)
-  resGetEvent.value = await fetch(eventLink);
-  if (resGetEvent.value.status === 200) {
-    eventList.value = await resGetEvent.value.json();
-    getStatus.value = true;
-  } else getStatus.value = false;
-}, 10000);
+// // check every 10 second
+// setInterval(async () => {
+//   const key = localStorage.getItem('key')
+//   //console.log(countGetEvent.value++)
+//   resGetEvent.value = await fetch(eventLink,{
+//     method: "GET",
+//     headers: {
+//             "Authorization":'Bearer ' + key ,
+//             "Accept": 'application/json',
+//             "content-type": "application/json",
+//     }
+//   });
+//   if (resGetEvent.value.status === 200) {
+//     eventList.value = await resGetEvent.value.json();
+//     getStatus.value = true;
+//   } else getStatus.value = false;
+// }, 10000);
 
-// first get event
+//GET event
 const getEvent = async () => {
-  const res = await fetch(eventLink);
+  const key = localStorage.getItem('key')
+  const res = await fetch(eventLink, {
+    method: "GET",
+    headers: {
+            "Authorization":'Bearer ' + key ,
+            "Accept": 'application/json',
+            "content-type": "application/json",
+        }
+  });
   if (res.status === 200) {
     eventList.value = await res.json();
-    getStatus.value = true;
-  } else getStatus.value = false;
+  } else if (res.status === 401 && localStorage.getItem('token')==='accessToken') {
+    console.log('test...')
+    const resForRefresh = await fetch(refreshLink, {
+      headers: {
+        Authorization: "Bearer " + key ,
+        isRefreshToken: true ,
+      },
+    })
+      const jwt = await resForRefresh.json()
+      console.log(jwt)
+      if(resForRefresh.status === 200){
+        // set localStorage
+        localStorage.setItem('key',jwt.token)
+        localStorage.setItem('token','refreshToken')
+        getEvent()
+      }
+    }else if(res.status === 401 && localStorage.getItem('token')==='refreshToken'){
+        localStorage.removeItem('key')
+        localStorage.removeItem('token')
+        goHome()
+        console.log('เข้า')
+    }
 };
 
 //get duration
-
 const durationTime = computed(() => {
   let value = undefined;
   for (let cate of categoryList.value) {
