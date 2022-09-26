@@ -473,7 +473,7 @@ onBeforeMount(async () => {
 <template>
   <div class="showUp container mx-auto">
     <div
-      class="max-w-screen-md p-5 pb-7 mx-auto mt-14 bg-gray-200 rounded-md shadow-sm shadow-xl"
+      class="max-w-screen-md p-5 pb-7 mx-auto mt-14 bg-gray-200 rounded-md shadow-xl"
     >
       <div class="text-center">
         <h1 class="my-3 text-3xl font-semibold text-gray-700">Booking</h1>
@@ -550,7 +550,7 @@ onBeforeMount(async () => {
               <!-- show category detail -->
               <a
                 href="#category-detail"
-                class="px-1.5 font-light mx-2 bg-white rounded-full text-xs bg-black text-white"
+                class="px-1.5 font-light mx-2 rounded-full text-xs bg-black text-white"
                 >?</a
               >
             </div>

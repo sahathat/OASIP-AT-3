@@ -6,7 +6,7 @@ const { params } = useRoute();
 
 const db = "http://localhost:5000/booking";
 const eventLink = `${import.meta.env.BASE_URL}api/events`;
-const eventLink = `${import.meta.env.BASE_URL}api/users/refresh`;
+const refreshLink = `${import.meta.env.BASE_URL}api/users/refresh`;
 // const eventLink = "http://localhost:8443/api/events";
 // const refreshLink = "http://localhost:8443/api/users/refresh";
 
