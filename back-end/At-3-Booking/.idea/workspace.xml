@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="7acec1a0-e548-4356-95cd-f53d1a02b3eb" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../../back-end-intregate/At-3-Booking/At-3-Booking/src/main/java/sit/int221/at3/config/ApplicationConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../back-end-intregate/At-3-Booking/At-3-Booking/src/main/java/sit/int221/at3/config/ApplicationConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../back-end-intregate/At-3-Booking/At-3-Booking/src/main/java/sit/int221/at3/config/SpringSecurityConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../back-end-intregate/At-3-Booking/At-3-Booking/src/main/java/sit/int221/at3/config/SpringSecurityConfiguration.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../back-end-intregate/At-3-Booking/At-3-Booking/src/main/java/sit/int221/at3/controllers/JwtRequestController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../back-end-intregate/At-3-Booking/At-3-Booking/src/main/java/sit/int221/at3/controllers/JwtRequestController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../back-end-intregate/At-3-Booking/At-3-Booking/src/main/java/sit/int221/at3/dtos/user/JwtResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../back-end-intregate/At-3-Booking/At-3-Booking/src/main/java/sit/int221/at3/dtos/user/JwtResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/At-3-Booking/.codetogether.ignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/At-3-Booking/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/At-3-Booking/.mvn/wrapper/maven-wrapper.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/At-3-Booking/.mvn/wrapper/maven-wrapper.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/At-3-Booking/At-3-Booking.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/At-3-Booking/Dockerfile" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/At-3-Booking/mvnw" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/At-3-Booking/mvnw.cmd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/At-3-Booking/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/At-3-Booking/src/main/java/sit/int221/at3/At3BookingApplication.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/At-3-Booking/src/main/java/sit/int221/at3/config/ApplicationConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/At-3-Booking/src/main/java/sit/int221/at3/config/SpringSecurityConfiguration.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/At-3-Booking/src/main/java/sit/int221/at3/controllers/CategoryController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/At-3-Booking/src/main/java/sit/int221/at3/controllers/EventController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/At-3-Booking/src/main/java/sit/int221/at3/controllers/JwtRequestController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/At-3-Booking/src/main/java/sit/int221/at3/controllers/UserController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/At-3-Booking/src/main/java/sit/int221/at3/dtos/category/CategoryDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/At-3-Booking/src/main/java/sit/int221/at3/dtos/category/CategoryUpdateDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/At-3-Booking/src/main/java/sit/int221/at3/dtos/event/EventCreateDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/At-3-Booking/src/main/java/sit/int221/at3/dtos/event/EventDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/At-3-Booking/src/main/java/sit/int221/at3/dtos/event/EventUpdateDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/At-3-Booking/src/main/java/sit/int221/at3/dtos/user/JwtResponse.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/At-3-Booking/src/main/java/sit/int221/at3/dtos/user/UserDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/At-3-Booking/src/main/java/sit/int221/at3/dtos/user/UserLoginDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/At-3-Booking/src/main/java/sit/int221/at3/dtos/user/UserModifyDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/At-3-Booking/src/main/java/sit/int221/at3/entities/Category.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/At-3-Booking/src/main/java/sit/int221/at3/entities/Event.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/At-3-Booking/src/main/java/sit/int221/at3/entities/Role.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/At-3-Booking/src/main/java/sit/int221/at3/entities/User.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/At-3-Booking/src/main/java/sit/int221/at3/errors/ErrorMessageDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/At-3-Booking/src/main/java/sit/int221/at3/errors/ErrorResponse.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/At-3-Booking/src/main/java/sit/int221/at3/errors/ValidationExceptionHandling.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/At-3-Booking/src/main/java/sit/int221/at3/filter/CustomJwtAuthenticationFilter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/At-3-Booking/src/main/java/sit/int221/at3/repositories/CategoryRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/At-3-Booking/src/main/java/sit/int221/at3/repositories/EventRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/At-3-Booking/src/main/java/sit/int221/at3/repositories/UserRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/At-3-Booking/src/main/java/sit/int221/at3/services/CategoryService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/At-3-Booking/src/main/java/sit/int221/at3/services/EventService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/At-3-Booking/src/main/java/sit/int221/at3/services/UserService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/At-3-Booking/src/main/java/sit/int221/at3/utils/JwtAuthenticationEntryPoint.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/At-3-Booking/src/main/java/sit/int221/at3/utils/JwtUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/At-3-Booking/src/main/java/sit/int221/at3/utils/ListMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/At-3-Booking/src/main/resources/application.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/At-3-Booking/src/test/java/sit/int221/at3/At3BookingApplicationTests.java" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
+  <component name="JpbToolWindowState">
+    <option name="myId2FirstActivated">
+      <map>
+        <entry key="com.haulmont.jpb.jpaStructure" value="true" />
+      </map>
+    </option>
+    <option name="myId2Visible">
+      <map>
+        <entry key="com.haulmont.jpb.jpaStructure" value="true" />
+      </map>
+    </option>
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHome" value="Use Maven wrapper" />
+        <option name="useMavenConfig" value="true" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProjectId" id="2EvLoOOc9DHNjSUYSYYDothJYPQ" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RequestMappingsPanelOrder0" value="0" />
+    <property name="RequestMappingsPanelOrder1" value="1" />
+    <property name="RequestMappingsPanelWidth0" value="75" />
+    <property name="RequestMappingsPanelWidth1" value="75" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../back-end-intregate/At-3-Booking" />
+    <property name="nodejs_package_manager_path" value="npm" />
+  </component>
+  <component name="RunManager">
+    <configuration name="At3BookingApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
+      <module name="At-3-Booking" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="sit.int221.at3.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="SPRING_BOOT_MAIN_CLASS" value="sit.int221.at3.At3BookingApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Spring Boot.At3BookingApplication" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="7acec1a0-e548-4356-95cd-f53d1a02b3eb" name="Changes" comment="" />
+      <created>1663471287465</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1663471287465</updated>
+      <workItem from="1663471289261" duration="1263000" />
+      <workItem from="1663508616454" duration="43000" />
+      <workItem from="1663667543300" duration="921000" />
+      <workItem from="1663766172522" duration="617000" />
+      <workItem from="1663767325401" duration="1021000" />
+      <workItem from="1663919294031" duration="11517000" />
+      <workItem from="1663940221258" duration="7661000" />
+      <workItem from="1663979347833" duration="10275000" />
+      <workItem from="1663989861273" duration="492000" />
+      <workItem from="1664027820106" duration="1413000" />
+      <workItem from="1664161533417" duration="951000" />
+      <workItem from="1664203235103" duration="664000" />
+      <workItem from="1664273223427" duration="1520000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
