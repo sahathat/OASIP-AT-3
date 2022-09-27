@@ -50,8 +50,7 @@ public class JwtRequestController {
 
         UserDetails userdetails = userDetailsService.loadUserByUsername(authenticationRequest.getEmail());
         String token = jwtUtil.generateToken(userdetails);
-        System.out.println(jwtUtil.getRolesFromToken(token));
-        return ResponseEntity.ok(new JwtResponse(token));
+        return ResponseEntity.ok(new JwtResponse(token, jwtUtil.getUsernameFromToken(token), String.valueOf(jwtUtil.getRolesFromToken(token))));
     }
 
     @RequestMapping(value = "/api/users/refresh", method = RequestMethod.GET)
@@ -60,7 +59,7 @@ public class JwtRequestController {
         DefaultClaims claims = (io.jsonwebtoken.impl.DefaultClaims) request.getAttribute("claims");
         Map<String, Object> expectedMap = getMapFromIoJsonwebtokenClaims(claims);
         String token = jwtUtil.doGenerateRefreshToken(expectedMap, expectedMap.get("sub").toString());
-        return ResponseEntity.ok(new JwtResponse(token));
+        return ResponseEntity.ok(new JwtResponse(token, jwtUtil.getUsernameFromToken(token), String.valueOf(jwtUtil.getRolesFromToken(token))));
     }
 
     public Map<String, Object> getMapFromIoJsonwebtokenClaims(DefaultClaims claims) {
