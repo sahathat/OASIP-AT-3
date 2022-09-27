@@ -5,21 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d4b3e77f-f647-4398-bc9a-dcf46d774c85" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/At-3-Booking/src/main/java/sit/int221/at3/At3BookingApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/At-3-Booking/src/main/java/sit/int221/at3/At3BookingApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/At-3-Booking/src/main/java/sit/int221/at3/config/ApplicationConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/At-3-Booking/src/main/java/sit/int221/at3/config/ApplicationConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/At-3-Booking/src/main/java/sit/int221/at3/config/SpringSecurityConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/At-3-Booking/src/main/java/sit/int221/at3/config/SpringSecurityConfiguration.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/At-3-Booking/src/main/java/sit/int221/at3/controllers/CategoryController.java" beforeDir="false" afterPath="$PROJECT_DIR$/At-3-Booking/src/main/java/sit/int221/at3/controllers/CategoryController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/At-3-Booking/src/main/java/sit/int221/at3/controllers/EventController.java" beforeDir="false" afterPath="$PROJECT_DIR$/At-3-Booking/src/main/java/sit/int221/at3/controllers/EventController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/At-3-Booking/src/main/java/sit/int221/at3/controllers/JwtRequestController.java" beforeDir="false" afterPath="$PROJECT_DIR$/At-3-Booking/src/main/java/sit/int221/at3/controllers/JwtRequestController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/At-3-Booking/src/main/java/sit/int221/at3/controllers/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/At-3-Booking/src/main/java/sit/int221/at3/controllers/UserController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/At-3-Booking/src/main/java/sit/int221/at3/dtos/category/CategoryUpdateDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/At-3-Booking/src/main/java/sit/int221/at3/dtos/category/CategoryUpdateDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/At-3-Booking/src/main/java/sit/int221/at3/dtos/event/EventCreateDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/At-3-Booking/src/main/java/sit/int221/at3/dtos/event/EventCreateDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/At-3-Booking/src/main/java/sit/int221/at3/dtos/event/EventUpdateDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/At-3-Booking/src/main/java/sit/int221/at3/dtos/event/EventUpdateDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/At-3-Booking/src/main/java/sit/int221/at3/filter/CustomJwtAuthenticationFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/At-3-Booking/src/main/java/sit/int221/at3/filter/CustomJwtAuthenticationFilter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/At-3-Booking/src/main/java/sit/int221/at3/services/EventService.java" beforeDir="false" afterPath="$PROJECT_DIR$/At-3-Booking/src/main/java/sit/int221/at3/services/EventService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/At-3-Booking/src/main/java/sit/int221/at3/utils/JwtUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/At-3-Booking/src/main/java/sit/int221/at3/utils/JwtUtil.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -65,7 +51,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/.." />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
   <component name="RunManager">
     <configuration name="At3BookingApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
@@ -96,6 +82,7 @@
       <option name="presentableId" value="Default" />
       <updated>1663990019972</updated>
       <workItem from="1663990021405" duration="301000" />
+      <workItem from="1664274287609" duration="453000" />
     </task>
     <servers />
   </component>
