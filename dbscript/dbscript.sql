@@ -8,6 +8,14 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- Schema mydb
 -- -----------------------------------------------------
 -- -----------------------------------------------------
+-- Schema booking
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Schema booking
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `booking` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
+-- -----------------------------------------------------
 -- Schema test
 -- -----------------------------------------------------
 
@@ -15,6 +23,88 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- Schema test
 -- -----------------------------------------------------
 CREATE SCHEMA IF NOT EXISTS `test` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
+USE `booking` ;
+
+-- -----------------------------------------------------
+-- Table `booking`.`Category`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `booking`.`Category` (
+  `eventCategoryId` INT NOT NULL AUTO_INCREMENT,
+  `eventCategoryName` VARCHAR(100) CHARACTER SET 'utf8mb3' NOT NULL,
+  `eventCategoryDescription` VARCHAR(500) CHARACTER SET 'utf8mb3' NULL DEFAULT NULL,
+  `eventCategoryDuration` INT NOT NULL,
+  PRIMARY KEY (`eventCategoryId`),
+  UNIQUE INDEX `eventCatagoryName_UNIQUE` (`eventCategoryName` ASC) VISIBLE)
+ENGINE = InnoDB
+AUTO_INCREMENT = 6
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `booking`.`Event`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `booking`.`Event` (
+  `eventId` INT NOT NULL AUTO_INCREMENT,
+  `bookingName` VARCHAR(100) CHARACTER SET 'utf8mb3' NOT NULL,
+  `bookingEmail` VARCHAR(100) CHARACTER SET 'utf8mb3' NOT NULL,
+  `eventCategoryId` INT NOT NULL,
+  `eventStartTime` DATETIME NOT NULL,
+  `eventDuration` INT NOT NULL,
+  `eventNotes` VARCHAR(500) CHARACTER SET 'utf8mb3' NULL DEFAULT NULL,
+  PRIMARY KEY (`eventId`),
+  INDEX `fk_AppoachTime_Catagory1_idx` (`eventCategoryId` ASC) VISIBLE,
+  CONSTRAINT `fk_AppoachTime_Catagory1`
+    FOREIGN KEY (`eventCategoryId`)
+    REFERENCES `booking`.`Category` (`eventCategoryId`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 169
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `booking`.`user`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `booking`.`user` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(100) NOT NULL,
+  `email` VARCHAR(50) NOT NULL,
+  `password` VARCHAR(100) NOT NULL,
+  `role` VARCHAR(10) NOT NULL,
+  `createdOn` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updatedOn` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `UNIQUE` (`name` ASC) VISIBLE,
+  UNIQUE INDEX `email_UNIQUE` (`email` ASC) VISIBLE)
+ENGINE = InnoDB
+AUTO_INCREMENT = 122
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `booking`.`Lecturer_Mapping`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `booking`.`Lecturer_Mapping` (
+  `mappingId` INT NOT NULL AUTO_INCREMENT,
+  `userId` INT NOT NULL,
+  `categoryId` INT NOT NULL,
+  PRIMARY KEY (`userId`, `categoryId`),
+  UNIQUE INDEX `id_UNIQUE` (`mappingId` ASC) VISIBLE,
+  INDEX `fk_Event_has_user_user1_idx` (`userId` ASC) VISIBLE,
+  INDEX `fk_Lecturer_Mapping_Category1_idx` (`categoryId` ASC) VISIBLE,
+  CONSTRAINT `fk_Event_has_user_user1`
+    FOREIGN KEY (`userId`)
+    REFERENCES `booking`.`user` (`id`),
+  CONSTRAINT `fk_Lecturer_Mapping_Category1`
+    FOREIGN KEY (`categoryId`)
+    REFERENCES `booking`.`Category` (`eventCategoryId`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 5
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
 USE `test` ;
 
 -- -----------------------------------------------------
@@ -50,7 +140,7 @@ CREATE TABLE IF NOT EXISTS `test`.`Event` (
     FOREIGN KEY (`eventCategoryId`)
     REFERENCES `test`.`Category` (`eventCategoryId`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 163
+AUTO_INCREMENT = 169
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
@@ -70,7 +160,7 @@ CREATE TABLE IF NOT EXISTS `test`.`user` (
   UNIQUE INDEX `UNIQUE` (`name` ASC) VISIBLE,
   UNIQUE INDEX `email_UNIQUE` (`email` ASC) VISIBLE)
 ENGINE = InnoDB
-AUTO_INCREMENT = 121
+AUTO_INCREMENT = 122
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
@@ -79,22 +169,21 @@ COLLATE = utf8mb4_0900_ai_ci;
 -- Table `test`.`Lecturer_Mapping`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `test`.`Lecturer_Mapping` (
-  `id` VARCHAR(45) NULL,
-  `eventId` INT NOT NULL,
+  `mappingId` INT NOT NULL AUTO_INCREMENT,
   `userId` INT NOT NULL,
+  `categoryId` INT NOT NULL,
+  PRIMARY KEY (`userId`, `categoryId`),
+  UNIQUE INDEX `id_UNIQUE` (`mappingId` ASC) VISIBLE,
   INDEX `fk_Event_has_user_user1_idx` (`userId` ASC) VISIBLE,
-  INDEX `fk_Event_has_user_Event1_idx` (`eventId` ASC) VISIBLE,
-  CONSTRAINT `fk_Event_has_user_Event1`
-    FOREIGN KEY (`eventId`)
-    REFERENCES `test`.`Event` (`eventId`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+  INDEX `fk_Lecturer_Mapping_Category1_idx` (`categoryId` ASC) VISIBLE,
   CONSTRAINT `fk_Event_has_user_user1`
     FOREIGN KEY (`userId`)
-    REFERENCES `test`.`user` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    REFERENCES `test`.`user` (`id`),
+  CONSTRAINT `fk_Lecturer_Mapping_Category1`
+    FOREIGN KEY (`categoryId`)
+    REFERENCES `test`.`Category` (`eventCategoryId`))
 ENGINE = InnoDB
+AUTO_INCREMENT = 5
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
