@@ -37,6 +37,8 @@ public class EventService {
     @Autowired
     private ListMapper listMapper;
 
+    private final List<SimpleGrantedAuthority> student = Arrays.asList(new SimpleGrantedAuthority(String.valueOf("ROLE_"+ Role.student)));
+
     public List<EventDto> getEventAll(String params) {
         // use List event sorted by datetime parameter by descendant order
         List<Event> event = eventRepository.findAll(Sort.by(params).descending());
@@ -73,7 +75,6 @@ public class EventService {
     }
 
     public Event save(EventCreateDto newEvent) {
-
         // find category id if new event are created
         Category category = categoryRepository.findById(newEvent.getEventCategoryId()).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, newEvent.getEventCategoryId() + " is not exist please find new id if exist.")
@@ -94,15 +95,11 @@ public class EventService {
     }
 
     public void delete(Integer id, Authentication authentication) {
-
-
         // check id if not found then throw exception.
         Event event = eventRepository.findById(id).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, id + " does not exist please find new id if exist."));
 
         // check email by authorize student role
-        List<SimpleGrantedAuthority> student = Arrays.asList(new SimpleGrantedAuthority(String.valueOf("ROLE_"+ Role.student)));
-
         if (authentication.getAuthorities().equals(student) && !authentication.getName().equals(event.getBookingEmail())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "id of email event should same by student email");
         }
@@ -133,8 +130,6 @@ public class EventService {
         });
 
         // check email by authorize student role
-        List<SimpleGrantedAuthority> student = Arrays.asList(new SimpleGrantedAuthority(String.valueOf("ROLE_"+ Role.student)));
-
         if (authentication.getAuthorities().equals(student) && !authentication.getName().equals(event.getBookingEmail())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "id of email event should same by student email");
         }

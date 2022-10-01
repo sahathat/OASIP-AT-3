@@ -27,14 +27,13 @@ public class EventController {
     @Autowired
     private EventService eventService;
 
+    private final List<SimpleGrantedAuthority> student = Arrays.asList(new SimpleGrantedAuthority(String.valueOf("ROLE_"+Role.student)));
+
     // /api/events [GET]
     @GetMapping("")
     public List<EventDto> getEventAll(
             @RequestParam(defaultValue = "eventStartTime") String params, Authentication authentication) {
-
         List<EventDto> events = eventService.getEventAll(params);
-
-        List<SimpleGrantedAuthority> student = Arrays.asList(new SimpleGrantedAuthority(String.valueOf("ROLE_"+Role.student)));
 
         if(authentication.getAuthorities().equals(student)) {
             events = events.stream().filter(u -> authentication.getName().equals(u.getBookingEmail())).collect(Collectors.toList());
@@ -46,8 +45,6 @@ public class EventController {
     // /api/events/{id} [GET]
     @GetMapping("/{id}")
     public EventDto getEventById (@PathVariable Integer id, Authentication authentication) {
-        List<SimpleGrantedAuthority> student = Arrays.asList(new SimpleGrantedAuthority(String.valueOf("ROLE_"+Role.student)));
-
         EventDto event = eventService.getEventById(id);
 
         if (authentication.getAuthorities().equals(student) && !event.getBookingEmail().equals(authentication.getName())) {
@@ -59,8 +56,6 @@ public class EventController {
 
     @GetMapping("/upcoming")
     public List<EventDto> getEventUpcoming(Authentication authentication){
-        List<SimpleGrantedAuthority> student = Arrays.asList(new SimpleGrantedAuthority(String.valueOf("ROLE_"+Role.student)));
-
         if (authentication.getAuthorities().equals(student)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "student should not see in filter method");
         }
@@ -70,8 +65,6 @@ public class EventController {
 
     @GetMapping("/past")
     public List<EventDto> getEventPast(Authentication authentication){
-        List<SimpleGrantedAuthority> student = Arrays.asList(new SimpleGrantedAuthority(String.valueOf("ROLE_"+Role.student)));
-
         if (authentication.getAuthorities().equals(student)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "student should not see in filter method");
         }
@@ -105,13 +98,9 @@ public class EventController {
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
     public Event create(@Valid @RequestBody EventCreateDto newEvent, Authentication authentication) {
-
-        List<SimpleGrantedAuthority> student = Arrays.asList(new SimpleGrantedAuthority(String.valueOf("ROLE_"+Role.student)));
-
-        if (authentication.getAuthorities().equals(student) && !authentication.getName().equals(newEvent.getBookingEmail())) {
+        if (authentication != null && authentication.getAuthorities().equals(student) && !authentication.getName().equals(newEvent.getBookingEmail())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "new event should add by student email");
         }
-
         return eventService.save(newEvent);
     }
 

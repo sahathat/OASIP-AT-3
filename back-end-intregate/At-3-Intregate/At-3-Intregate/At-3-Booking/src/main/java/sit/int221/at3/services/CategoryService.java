@@ -4,6 +4,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import sit.int221.at3.dtos.category.CategoryDto;
@@ -11,10 +13,14 @@ import sit.int221.at3.dtos.category.CategoryUpdateDto;
 import sit.int221.at3.dtos.event.EventDto;
 import sit.int221.at3.entities.Category;
 import sit.int221.at3.entities.Event;
+import sit.int221.at3.entities.LecturerMapping;
+import sit.int221.at3.entities.Role;
 import sit.int221.at3.repositories.CategoryRepository;
 import sit.int221.at3.repositories.EventRepository;
+import sit.int221.at3.repositories.LecturerMappingRepository;
 import sit.int221.at3.utils.ListMapper;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -26,20 +32,56 @@ public class CategoryService {
     private CategoryRepository categoryRepository;
 
     @Autowired
+    private LecturerMappingRepository lecturerMappingRepository;
+
+    @Autowired
     private ModelMapper modelMapper;
 
     @Autowired
     private ListMapper listMapper;
 
-    public List<CategoryDto> getCategoryAll(String param){
+    private List<SimpleGrantedAuthority> lecturer = Arrays.asList(new SimpleGrantedAuthority(String.valueOf("ROLE_"+ Role.lecturer)));
+
+    private List<SimpleGrantedAuthority> student = Arrays.asList(new SimpleGrantedAuthority(String.valueOf("ROLE_"+ Role.student)));
+
+    public List<CategoryDto> getCategoryAll(String param,Authentication authentication){
         List<Category> categoryList = categoryRepository.findAll(Sort.by(param).descending());
+
+        // check if user have lecturer role
+        if (lecturer.equals(authentication.getAuthorities())) {
+            // call lecturer mapping for filter lecturer email by authentication email
+            List<LecturerMapping> lecturerMappingList = lecturerMappingRepository.findAll().stream().filter(
+                    lm -> authentication.getName().equals(lm.getUser().getEmail())).toList();
+
+            // clear all item on categories
+            categoryList.clear();
+
+            // add item when filter by categories in lecturer mapping
+            lecturerMappingList.forEach(lm -> categoryList.add(lm.getCategory()));
+        }
+
         return listMapper.mapList(categoryList,CategoryDto.class,modelMapper);
     }
 
-    public CategoryDto getCategoryById(Integer id){
+    public CategoryDto getCategoryById(Integer id, Authentication authentication){
         Category category = categoryRepository.findById(id).orElseThrow(
                 ()->new ResponseStatusException(HttpStatus.NOT_FOUND,id +" is Not Exist Please find new id if exist")
         );
+
+        // check if user have lecturer role
+        if (lecturer.equals(authentication.getAuthorities())) {
+            // use lecturer email and categories id
+            List<LecturerMapping> lecturerMapping = lecturerMappingRepository
+                    .getLecturerMappingByCategory(id)
+                    .stream().filter(lm ->
+                            authentication.getName().equals(lm.getUser().getEmail())).toList();
+
+            // check if user email not equal owner clinic email sent error 403
+            if (lecturerMapping.isEmpty() || !authentication.getName().equals(lecturerMapping.get(0).getUser().getEmail())) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN, authentication.getName() + " can see owner categories/clinics only");
+            }
+        }
+
         return modelMapper.map(category,CategoryDto.class);
     }
 
@@ -62,11 +104,29 @@ public class CategoryService {
         return existingCategory;
     }
 
-    public Category configCategory(Integer id, CategoryUpdateDto updatedCategory){
+    public Category configCategory(Integer id, CategoryUpdateDto updatedCategory, Authentication authentication){
 
         // check id category
         Category category = categoryRepository.findById(id).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, id + " does not exist please find new id if exist"));
+
+        // check if user have lecturer role
+        if (lecturer.equals(authentication.getAuthorities())) {
+            // use lecturer email and categories id
+            List<LecturerMapping> lecturerMapping = lecturerMappingRepository
+                    .getLecturerMappingByCategory(id)
+                    .stream().filter(lm ->
+                            authentication.getName().equals(lm.getUser().getEmail())).toList();
+
+            // check if user email not equal owner clinic email sent error 403
+            if (lecturerMapping.isEmpty() || !authentication.getName().equals(lecturerMapping.get(0).getUser().getEmail())) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN, authentication.getName() + " can edit owner categories/clinics only");
+            }
+        }
+
+        if(student.equals(authentication.getAuthorities())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "student cannot edit categories in each clinic");
+        }
 
         // check that is unique
         if(checkIsNotUnique(category,updatedCategory)){
