@@ -10,12 +10,12 @@ const myRouoter = useRouter();
 const goHome = () => myRouoter.push({ name: "Home" });
 
 const db = "http://localhost:5000/booking";
-const eventLink = `${import.meta.env.BASE_URL}api/events`;
-const categoryLink = `${import.meta.env.BASE_URL}api/categories`;
-const refreshLink = `${import.meta.env.BASE_URL}api/users/refresh`;
-// const eventLink = "http://localhost:8443/api/events";
-// const categoryLink = "http://localhost:8443/api/categories";
-// const refreshLink = "http://localhost:8443/api/users/refresh";
+// const eventLink = `${import.meta.env.BASE_URL}api/events`;
+// const categoryLink = `${import.meta.env.BASE_URL}api/categories`;
+// const refreshLink = `${import.meta.env.BASE_URL}api/users/refresh`;
+const eventLink = "http://localhost:8443/api/events";
+const categoryLink = "http://localhost:8443/api/categories";
+const refreshLink = "http://localhost:8443/api/users/refresh";
 
 //GET event
 const getEvent = async () => {
@@ -111,7 +111,7 @@ onBeforeMount(async () => {
 });
 
 onUpdated(async () => {
-  await getEvent();
+  // await getEvent();
   await getCategory();
 });
 
@@ -509,7 +509,6 @@ const reset = () => {
 
       <div
         v-else-if="
-          getStatus == false ||
           (categoryList.length == 0 && eventList.length == 0)
         "
         class="alert warning text-sm"

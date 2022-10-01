@@ -4,7 +4,8 @@ import { onBeforeMount, onUpdated, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 const name = ref("");
-const eMail = ref("");
+const eMail = ref(localStorage.getItem('email'))
+const loginEmail = localStorage.getItem('email')
 const startDate = ref("");
 const category = ref("");
 const startTime = ref("");
@@ -20,12 +21,12 @@ const emailLength = 100;
 const noteLength = 500;
 
 const db = "http://localhost:5000/booking";
-const eventLink = `${import.meta.env.BASE_URL}api/events`;
-const categoryLink = `${import.meta.env.BASE_URL}api/categories`;
-const refreshLink = `${import.meta.env.BASE_URL}api/users/refresh`;
-// const eventLink = "http://localhost:8443/api/events";
-// const categoryLink = "http://localhost:8443/api/categories";
-// const refreshLink = "http://localhost:8443/api/users/refresh";
+// const eventLink = `${import.meta.env.BASE_URL}api/events`;
+// const categoryLink = `${import.meta.env.BASE_URL}api/categories`;
+// const refreshLink = `${import.meta.env.BASE_URL}api/users/refresh`;
+const eventLink = "http://localhost:8443/api/events";
+const categoryLink = "http://localhost:8443/api/categories";
+const refreshLink = "http://localhost:8443/api/users/refresh";
 
 const eventList = ref([]);
 const categoryList = ref([]);
@@ -525,6 +526,20 @@ onBeforeMount(async () => {
               </span>
             </div>
             <div>
+            <div v-if="loginEmail!==null">
+              <input
+                type="email"
+                name="email"
+                v-model="eMail"
+                required
+                :style="[
+                  validateEmailisNotNull == false ? 'border-color:red' : '',
+                ]"
+                class="w-80 px-3 py-2 mx-2 placeholder-gray-300 border border-gray-400 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300"
+                :disabled = true
+              >
+            </div>
+            <div v-else-if="loginEmail==null">
               <input
                 v-model="eMail"
                 type="email"
@@ -536,6 +551,7 @@ onBeforeMount(async () => {
                 ]"
                 class="w-80 px-3 py-2 mx-2 placeholder-gray-300 border border-gray-400 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300"
               />
+            </div>
             </div>
           </div>
         </div>

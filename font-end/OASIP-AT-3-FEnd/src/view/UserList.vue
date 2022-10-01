@@ -4,8 +4,9 @@ import { useRoute,useRouter } from "vue-router";
 
 const userList = ref([]);
 const db = "http://localhost:5000/booking";
-const userLink = `${import.meta.env.BASE_URL}api/users`;
-// const userLink = "http://localhost:8443/api/users";
+// const userLink = `${import.meta.env.BASE_URL}api/users`;
+const userLink = "http://localhost:8443/api/userList";
+const refreshLink = "http://localhost:8443/api/users/refresh";
 
 const { params } = useRoute();
 const myRouoter = useRouter();
@@ -14,6 +15,7 @@ const goHome = () => myRouoter.push({ name: "Home" });
 //GET users
 const getUser = async () => {
   const key = localStorage.getItem('key')
+  // const user_role = localStorage.getItem('role').substring()
 
   const res = await fetch(userLink, {
     method: "GET",
@@ -23,11 +25,11 @@ const getUser = async () => {
             "content-type": "application/json",
         }
   });
-  if (res.status === 200) {
+  if (res.status === 200 ) {
     userList.value = await res.json();
   } else if (res.status === 401 && localStorage.getItem('token')==='accessToken') {
     console.log('test...')
-    const resForRefresh = await fetch(`${userLink}/refresh`, {
+    const resForRefresh = await fetch(refreshLink, {
       headers: {
         Authorization: "Bearer " + localStorage.getItem('key'),
         isRefreshToken: true ,

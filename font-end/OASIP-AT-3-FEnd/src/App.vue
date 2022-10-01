@@ -19,39 +19,44 @@ const goLogin = ()=>myRouter.push({name:'Login'})
 const signOut = () => {
     localStorage.removeItem('key')
     localStorage.removeItem('token')
+    localStorage.removeItem('email')
+    localStorage.removeItem('role')
     haveToken.value = null
     console.log(localStorage.getItem('key'))
     goHome()
 }
 
-
-// const haveToken = ref(null)
-// const isHaveToken = () =>{
-//     const token = localStorage.getItem('key')
-//     if(token!==null) haveToken.value = true
-//     else haveToken.value = false
-//     console.log(haveToken.value)
-// }
-
 const haveToken = ref(null)
 const isHaveToken = () => {
     const token = localStorage.getItem('key')
-    // console.log(token)
     if(token!==null && token!==undefined) haveToken.value = true
-    // else if(token==undefined) haveToken.value = false
     else haveToken.value = false
-    // console.log(haveToken.value)
     return haveToken.value
+}
+
+const userRole = ref('guest')
+const checkRole = () => {
+    // const getRole = localStorage.getItem('role')
+    // const role = getRole.substring(6,getRole.length-1)
+    const role = localStorage.getItem('role')
+    // console.log(role.substring(6,role.length-1))
+    if(role.substring(6,role.length-1)=='admin') userRole.value = 'admin'
+    else if(role.substring(6,role.length-1)=='student') userRole.value = 'student'
+    else if(role.substring(6,role.length-1)=='lecture') userRole.value = 'lecture'
+    else userRole.value = 'guest'
+    // console.log(userRole.value)
+    return userRole.value
 }
 
 //show navbar2
 onBeforeMount(async () => {
-    // const token = localStorage.getItem('key')
     isHaveToken()
+    checkRole()
 })
 
 setInterval(async () => {
     isHaveToken()
+    checkRole()
 }, 1000);
 
 </script>
@@ -97,7 +102,7 @@ setInterval(async () => {
                             transition duration-150 ease-in-out " @click="goHome">Home</button>
                             
                                 </li>
-                                <li>
+                                <li v-if="userRole=='admin' || userRole=='student'">
                                     <button type="button" class="inline-block px-4 py-2 bg-transparent text-white 
                             font-medium text-lg leading-tight  rounded 
                              hover:bg-gray-900 hover:shadow-lg focus:bg-blue-500
@@ -105,21 +110,21 @@ setInterval(async () => {
                             active:shadow-lg transition duration-150 ease-in-out" @click="goBooking">Booking</button>
 
                                 </li>
-                                <li>
+                                <li v-if="userRole=='admin' || userRole=='student' ">
                             <button type="button" class="inline-block px-2 py-2  bg-transparent text-white 
                             font-medium text-lg leading-tight  rounded  
                             hover:bg-gray-900 hover:shadow-lg focus:bg-blue-500 focus:shadow-lg 
                             focus:outline-none focus:ring-0 active:bg-gray-900 active:shadow-lg 
                             transition duration-150 ease-in-out " @click="goReservationList">Reservation</button>
                                 </li>
-                                <li>
+                                <li v-if="userRole=='admin' || userRole=='lecturer'">
                             <button type="button" class="inline-block px-2 py-2  bg-transparent text-white 
                             font-medium text-lg leading-tight  rounded 
                             hover:bg-gray-900 hover:shadow-lg focus:bg-blue-500 focus:shadow-lg 
                             focus:outline-none focus:ring-0 active:bg-gray-900 active:shadow-lg 
                             transition duration-150 ease-in-out " @click="goCategoriesList">Categories</button>
                                 </li>
-                                <li>
+                                <li  v-if="userRole=='admin'">
                             <button type="button" class="inline-block px-2 py-2  bg-transparent text-white 
                             font-medium text-lg leading-tight  rounded 
                             hover:bg-gray-900 hover:shadow-lg focus:bg-blue-500 focus:shadow-lg 

@@ -5,10 +5,10 @@ import { onBeforeMount, ref , computed} from "vue";
 const { params } = useRoute();
 
 const db = "http://localhost:5000/booking";
-const userLink = `${import.meta.env.BASE_URL}api/users`;
-const refreshLink = `${import.meta.env.BASE_URL}api/users`;
-// const userLink = "http://localhost:8443/api/users";
-// const refreshLink = "http://localhost:8443/api/users/refresh";
+// const userLink = `${import.meta.env.BASE_URL}api/userList`;
+// const refreshLink = `${import.meta.env.BASE_URL}api/users/refresh`;
+const userLink = "http://localhost:8443/api/userList";
+const refreshLink = "http://localhost:8443/api/users/refresh";
 
 // ขาดเช็คชื่อ-เมล์ซ้ำ
 const id = params.id;

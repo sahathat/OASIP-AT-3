@@ -5,10 +5,10 @@ import { onBeforeMount, ref } from "vue";
 const { params } = useRoute();
 
 const db = "http://localhost:5000/booking";
-const eventLink = `${import.meta.env.BASE_URL}api/events`;
-const refreshLink = `${import.meta.env.BASE_URL}api/users/refresh`;
-// const eventLink = "http://localhost:8443/api/events";
-// const refreshLink = "http://localhost:8443/api/users/refresh";
+// const eventLink = `${import.meta.env.BASE_URL}api/events`;
+// const refreshLink = `${import.meta.env.BASE_URL}api/users/refresh`;
+const eventLink = "http://localhost:8443/api/events";
+const refreshLink = "http://localhost:8443/api/users/refresh";
 
 const id = params.id;
 const name = ref("");
@@ -586,7 +586,6 @@ const calTime = (hour, minute, addTime) => {
     </div>
     
     <div v-if="
-          getStatus == false ||
           eventList.length == 0
         " class="alert warning text-sm">
           <strong class="block">Warning!</strong> A system error has occurred,please try again.
