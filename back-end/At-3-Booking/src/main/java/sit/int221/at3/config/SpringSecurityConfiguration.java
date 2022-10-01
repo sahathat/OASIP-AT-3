@@ -4,6 +4,7 @@ package sit.int221.at3.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -49,7 +50,10 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter{
     public void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/api/events/**").hasAnyRole("admin","student")
+                .antMatchers(HttpMethod.GET,"/api/events/**").hasAnyRole("admin","student","lecturer")
+                .antMatchers(HttpMethod.POST,"/api/events/**").permitAll()
+                .antMatchers(HttpMethod.PUT,"/api/events/**").hasAnyRole("admin","student")
+                .antMatchers(HttpMethod.DELETE,"/api/events/**").hasAnyRole("admin","student")
                 .antMatchers("/api/userList/**").hasRole("admin")
                 .antMatchers("/api/users/signin","/api/users/signup","/api/users/refresh").permitAll()
                 .anyRequest().authenticated()

@@ -1,7 +1,10 @@
 package sit.int221.at3.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
-import java.util.*;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "Category")
@@ -20,15 +23,28 @@ public class Category {
     @Column(name = "eventCategoryDuration", nullable = false)
     private Integer eventCategoryDuration;
 
-    @OneToMany(mappedBy = "eventCategory")
-    private Set<Event> eventList = new LinkedHashSet<>();
+    @JsonIgnore
+    @OneToMany(mappedBy = "category")
+    private Set<LecturerMapping> lecturerMappings = new LinkedHashSet<>();
 
+    @OneToMany(mappedBy = "eventCategory")
+    private Set<Event> events = new LinkedHashSet<>();
+
+    @JsonIgnore
     public Set<Event> getEventList() {
-        return eventList;
+        return events;
     }
 
-    public void setEventList(Set<Event> eventList) {
-        this.eventList = eventList;
+    public void setEventList(Set<Event> events) {
+        this.events = events;
+    }
+
+    public Set<LecturerMapping> getLecturerMappings() {
+        return lecturerMappings;
+    }
+
+    public void setLecturerMappings(Set<LecturerMapping> lecturerMappings) {
+        this.lecturerMappings = lecturerMappings;
     }
 
     public Integer getEventCategoryDuration() {
