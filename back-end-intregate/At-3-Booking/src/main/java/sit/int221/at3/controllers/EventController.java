@@ -76,6 +76,7 @@ public class EventController {
 
     @GetMapping("/day/{date}")
     public List<EventDto> getEventDay(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date, Authentication authentication) {
+        List<SimpleGrantedAuthority> student = Arrays.asList(new SimpleGrantedAuthority(String.valueOf("ROLE_"+Role.student)));
 
         if (authentication.getAuthorities().equals(student)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "student should not see in filter method");
@@ -86,6 +87,7 @@ public class EventController {
 
     @GetMapping("/day")
     public List<EventDto> getEventToday(Authentication authentication){
+        List<SimpleGrantedAuthority> student = Arrays.asList(new SimpleGrantedAuthority(String.valueOf("ROLE_"+Role.student)));
 
         if (authentication.getAuthorities().equals(student)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "student should not see in filter method");
