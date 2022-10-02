@@ -10,6 +10,9 @@
         <module name="At-3-Booking" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="At-3-Booking" target="17" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
