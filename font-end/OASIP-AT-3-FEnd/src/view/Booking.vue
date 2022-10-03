@@ -4,7 +4,7 @@ import { onBeforeMount, onUpdated, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 const name = ref("");
-const eMail = ref(localStorage.getItem('email'))
+const eMail = ref('')
 const loginEmail = localStorage.getItem('email')
 const startDate = ref("");
 const category = ref("");
@@ -32,6 +32,12 @@ const eventList = ref([]);
 const categoryList = ref([]);
 const addSuccess = ref(undefined);
 const getStatus = ref(undefined);
+
+// check is Login ?
+const isLogin = () => {
+  if(loginEmail!==null) eMail.value = loginEmail
+  else eMail.value = ''
+}
 
 // validate past
 const validateIsPast = ref(undefined);
@@ -468,6 +474,8 @@ const durationTime = computed(() => {
 onBeforeMount(async () => {
   await getCategory();
   await getEvent();
+  isLogin()
+
 });
 </script>
 

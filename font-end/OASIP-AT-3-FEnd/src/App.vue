@@ -1,5 +1,5 @@
 <script setup>
-import {ref, onBeforeMount,onMounted} from 'vue'
+import {ref, onBeforeMount,onMounted, onUpdated} from 'vue'
 import BaseDate from './components/BaseDate.vue'
 import {useRouter} from 'vue-router'
 
@@ -40,9 +40,11 @@ const checkRole = () => {
     // const role = getRole.substring(6,getRole.length-1)
     const role = localStorage.getItem('role')
     // console.log(role.substring(6,role.length-1))
-    if(role.substring(6,role.length-1)=='admin') userRole.value = 'admin'
-    else if(role.substring(6,role.length-1)=='student') userRole.value = 'student'
-    else if(role.substring(6,role.length-1)=='lecture') userRole.value = 'lecture'
+    if(role !== null){
+        if(role.substring(6,role.length-1)=='admin') userRole.value = 'admin'
+        else if(role.substring(6,role.length-1)=='student') userRole.value = 'student'
+        else if(role.substring(6,role.length-1)=='lecture') userRole.value = 'lecture'
+    }
     else userRole.value = 'guest'
     // console.log(userRole.value)
     return userRole.value

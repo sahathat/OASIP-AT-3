@@ -32,7 +32,7 @@ const goBooking = () => myRouter.push({ name: "Booking" });
           class="hover:underline bg-white text-gray-800 font-bold rounded-full py-4 px-8 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out"
           @click="goBooking"
         >
-          Start (as guset)
+          Start as guest
         </button>
       </div>
     </div>
