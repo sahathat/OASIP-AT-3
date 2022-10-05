@@ -22,6 +22,21 @@ const categoryList=ref([])
 const isNotNull = ref(false);
 const categoryDetail = ref({})
 
+const userRole = ref('guest')
+const checkRole = () => {
+    // const getRole = localStorage.getItem('role')
+    // const role = getRole.substring(6,getRole.length-1)
+    const role = localStorage.getItem('role')
+    // console.log(role.substring(6,role.length-1))
+    if(role !== null){
+        if(role.substring(6,role.length-1)=='admin') userRole.value = 'admin'
+        else if(role.substring(6,role.length-1)=='lecturer') userRole.value = 'lecturer'
+    }
+    else userRole.value = 'guest'
+    // console.log(userRole.value)
+    return userRole.value
+}
+
 
 // get every 10 sec
 // const getStatus=ref(undefined)
@@ -134,6 +149,7 @@ const getDetail = async () => {
 onBeforeMount(async()=>{
        await getCategory()
        await getDetail()
+       checkRole()
 });
 
 
@@ -333,7 +349,7 @@ const submitt = async () => {
         </div>
        <!-- button not edit mode -->
         <div v-if="isEdit == false" class="showUp m-auto w-fit">
-          <button @click="editInfo" class="m-4 custom-btn edit">Edit</button>
+          <button v-if="userRole=='admin'" @click="editInfo" class="m-4 custom-btn edit">Edit</button>
           <button @click="goCategoriesList"  class="m-4 custom-btn back">Go Back</button>
         </div>
        <!-- button edit mode -->

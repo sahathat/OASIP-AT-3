@@ -5,8 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0d7ea02e-a360-40fe-b986-93a726d93615" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/At-3-Booking/At-3-Booking/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/At-3-Booking/At-3-Booking/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/At-3-Booking/At-3-Booking/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/At-3-Booking/At-3-Booking/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../font-end/OASIP-AT-3-FEnd/src/App.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../font-end/OASIP-AT-3-FEnd/src/App.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../font-end/OASIP-AT-3-FEnd/src/view/CategoriesList.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../font-end/OASIP-AT-3-FEnd/src/view/CategoriesList.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../font-end/OASIP-AT-3-FEnd/src/view/Home.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../font-end/OASIP-AT-3-FEnd/src/view/Home.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -80,7 +82,8 @@
       <option name="presentableId" value="Default" />
       <updated>1662726149511</updated>
       <workItem from="1662726150807" duration="724000" />
-      <workItem from="1664809642915" duration="745000" />
+      <workItem from="1664809642915" duration="1938000" />
+      <workItem from="1664967072588" duration="1714000" />
     </task>
     <servers />
   </component>

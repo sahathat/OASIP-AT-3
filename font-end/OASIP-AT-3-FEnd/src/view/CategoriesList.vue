@@ -9,10 +9,10 @@ const myRouoter = useRouter();
 const goHome = () => myRouoter.push({ name: "Home" });
 
 const db = "http://localhost:5000/booking";
-// const categoryLink = `${import.meta.env.BASE_URL}api/categories`;
-// const refreshLink = `${import.meta.env.BASE_URL}api/users/refresh`;
-const categoryLink = "http://localhost:8443/api/categories";
-const refreshLink  = "http://localhost:8443/api/users/refresh";
+const categoryLink = `${import.meta.env.BASE_URL}api/categories`;
+const refreshLink = `${import.meta.env.BASE_URL}api/users/refresh`;
+// const categoryLink = "http://localhost:8443/api/categories";
+// const refreshLink  = "http://localhost:8443/api/users/refresh";
 
 //GET category
 const getCategory = async () => {
@@ -124,7 +124,7 @@ onUpdated(async () => {
             <td class="px-6 py-4 text-ellipsis overflow-hidden">
               {{ cat.eventCategoryDuration }}
             </td>
-            <td class="px-14 py-4">
+            <td  class="px-14 py-4">
               <button
                 @click="goCategories(cat)"
                 class="text-black hover:text-white border border-gray-800 hover:bg-gray-900 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:border-gray-600 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-800"

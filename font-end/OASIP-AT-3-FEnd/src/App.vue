@@ -43,7 +43,7 @@ const checkRole = () => {
     if(role !== null){
         if(role.substring(6,role.length-1)=='admin') userRole.value = 'admin'
         else if(role.substring(6,role.length-1)=='student') userRole.value = 'student'
-        else if(role.substring(6,role.length-1)=='lecture') userRole.value = 'lecture'
+        else if(role.substring(6,role.length-1)=='lecturer') userRole.value = 'lecturer'
     }
     else userRole.value = 'guest'
     // console.log(userRole.value)
@@ -102,23 +102,27 @@ setInterval(async () => {
                             hover:bg-gray-900 hover:shadow-lg focus:bg-blue-500 focus:shadow-lg 
                             focus:outline-none focus:ring-0 active:bg-gray-900 active:shadow-lg 
                             transition duration-150 ease-in-out " @click="goHome">Home</button>
-                            
                                 </li>
+
+                                <!-- admin & student can see -->
                                 <li v-if="userRole=='admin' || userRole=='student'">
                                     <button type="button" class="inline-block px-4 py-2 bg-transparent text-white 
                             font-medium text-lg leading-tight  rounded 
                              hover:bg-gray-900 hover:shadow-lg focus:bg-blue-500
                             focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-600
                             active:shadow-lg transition duration-150 ease-in-out" @click="goBooking">Booking</button>
-
                                 </li>
-                                <li v-if="userRole=='admin' || userRole=='student' ">
+
+                                <!-- everyone can see -->
+                                <li>
                             <button type="button" class="inline-block px-2 py-2  bg-transparent text-white 
                             font-medium text-lg leading-tight  rounded  
                             hover:bg-gray-900 hover:shadow-lg focus:bg-blue-500 focus:shadow-lg 
                             focus:outline-none focus:ring-0 active:bg-gray-900 active:shadow-lg 
                             transition duration-150 ease-in-out " @click="goReservationList">Reservation</button>
                                 </li>
+
+                                <!-- admin & lecture can see -->
                                 <li v-if="userRole=='admin' || userRole=='lecturer'">
                             <button type="button" class="inline-block px-2 py-2  bg-transparent text-white 
                             font-medium text-lg leading-tight  rounded 
@@ -126,6 +130,8 @@ setInterval(async () => {
                             focus:outline-none focus:ring-0 active:bg-gray-900 active:shadow-lg 
                             transition duration-150 ease-in-out " @click="goCategoriesList">Categories</button>
                                 </li>
+
+                                <!-- admin can see -->
                                 <li  v-if="userRole=='admin'">
                             <button type="button" class="inline-block px-2 py-2  bg-transparent text-white 
                             font-medium text-lg leading-tight  rounded 
@@ -133,6 +139,8 @@ setInterval(async () => {
                             focus:outline-none focus:ring-0 active:bg-gray-900 active:shadow-lg 
                             transition duration-150 ease-in-out " @click="goUserList">Users</button>
                                 </li>
+
+                                <!-- everyone can see -->
                                 <li>
                             <button type="button" class="inline-block px-2 py-2  bg-transparent text-white 
                             font-medium text-lg leading-tight  rounded 

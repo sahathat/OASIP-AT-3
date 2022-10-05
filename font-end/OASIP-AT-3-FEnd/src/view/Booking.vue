@@ -21,12 +21,12 @@ const emailLength = 100;
 const noteLength = 500;
 
 const db = "http://localhost:5000/booking";
-// const eventLink = `${import.meta.env.BASE_URL}api/events`;
-// const categoryLink = `${import.meta.env.BASE_URL}api/categories`;
-// const refreshLink = `${import.meta.env.BASE_URL}api/users/refresh`;
-const eventLink = "http://localhost:8443/api/events";
-const categoryLink = "http://localhost:8443/api/categories";
-const refreshLink = "http://localhost:8443/api/users/refresh";
+const eventLink = `${import.meta.env.BASE_URL}api/events`;
+const categoryLink = `${import.meta.env.BASE_URL}api/categories`;
+const refreshLink = `${import.meta.env.BASE_URL}api/users/refresh`;
+// const eventLink = "http://localhost:8443/api/events";
+// const categoryLink = "http://localhost:8443/api/categories";
+// const refreshLink = "http://localhost:8443/api/users/refresh";
 
 const eventList = ref([]);
 const categoryList = ref([]);
