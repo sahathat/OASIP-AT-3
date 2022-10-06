@@ -98,7 +98,7 @@ public class EventController {
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
     public Event create(@Valid @RequestBody EventCreateDto newEvent, Authentication authentication) {
-        if (authentication != null && authentication.getAuthorities().equals(lecturer)) {
+        if (authentication.getAuthorities().equals(lecturer)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Forbidden");
         } else if (authentication.getAuthorities().equals(student) && !authentication.getName().equals(newEvent.getBookingEmail())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "new event should add by student email");

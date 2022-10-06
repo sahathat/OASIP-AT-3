@@ -42,7 +42,6 @@ public class EventService {
     public List<EventDto> getEventAll(String params) {
         // use List event sorted by datetime parameter by descendant order
         List<Event> event = eventRepository.findAll(Sort.by(params).descending());
-
         return listMapper.mapList(event, EventDto.class, modelMapper);
     }
 

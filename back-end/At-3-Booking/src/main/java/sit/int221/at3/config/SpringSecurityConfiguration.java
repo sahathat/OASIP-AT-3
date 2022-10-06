@@ -51,10 +51,11 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter{
         http.csrf().disable()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.GET,"/api/events/**").hasAnyRole("admin","student","lecturer")
-                .antMatchers(HttpMethod.POST,"/api/events/**").permitAll()
+                .antMatchers(HttpMethod.POST,"/api/events/**").hasAnyRole("admin","student")
                 .antMatchers(HttpMethod.PUT,"/api/events/**").hasAnyRole("admin","student")
                 .antMatchers(HttpMethod.DELETE,"/api/events/**").hasAnyRole("admin","student")
                 .antMatchers("/api/userList/**").hasRole("admin")
+                .antMatchers("/api/guests/**").permitAll()
                 .antMatchers("/api/users/signin","/api/users/signup","/api/users/refresh").permitAll()
                 .anyRequest().authenticated()
                 .and().exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).

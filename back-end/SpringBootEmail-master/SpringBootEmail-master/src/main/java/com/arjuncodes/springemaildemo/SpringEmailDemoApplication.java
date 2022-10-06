@@ -18,7 +18,7 @@ public class SpringEmailDemoApplication {
 	}
 	@EventListener(ApplicationReadyEvent.class)
 	public void triggerMail() throws MessagingException {
-		senderService.sendSimpleEmail("oasip.at3@gmail.com",
+		senderService.sendSimpleEmail("sahatat44@gmail.com",
 				"This is email body <h1> Test </h1>",
 				"This is email subject <h1> Test </h1>");
 

@@ -8,7 +8,9 @@ import sit.int221.at3.dtos.category.CategoryDto;
 import sit.int221.at3.dtos.category.CategoryUpdateDto;
 import sit.int221.at3.dtos.event.EventDto;
 import sit.int221.at3.entities.Category;
+import sit.int221.at3.entities.LecturerMapping;
 import sit.int221.at3.entities.Role;
+import sit.int221.at3.repositories.LecturerMappingRepository;
 import sit.int221.at3.services.CategoryService;
 
 import javax.validation.Valid;
@@ -26,8 +28,7 @@ public class CategoryController {
     // /api/categories [GET]
     @GetMapping("")
     public List<CategoryDto> getCategoryAll(@RequestParam(defaultValue = "id") String params, Authentication authentication) {
-        List<CategoryDto> categoryList = CategoryService.getCategoryAll(params, authentication);
-        return categoryList;
+        return CategoryService.getCategoryAll(params, authentication);
     }
 
     // /api/categories/{id} [GET]
@@ -37,8 +38,8 @@ public class CategoryController {
     }
 
     @GetMapping("/{id}/events")
-    public List<EventDto> getAllEventInCategory(@PathVariable Integer id) {
-        return CategoryService.getAllEventInCategory(id);
+    public List<EventDto> getAllEventInCategory(@PathVariable Integer id, Authentication authentication) {
+        return CategoryService.getAllEventInCategory(id, authentication);
     }
 
     @PutMapping("/{id}")

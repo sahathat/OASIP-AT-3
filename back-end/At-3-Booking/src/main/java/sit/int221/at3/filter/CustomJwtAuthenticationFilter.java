@@ -33,6 +33,7 @@ public class CustomJwtAuthenticationFilter extends OncePerRequestFilter {
         try{
             // JWT Token is in the form "Bearer token". Remove Bearer word and
             // get  only the Token
+
             String jwtToken = extractJwtFromRequest(request);
 
             if (StringUtils.hasText(jwtToken) && jwtTokenUtil.validateToken(jwtToken)) {
