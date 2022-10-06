@@ -35,25 +35,13 @@ public class EventController {
     @GetMapping("")
     public List<EventDto> getEventAll(
             @RequestParam(defaultValue = "eventStartTime") String params, Authentication authentication) {
-        List<EventDto> events = eventService.getEventAll(params);
-
-        if(authentication.getAuthorities().equals(student)) {
-            events = events.stream().filter(u -> authentication.getName().equals(u.getBookingEmail())).collect(Collectors.toList());
-        }
-
-        return events;
+        return eventService.getEventAll(params, authentication);
     }
 
     // /api/events/{id} [GET]
     @GetMapping("/{id}")
     public EventDto getEventById (@PathVariable Integer id, Authentication authentication) {
-        EventDto event = eventService.getEventById(id);
-
-        if (authentication.getAuthorities().equals(student) && !event.getBookingEmail().equals(authentication.getName())) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "student email is not same to booking email");
-        }
-
-        return event;
+        return eventService.getEventById(id, authentication);
     }
 
     @GetMapping("/upcoming")

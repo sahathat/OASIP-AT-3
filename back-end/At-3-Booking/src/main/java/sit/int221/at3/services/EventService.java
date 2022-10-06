@@ -13,15 +13,19 @@ import sit.int221.at3.dtos.event.EventDto;
 import sit.int221.at3.dtos.event.EventUpdateDto;
 import sit.int221.at3.entities.Category;
 import sit.int221.at3.entities.Event;
+import sit.int221.at3.entities.LecturerMapping;
 import sit.int221.at3.entities.Role;
 import sit.int221.at3.repositories.CategoryRepository;
 import sit.int221.at3.repositories.EventRepository;
+import sit.int221.at3.repositories.LecturerMappingRepository;
 import sit.int221.at3.utils.ListMapper;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class EventService {
@@ -32,6 +36,9 @@ public class EventService {
     private CategoryRepository categoryRepository;
 
     @Autowired
+    private LecturerMappingRepository lecturerMappingRepository;
+
+    @Autowired
     private ModelMapper modelMapper;
 
     @Autowired
@@ -39,17 +46,64 @@ public class EventService {
 
     private final List<SimpleGrantedAuthority> student = Arrays.asList(new SimpleGrantedAuthority(String.valueOf("ROLE_"+ Role.student)));
 
-    public List<EventDto> getEventAll(String params) {
+    private final List<SimpleGrantedAuthority> lecturer = Arrays.asList(new SimpleGrantedAuthority(String.valueOf("ROLE_"+ Role.lecturer)));
+
+    public List<EventDto> getEventAll(String params, Authentication authentication) {
         // use List event sorted by datetime parameter by descendant order
-        List<Event> event = eventRepository.findAll(Sort.by(params).descending());
-        return listMapper.mapList(event, EventDto.class, modelMapper);
+        List<Event> events = eventRepository.findAll(Sort.by(params).descending());
+
+        if(authentication.getAuthorities().equals(student)) {
+            events = events.stream().filter(u -> authentication.getName().equals(u.getBookingEmail())).collect(Collectors.toList());
+        } else if (authentication.getAuthorities().equals(lecturer)) {
+            List<Category> categoryList = categoryRepository.findAll();
+
+            // call lecturer mapping for filter lecturer email by authentication email
+            List<LecturerMapping> lecturerMappingList = lecturerMappingRepository.findAll().stream().filter(
+                    lm -> authentication.getName().equals(lm.getUser().getEmail())).toList();
+
+            // clear all item on categories
+            categoryList.clear();
+
+            // add item when filter by categories in lecturer mapping
+            lecturerMappingList.forEach(lm -> categoryList.add(lm.getCategory()));
+
+            events.clear();
+
+            // add item when filter by events in categories mapping
+            List<Event> finalEvents = events;
+            categoryList.forEach(c -> {
+                List<Event> eventModels = eventRepository.getEventInCategory(c.getId());
+                eventModels.forEach(e -> {
+                    finalEvents.add(eventRepository.getById(e.getId()));
+                });
+            });
+
+            events = new ArrayList<>(finalEvents);
+        }
+        return listMapper.mapList(events, EventDto.class, modelMapper);
     }
 
-    public EventDto getEventById(Integer id) {
+    public EventDto getEventById(Integer id, Authentication authentication) {
         // find event id
         Event event = eventRepository.findById(id).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, id + " is not exist please find new id if exist.")
         );
+
+        if (authentication.getAuthorities().equals(student) && !event.getBookingEmail().equals(authentication.getName())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "student email is not same to booking email");
+        } else if (lecturer.equals(authentication.getAuthorities())) {
+            // use lecturer email and categories id
+            List<LecturerMapping> lecturerMapping = lecturerMappingRepository
+                    .getLecturerMappingByCategory(event.getEventCategory().getId())
+                    .stream().filter(lm ->
+                            authentication.getName().equals(lm.getUser().getEmail())).toList();
+            
+            // check if user email not equal owner clinic email sent error 403
+            if (lecturerMapping.isEmpty() || !authentication.getName().equals(lecturerMapping.get(0).getUser().getEmail())) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN, authentication.getName() + " can see event in owner categories/clinics only");
+            }
+        }
+
         return modelMapper.map(event, EventDto.class);
     }
 
