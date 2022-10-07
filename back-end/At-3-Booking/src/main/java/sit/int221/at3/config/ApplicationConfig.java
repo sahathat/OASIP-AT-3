@@ -21,5 +21,4 @@ public class ApplicationConfig {
         return ListMapper.getInstance();
     }
 
-
 }
