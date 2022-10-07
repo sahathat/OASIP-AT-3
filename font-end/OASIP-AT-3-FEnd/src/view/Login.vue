@@ -14,11 +14,9 @@ const password = ref("");
 const statusMessage = ref("");
 const status = ref(0)
 
-const token = ref('')
-
 const db = "http://localhost:5000/booking";
-// const signinLink = 'http://localhost:8443/api/users/signin';
-const signinLink = `${import.meta.env.BASE_URL}api/users/signin`;
+const signinLink = 'http://localhost:8443/api/users/signin';
+// const signinLink = `${import.meta.env.BASE_URL}api/users/signin`;
 
 // validate email
 const isEmailEmpty = ref(undefined);
@@ -72,14 +70,19 @@ const checkMatchTODB = async () => {
     
     // set localStorage
     localStorage.setItem('key',jwt.token)
+    localStorage.setItem('token','accessToken')
+    localStorage.setItem('email',jwt.email)
+    localStorage.setItem('role',jwt.role)
 
+    const role = localStorage.getItem('role')
+    console.log(localStorage.getItem('role').substring(6,role.length-1))
+    
     status.value = res.status
-    statusMessage.value = res.status == 200 ? 'Password Matches !' && goBooking() :
-        res.status == 401 ? 'Password Not Matches !' :
-        res.status == 404 ? 'A user with the specified email DOSE NOT exist !' : ''
+    statusMessage.value = res.status == 200 ? 'Login Successful !' && goHome() :
+        res.status == 401 ? 'Password Incorrect !' :
+        res.status == 404 ? 'A user with the specified email DOES NOT exist and allow the user to edit the email' : ''
     // console.log(this.token)
 }
-
 
 
 

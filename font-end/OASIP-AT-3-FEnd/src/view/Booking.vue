@@ -1,30 +1,59 @@
 <script setup>
 import { computed } from "@vue/reactivity";
 import { onBeforeMount, onUpdated, ref } from "vue";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 
 const name = ref("");
-const eMail = ref("");
+const eMail = ref('')
+const loginEmail = localStorage.getItem('email')
 const startDate = ref("");
 const category = ref("");
 const startTime = ref("");
 const noteText = ref("");
 const cateId = ref("");
 
+const { params } = useRoute();
+const myRouoter = useRouter();
+const goHome = () => myRouoter.push({ name: "Home" });
+
 const nameLength = 100;
 const emailLength = 100;
 const noteLength = 500;
 
 const db = "http://localhost:5000/booking";
-const eventLink = `${import.meta.env.BASE_URL}api/events`;
-const categoryLink = `${import.meta.env.BASE_URL}api/categories`;
-// const eventLink = "http://localhost:8443/api/events";
-// const categoryLink = "http://localhost:8443/api/categories";
+// const eventLink = `${import.meta.env.BASE_URL}api/events`;
+// const categoryLink = `${import.meta.env.BASE_URL}api/categories`;
+// const refreshLink = `${import.meta.env.BASE_URL}api/users/refresh`;
+const eventLink = "http://localhost:8443/api/events";
+const categoryLink = "http://localhost:8443/api/categories";
+const refreshLink = "http://localhost:8443/api/users/refresh";
 
 const eventList = ref([]);
 const categoryList = ref([]);
 const addSuccess = ref(undefined);
 const getStatus = ref(undefined);
+
+// check is Login ?
+const isLogin = () => {
+  if(loginEmail!==null && userRole.value!=='admin') eMail.value = loginEmail
+  else if(userRole.value=='admin') eMail.value = ''
+  else eMail.value = ''
+}
+
+const userRole = ref('guest')
+const checkRole = () => {
+    const role = localStorage.getItem('role')
+    // console.log(role.substring(6,role.length-1))
+    if(role !== null){
+        if(role.substring(6,role.length-1)=='admin') userRole.value = 'admin'
+        else if(role.substring(6,role.length-1)=='lecturer') userRole.value = 'lecturer'
+        else if(role.substring(6,role.length-1)=='student') userRole.value = 'student'
+    }
+    else userRole.value = 'guest'
+    // console.log(userRole.value)
+    return userRole.value
+}
+
 
 // validate past
 const validateIsPast = ref(undefined);
@@ -304,11 +333,37 @@ const addBooking = async () => {
     addSuccess.value = true;
     createStatus = true;
     isStatus.value = true;
+    console.log('เข้า')
     setTimeout(() => (addSuccess.value = false), 5000);
   } else if (res.status === 400) {
     validateBetweenDate.value = true;
     isStatus.value = false;
-  } else {
+  }
+  // refresh token ----------------------------------------------------------- //
+    else if (res.status === 401 && localStorage.getItem('token')==='accessToken') {
+          console.log('test...')
+          const resForRefresh = await fetch(refreshLink, {
+            headers: {
+            Authorization: "Bearer " + key,
+            isRefreshToken: true ,
+            },
+            })
+          const jwt = await resForRefresh.json()
+          console.log(jwt)
+          if(resForRefresh.status === 200){
+              // set localStorage
+              localStorage.setItem('key',jwt.token)
+              localStorage.setItem('token','refreshToken')
+              addBooking()
+          }
+    } else if(res.status === 401 && localStorage.getItem('token')==='refreshToken'){
+          localStorage.removeItem('key')
+          localStorage.removeItem('token')
+          goHome()
+        // console.log('เข้า')
+    } 
+  // ------------------------------------------------------------------------- //
+    else {
     createStatus = false;
     isStatus.value = false;
   }
@@ -331,52 +386,96 @@ const getCategory = async () => {
   if (res.status === 200) {
     categoryList.value = await res.json();
     getStatus.value = true;
-  } else {
-    getStatus.value = false;
-  }
+  } 
+  // refresh token ----------------------------------------------------------- //
+    else if (res.status === 401 && localStorage.getItem('token')==='accessToken') {
+      console.log('test...')
+         const resForRefresh = await fetch(refreshLink, {
+            headers: {
+            Authorization: "Bearer " + key,
+            isRefreshToken: true ,
+            },
+            })
+          const jwt = await resForRefresh.json()
+          console.log(jwt)
+          if(resForRefresh.status === 200){
+              // set localStorage
+              localStorage.setItem('key',jwt.token)
+              localStorage.setItem('token','refreshToken')
+              getCategory()
+          }
+    } else if(res.status === 401 && localStorage.getItem('token')==='refreshToken'){
+          localStorage.removeItem('key')
+          localStorage.removeItem('token')
+          goHome()
+        // console.log('เข้า')
+    } 
+    // ------------------------------------------------------------------------- //
+      else {
+        getStatus.value = false;
+    }
 };
 
 // get event
-const resGetEvent = ref(undefined);
-//const countGetEvent=ref(0)
+// const resGetEvent = ref(undefined);
+// //const countGetEvent=ref(0)
 
-// check every 10 second
-setInterval(async () => {
-  const key = localStorage.getItem('key')
-  //console.log(countGetEvent.value++)
-  resGetEvent.value = await fetch(eventLink,{
-    method: "GET",
-    headers: {
-            "Authorization":'Bearer ' + key ,
-            "Accept": 'application/json',
-            "content-type": "application/json",
-    }
-  });
-  if (resGetEvent.value.status === 200) {
-    eventList.value = await resGetEvent.value.json();
-    getStatus.value = true;
-  } else getStatus.value = false;
-}, 10000);
+// // check every 10 second
+// setInterval(async () => {
+//   const key = localStorage.getItem('key')
+//   //console.log(countGetEvent.value++)
+//   resGetEvent.value = await fetch(eventLink,{
+//     method: "GET",
+//     headers: {
+//             "Authorization":'Bearer ' + key ,
+//             "Accept": 'application/json',
+//             "content-type": "application/json",
+//     }
+//   });
+//   if (resGetEvent.value.status === 200) {
+//     eventList.value = await resGetEvent.value.json();
+//     getStatus.value = true;
+//   } else getStatus.value = false;
+// }, 10000);
 
-// first get event
+//GET event
 const getEvent = async () => {
   const key = localStorage.getItem('key')
-  const res = await fetch(eventLink,{
+  const res = await fetch(eventLink, {
     method: "GET",
     headers: {
             "Authorization":'Bearer ' + key ,
             "Accept": 'application/json',
             "content-type": "application/json",
-    }
+        }
   });
   if (res.status === 200) {
     eventList.value = await res.json();
-    getStatus.value = true;
-  } else getStatus.value = false;
+  } else if (res.status === 401 && localStorage.getItem('token')==='accessToken') {
+    console.log('test...')
+    const resForRefresh = await fetch(refreshLink, {
+      headers: {
+        Authorization: "Bearer " + key ,
+        isRefreshToken: true ,
+      },
+    })
+      const jwt = await resForRefresh.json()
+      console.log(jwt)
+      if(resForRefresh.status === 200){
+        // set localStorage
+        localStorage.setItem('key',jwt.token)
+        localStorage.setItem('token','refreshToken')
+        getEvent()
+      }
+    }else if(res.status === 401 && localStorage.getItem('token')==='refreshToken'){
+        localStorage.removeItem('key')
+        localStorage.removeItem('token')
+        goHome()
+        console.log('เข้า')
+    }
 };
 
 //get duration
-
 const durationTime = computed(() => {
   let value = undefined;
   for (let cate of categoryList.value) {
@@ -391,13 +490,15 @@ const durationTime = computed(() => {
 onBeforeMount(async () => {
   await getCategory();
   await getEvent();
+  isLogin()
+  checkRole()
 });
 </script>
 
 <template>
   <div class="showUp container mx-auto">
     <div
-      class="max-w-screen-md p-5 pb-7 mx-auto mt-14 bg-gray-200 rounded-md shadow-sm shadow-xl"
+      class="max-w-screen-md p-5 pb-7 mx-auto mt-14 bg-gray-200 rounded-md shadow-xl"
     >
       <div class="text-center">
         <h1 class="my-3 text-3xl font-semibold text-gray-700">Booking</h1>
@@ -449,6 +550,20 @@ onBeforeMount(async () => {
               </span>
             </div>
             <div>
+            <div v-if="loginEmail!==null && (userRole =='student' || userRole =='lecturer')">
+              <input
+                type="email"
+                name="email"
+                v-model="eMail"
+                required
+                :style="[
+                  validateEmailisNotNull == false ? 'border-color:red' : '',
+                ]"
+                class="w-80 px-3 py-2 mx-2 placeholder-gray-300 border border-gray-400 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300"
+                :disabled = true
+              >
+            </div>
+            <div v-else-if="eMail=='' || userRole=='admin'">
               <input
                 v-model="eMail"
                 type="email"
@@ -459,7 +574,9 @@ onBeforeMount(async () => {
                   validateEmailisNotNull == false ? 'border-color:red' : '',
                 ]"
                 class="w-80 px-3 py-2 mx-2 placeholder-gray-300 border border-gray-400 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300"
+                :disabled = false
               />
+            </div>
             </div>
           </div>
         </div>
@@ -474,7 +591,7 @@ onBeforeMount(async () => {
               <!-- show category detail -->
               <a
                 href="#category-detail"
-                class="px-1.5 font-light mx-2 bg-white rounded-full text-xs bg-black text-white"
+                class="px-1.5 font-light mx-2 rounded-full text-xs bg-black text-white"
                 >?</a
               >
             </div>

@@ -1,16 +1,21 @@
 <script setup>
-import { ref, onBeforeMount } from "vue";
-import { useRouter } from "vue-router";
-const userList = ref([]);
-const userCheck = ref(false);
+import { ref, onBeforeMount,onUpdated } from "vue";
+import { useRoute,useRouter } from "vue-router";
 
+const userList = ref([]);
 const db = "http://localhost:5000/booking";
-const userLink = `${import.meta.env.BASE_URL}api/users`;
-// const userLink = "http://localhost:8443/api/users";
+// const userLink = `${import.meta.env.BASE_URL}api/userList`;
+const userLink = "http://localhost:8443/api/userList";
+const refreshLink = "http://localhost:8443/api/users/refresh";
+
+const { params } = useRoute();
+const myRouoter = useRouter();
+const goHome = () => myRouoter.push({ name: "Home" });
 
 //GET users
-const getUsers = async () => {
+const getUser = async () => {
   const key = localStorage.getItem('key')
+  // const user_role = localStorage.getItem('role').substring()
 
   const res = await fetch(userLink, {
     method: "GET",
@@ -20,13 +25,30 @@ const getUsers = async () => {
             "content-type": "application/json",
         }
   });
-  if (res.status === 200) {
+  if (res.status === 200 ) {
     userList.value = await res.json();
-    userCheck.value = true;
-    // console.log(userList.value)
-  } else {
-    userCheck.value = false;
-  }
+  } else if (res.status === 401 && localStorage.getItem('token')==='accessToken') {
+    console.log('test...')
+    const resForRefresh = await fetch(refreshLink, {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem('key'),
+        isRefreshToken: true ,
+      },
+    })
+      const jwt = await resForRefresh.json()
+      console.log(jwt)
+      if(resForRefresh.status === 200){
+        // set localStorage
+        localStorage.setItem('key',jwt.token)
+        localStorage.setItem('token','refreshToken')
+        getUser()
+      }
+    }else if(res.status === 401 && localStorage.getItem('token')==='refreshToken'){
+        localStorage.removeItem('key')
+        localStorage.removeItem('token')
+        goHome()
+        console.log('เข้า')
+    }
 };
 
 //router
@@ -40,7 +62,10 @@ const goUserInfo= (input) =>
   });
 
 onBeforeMount(async () => {
-  await getUsers();
+  await getUser();
+});
+onUpdated(async () => {
+  await getUser();
 });
 
 </script>

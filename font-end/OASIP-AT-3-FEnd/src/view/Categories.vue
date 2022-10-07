@@ -2,11 +2,16 @@
 import { useRoute, useRouter } from "vue-router";
 import { onBeforeMount, ref } from "vue";
 
-const { params } = useRoute();
-
 const db = "http://localhost:5000/booking";
-const categoryLink = `${import.meta.env.BASE_URL}api/categories`;
-// const categoryLink = "http://localhost:8443/api/categories";
+// const categoryLink = `${import.meta.env.BASE_URL}api/categories`;
+// const refreshLink = `${import.meta.env.BASE_URL}api/users/refresh`;
+const categoryLink = "http://localhost:8443/api/categories";
+const refreshLink = "http://localhost:8443/api/users/refresh";
+
+const { params } = useRoute();
+const myRouoter = useRouter();
+const goHome = () => myRouoter.push({ name: "Home" });
+const goCategoriesList = () => myRouoter.push({ name: "CategoriesList" });
 
 // ขาดเช็คชื่อคลิกนิกซ้ำ
 const id = params.id;
@@ -16,49 +21,82 @@ const duration = ref("");
 const categoryList=ref([])
 const isNotNull = ref(false);
 const categoryDetail = ref({})
-const myRouoter = useRouter();
-const goCategoriesList = () => myRouoter.push({ name: "CategoriesList" });
+
+const userRole = ref('guest')
+const checkRole = () => {
+    // const getRole = localStorage.getItem('role')
+    // const role = getRole.substring(6,getRole.length-1)
+    const role = localStorage.getItem('role')
+    // console.log(role.substring(6,role.length-1))
+    if(role !== null){
+        if(role.substring(6,role.length-1)=='admin') userRole.value = 'admin'
+        else if(role.substring(6,role.length-1)=='lecturer') userRole.value = 'lecturer'
+    }
+    else userRole.value = 'guest'
+    // console.log(userRole.value)
+    return userRole.value
+}
 
 
 // get every 10 sec
-const getStatus=ref(undefined)
-const resGetCategory=ref(undefined)
+// const getStatus=ref(undefined)
+// const resGetCategory=ref(undefined)
+// setInterval(async ()=>{
+//   const key = localStorage.getItem('key')
 
-setInterval(async ()=>{
+//   resGetCategory.value= await fetch(categoryLink, {
+//     method: "GET",
+//     headers: {
+//             "Authorization":'Bearer ' + key ,
+//             "Accept": 'application/json',
+//             "content-type": "application/json",
+//         }
+//   })
+//   if (resGetCategory.value.status === 200) {
+//     categoryList.value = await resGetCategory.value.json();
+//     getStatus.value = true;
+//   } else getStatus.value = false;
+// },10000)
+
+//GET category
+const getCategory = async () => {
   const key = localStorage.getItem('key')
-
-  resGetCategory.value= await fetch(categoryLink, {
+  const res = await fetch(categoryLink, {
     method: "GET",
     headers: {
             "Authorization":'Bearer ' + key ,
             "Accept": 'application/json',
             "content-type": "application/json",
         }
-  })
-  if (resGetCategory.value.status === 200) {
-    categoryList.value = await resGetCategory.value.json();
-    getStatus.value = true;
-  } else getStatus.value = false;
-},10000)
-
-// first get event
-const getCategory =async()=>{
-  const key = localStorage.getItem('key')
-  // console.log(key)
-
- resGetCategory.value= await fetch(categoryLink, {
-    method: "GET",
-    headers: {
-            "Authorization":'Bearer ' + key ,
-            "Accept": 'application/json',
-            "content-type": "application/json",
-        }
-  })
-  if (resGetCategory.value.status === 200) {
-    categoryList.value = await resGetCategory.value.json();
-    getStatus.value = true;
-  } else getStatus.value = false;       
-}
+  });
+  if (res.status === 200) {
+    categoryList.value = await res.json();
+  } 
+  // refresh token ------------------------------------------------------ //
+  else if (res.status === 401 && localStorage.getItem('token')==='accessToken') {
+    console.log('test...')
+    const resForRefresh = await fetch(refreshLink, {
+      headers: {
+        Authorization: "Bearer " + key,
+        isRefreshToken: true ,
+      },
+    })
+      const jwt = await resForRefresh.json()
+      console.log(jwt)
+      if(resForRefresh.status === 200){
+        // set localStorage
+        localStorage.setItem('key',jwt.token)
+        localStorage.setItem('token','refreshToken')
+        getCategory()
+      }
+    }else if(res.status === 401 && localStorage.getItem('token')==='refreshToken'){
+        localStorage.removeItem('key')
+        localStorage.removeItem('token')
+        goHome()
+        // console.log('เข้า')
+    }
+    // ------------------------------------------------------------------- //
+};
 
 // get value
 const getDetail = async () => {
@@ -74,21 +112,44 @@ const getDetail = async () => {
   });
   if (res.status === 200) {
     categoryDetail.value = await res.json();
-    //console.log(categoryDetail.value);
-
-    //console.log(Date.parse("2022-06-01T15:00:00+07:00"));
     if (categoryDetail.value.id == id) {
       isNotNull.value = true;
       name.value = categoryDetail.value.eventCategoryName;
       description.value = categoryDetail.value.eventCategoryDescription;
       duration.value = categoryDetail.value.eventCategoryDuration;
     }
-  }
+  } 
+  // refresh token ------------------------------------------------------ //
+  else if (res.status === 401 && localStorage.getItem('token')==='accessToken') {
+    console.log('test...')
+    const resForRefresh = await fetch(refreshLink, {
+      headers: {
+        Authorization: "Bearer " + key,
+        isRefreshToken: true ,
+      },
+    })
+      const jwt = await resForRefresh.json()
+      console.log(jwt)
+      if(resForRefresh.status === 200){
+        // set localStorage
+        localStorage.setItem('key',jwt.token)
+        localStorage.setItem('token','refreshToken')
+        getDetail()
+      }
+    }else if(res.status === 401 && localStorage.getItem('token')==='refreshToken'){
+        localStorage.removeItem('key')
+        localStorage.removeItem('token')
+        goHome()
+        // console.log('เข้า')
+    }
+    // ---------------------------------------------------------------- //
+
 };
 
 onBeforeMount(async()=>{
        await getCategory()
        await getDetail()
+       checkRole()
 });
 
 
@@ -141,7 +202,32 @@ const edit =async()=>{
         canEdit=true
         editSuccess.value=true
         console.log(`editSuccess = ${editSuccess.value}`)
-       }else {
+      } 
+      // refresh token ----------------------------------------------------------- //
+      else if (res.status === 401 && localStorage.getItem('token')==='accessToken') {
+          console.log('test...')
+          const resForRefresh = await fetch(refreshLink, {
+            headers: {
+            Authorization: "Bearer " + key,
+            isRefreshToken: true ,
+            },
+            })
+          const jwt = await resForRefresh.json()
+          console.log(jwt)
+          if(resForRefresh.status === 200){
+              // set localStorage
+              localStorage.setItem('key',jwt.token)
+              localStorage.setItem('token','refreshToken')
+              getDetail()
+          }
+      } else if(res.status === 401 && localStorage.getItem('token')==='refreshToken'){
+          localStorage.removeItem('key')
+          localStorage.removeItem('token')
+          goHome()
+        // console.log('เข้า')
+      } 
+      // ------------------------------------------------------------------------------------------------- //
+      else {
               canEdit=false
               editSuccess.value=false
               // console.log(`editSuccess = ${editSuccess.value}`)

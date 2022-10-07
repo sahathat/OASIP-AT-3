@@ -5,8 +5,10 @@ import { onBeforeMount, ref } from "vue";
 const { params } = useRoute();
 
 const db = "http://localhost:5000/booking";
-const eventLink = `${import.meta.env.BASE_URL}api/events`;
-// const eventLink = "http://localhost:8443/api/events";
+// const eventLink = `${import.meta.env.BASE_URL}api/events`;
+// const refreshLink = `${import.meta.env.BASE_URL}api/users/refresh`;
+const eventLink = "http://localhost:8443/api/events";
+const refreshLink = "http://localhost:8443/api/users/refresh";
 
 const id = params.id;
 const name = ref("");
@@ -19,8 +21,10 @@ const noteT = ref("");
 const detailBooking = ref({});
 const eventList=ref([])
 const isNotNull = ref(false);
+
 const myRouoter = useRouter();
 const goReservation = () => myRouoter.push({ name: "ReservationList" });
+const goHome = () => myRouoter.push({ name: "Home" });
 
 // timer
 const day = ref();
@@ -59,42 +63,64 @@ let clock = () => {
 setInterval(clock, 1000);
 
 // get every 10 sec
-const getStatus=ref(undefined)
-const resGetEvent=ref(undefined)
+// const getStatus=ref(undefined)
+// const resGetEvent=ref(undefined)
 
-setInterval(async ()=>{
+// setInterval(async ()=>{
+//   const key = localStorage.getItem('key')
+//   resGetEvent.value= await fetch(eventLink,{
+//     method: 'GET',
+//     headers: {
+//             "Authorization":'Bearer ' + key ,
+//             "Accept": 'application/json',
+//             "content-type": "application/json",
+//         }
+//   })
+//   if (resGetEvent.value.status === 200) {
+//     eventList.value = await resGetEvent.value.json();
+//     getStatus.value = true;
+//   } else getStatus.value = false;
+// },10000)
+
+//GET event
+const getEvent = async () => {
   const key = localStorage.getItem('key')
-  resGetEvent.value= await fetch(eventLink,{
-    method: 'GET',
+  const res = await fetch(eventLink, {
+    method: "GET",
     headers: {
             "Authorization":'Bearer ' + key ,
             "Accept": 'application/json',
             "content-type": "application/json",
         }
-  })
-  if (resGetEvent.value.status === 200) {
-    eventList.value = await resGetEvent.value.json();
-    getStatus.value = true;
-  } else getStatus.value = false;
-},10000)
-
-// first get event
-const getEvent =async()=>{
-  const key = localStorage.getItem('key')
-
- resGetEvent.value= await fetch(eventLink,{
-    method: 'GET',
-    headers: {
-            "Authorization":'Bearer ' + key ,
-            "Accept": 'application/json',
-            "content-type": "application/json",
-        }
-  })
-  if (resGetEvent.value.status === 200) {
-    eventList.value = await resGetEvent.value.json();
-    getStatus.value = true;
-  } else getStatus.value = false;       
-}
+  });
+  if (res.status === 200) {
+    eventList.value = await res.json();
+  } 
+  // refresh token ----------------------------- //
+  else if (res.status === 401 && localStorage.getItem('token')==='accessToken') {
+    console.log('test...')
+    const resForRefresh = await fetch(refreshLink, {
+      headers: {
+        Authorization: "Bearer " + key ,
+        isRefreshToken: true ,
+      },
+    })
+      const jwt = await resForRefresh.json()
+      console.log(jwt)
+      if(resForRefresh.status === 200){
+        // set localStorage
+        localStorage.setItem('key',jwt.token)
+        localStorage.setItem('token','refreshToken')
+        getEvent()
+      }
+    }else if(res.status === 401 && localStorage.getItem('token')==='refreshToken'){
+        localStorage.removeItem('key')
+        localStorage.removeItem('token')
+        goHome()
+        console.log('เข้า')
+    }
+    // ----------------------------------------- //
+};
 
 // get value
 const getDetail = async () => {
@@ -124,15 +150,51 @@ const getDetail = async () => {
       noteT.value = detailBooking.value.eventNotes;
     }
   }
+  // refresh token ----------------------------------------------------------- //
+      else if (res.status === 401 && localStorage.getItem('token')==='accessToken') {
+          console.log('test...')
+          const resForRefresh = await fetch(refreshLink, {
+            headers: {
+            Authorization: "Bearer " + key,
+            isRefreshToken: true ,
+            },
+            })
+          const jwt = await resForRefresh.json()
+          console.log(jwt)
+          if(resForRefresh.status === 200){
+              // set localStorage
+              localStorage.setItem('key',jwt.token)
+              localStorage.setItem('token','refreshToken')
+              getDetail()
+          }
+      } else if(res.status === 401 && localStorage.getItem('token')==='refreshToken'){
+          localStorage.removeItem('key')
+          localStorage.removeItem('token')
+          goHome()
+        // console.log('เข้า')
+      } 
 };
 
-// const key = ref('')
-// const getToken = () => { key.value = localStorage.getItem('key')}
+const userRole = ref('guest')
+const checkRole = () => {
+    // const getRole = localStorage.getItem('role')
+    // const role = getRole.substring(6,getRole.length-1)
+    const role = localStorage.getItem('role')
+    // console.log(role.substring(6,role.length-1))
+    if(role !== null){
+        if(role.substring(6,role.length-1)=='admin') userRole.value = 'admin'
+        else if(role.substring(6,role.length-1)=='lecturer') userRole.value = 'lecturer'
+        else if(role.substring(6,role.length-1)=='student') userRole.value = 'student'
+    }
+    else userRole.value = 'guest'
+    // console.log(userRole.value)
+    return userRole.value
+}
 
 onBeforeMount(async()=>{
        await  getEvent()
        await getDetail()
-      //  getToken()
+       checkRole()
 });
 
 //remove information
@@ -149,7 +211,32 @@ const removeInfo = async () => {
   if (res.status === 200) {
     console.log("delete successfully");
     goReservation();
-  } else console.log("error");
+  } 
+  // refresh token ----------------------------------------------------------- //
+    else if (res.status === 401 && localStorage.getItem('token')==='accessToken') {
+        console.log('test...')
+        const resForRefresh = await fetch(refreshLink, {
+            headers: {
+            Authorization: "Bearer " + key,
+            isRefreshToken: true ,
+            },
+            })
+        const jwt = await resForRefresh.json()
+        console.log(jwt)
+        if(resForRefresh.status === 200){
+              // set localStorage
+              localStorage.setItem('key',jwt.token)
+              localStorage.setItem('token','refreshToken')
+              getDetail()
+        }
+      } else if(res.status === 401 && localStorage.getItem('token')==='refreshToken'){
+          localStorage.removeItem('key')
+          localStorage.removeItem('token')
+          goHome()
+        // console.log('เข้า')
+      } 
+      // ----------------------------------------------------------------------- //
+      else console.log("error");
 };
 
 // assign to edit attribute
@@ -195,7 +282,32 @@ const edit =async()=>{
         isEdit.value = false;
         canEdit=true
         editSuccess.value=true
-       }else {
+       }
+       // refresh token ----------------------------------------------------------- //
+      else if (res.status === 401 && localStorage.getItem('token')==='accessToken') {
+          console.log('test...')
+          const resForRefresh = await fetch(refreshLink, {
+            headers: {
+            Authorization: "Bearer " + key,
+            isRefreshToken: true ,
+            },
+            })
+          const jwt = await resForRefresh.json()
+          console.log(jwt)
+          if(resForRefresh.status === 200){
+              // set localStorage
+              localStorage.setItem('key',jwt.token)
+              localStorage.setItem('token','refreshToken')
+              getDetail()
+          }
+      } else if(res.status === 401 && localStorage.getItem('token')==='refreshToken'){
+          localStorage.removeItem('key')
+          localStorage.removeItem('token')
+          goHome()
+        // console.log('เข้า')
+      } 
+      // ------------------------------------------------------------------------- //
+        else {
               canEdit=false
               editSuccess.value=false
        }
@@ -461,8 +573,8 @@ const calTime = (hour, minute, addTime) => {
         </div>
        <!-- button not edit mode -->
         <div v-if="isEdit == false" class="showUp m-auto w-fit">
-          <button @click="editInfo" class="m-4 custom-btn edit">Edit</button>
-          <a  href="#remove" class="m-4 custom-btn remove">
+          <button v-if="userRole=='admin' || userRole=='student'" @click="editInfo" class="m-4 custom-btn edit">Edit</button>
+          <a v-if="userRole=='admin' || userRole=='student'"  href="#remove" class="m-4 custom-btn remove">
             Remove
           </a>
           <button @click="goReservation"  class="m-4 custom-btn back">Go Back</button>
@@ -491,7 +603,6 @@ const calTime = (hour, minute, addTime) => {
     </div>
     
     <div v-if="
-          getStatus == false ||
           eventList.length == 0
         " class="alert warning text-sm">
           <strong class="block">Warning!</strong> A system error has occurred,please try again.

@@ -95,10 +95,10 @@ const router = createRouter({history,routes})
 
 // router.beforeEach((to,from,next) => {
 //     if(to.meta.auth && !store.gettes[`auth/${IS_USER_AUTHENTICATION_GETTER}`]){
-//         next('/login')
+//         next({ name: 'Login' })
 //     }
 //     else if( !to.meta.auth && store.gettes[`auth/${IS_USER_AUTHENTICATION_GETTER}`]){
-//         next('booking')
+//         next({ name: 'Booking' })
 //     }
 //     else{
 //         next()

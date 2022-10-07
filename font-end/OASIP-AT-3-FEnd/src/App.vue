@@ -1,5 +1,5 @@
 <script setup>
-import {ref, onBeforeMount,onMounted} from 'vue'
+import {ref, onBeforeMount,onMounted, onUpdated} from 'vue'
 import BaseDate from './components/BaseDate.vue'
 import {useRouter} from 'vue-router'
 
@@ -18,40 +18,48 @@ const goLogin = ()=>myRouter.push({name:'Login'})
 
 const signOut = () => {
     localStorage.removeItem('key')
+    localStorage.removeItem('token')
+    localStorage.removeItem('email')
+    localStorage.removeItem('role')
     haveToken.value = null
     console.log(localStorage.getItem('key'))
     goHome()
 }
 
-
-// const haveToken = ref(null)
-// const isHaveToken = () =>{
-//     const token = localStorage.getItem('key')
-//     if(token!==null) haveToken.value = true
-//     else haveToken.value = false
-//     console.log(haveToken.value)
-// }
-
 const haveToken = ref(null)
 const isHaveToken = () => {
     const token = localStorage.getItem('key')
-    if(token!==null) haveToken.value = true
-    else haveToken.value =false
+    if(token!==null && token!==undefined) haveToken.value = true
+    else haveToken.value = false
     return haveToken.value
+}
+
+const userRole = ref('guest')
+const checkRole = () => {
+    // const getRole = localStorage.getItem('role')
+    // const role = getRole.substring(6,getRole.length-1)
+    const role = localStorage.getItem('role')
+    // console.log(role.substring(6,role.length-1))
+    if(role !== null){
+        if(role.substring(6,role.length-1)=='admin') userRole.value = 'admin'
+        else if(role.substring(6,role.length-1)=='student') userRole.value = 'student'
+        else if(role.substring(6,role.length-1)=='lecturer') userRole.value = 'lecturer'
+    }
+    else userRole.value = 'guest'
+    // console.log(userRole.value)
+    return userRole.value
 }
 
 //show navbar2
 onBeforeMount(async () => {
-    // const token = localStorage.getItem('key')
     isHaveToken()
+    checkRole()
 })
-// onMounted(async () => {
-//     // const token = localStorage.getItem('key')
-//     isHaveToken()
-// })
+
 setInterval(async () => {
     isHaveToken()
-}, 500);
+    checkRole()
+}, 1000);
 
 </script>
 
@@ -94,16 +102,18 @@ setInterval(async () => {
                             hover:bg-gray-900 hover:shadow-lg focus:bg-blue-500 focus:shadow-lg 
                             focus:outline-none focus:ring-0 active:bg-gray-900 active:shadow-lg 
                             transition duration-150 ease-in-out " @click="goHome">Home</button>
-                            
                                 </li>
-                                <li>
+
+                                <!-- admin & student can see -->
+                                <li v-if="userRole=='admin' || userRole=='student'">
                                     <button type="button" class="inline-block px-4 py-2 bg-transparent text-white 
                             font-medium text-lg leading-tight  rounded 
                              hover:bg-gray-900 hover:shadow-lg focus:bg-blue-500
                             focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-600
                             active:shadow-lg transition duration-150 ease-in-out" @click="goBooking">Booking</button>
-
                                 </li>
+
+                                <!-- everyone can see -->
                                 <li>
                             <button type="button" class="inline-block px-2 py-2  bg-transparent text-white 
                             font-medium text-lg leading-tight  rounded  
@@ -111,20 +121,26 @@ setInterval(async () => {
                             focus:outline-none focus:ring-0 active:bg-gray-900 active:shadow-lg 
                             transition duration-150 ease-in-out " @click="goReservationList">Reservation</button>
                                 </li>
-                                <li>
+
+                                <!-- admin & lecture can see -->
+                                <li v-if="userRole=='admin' || userRole=='lecturer'">
                             <button type="button" class="inline-block px-2 py-2  bg-transparent text-white 
                             font-medium text-lg leading-tight  rounded 
                             hover:bg-gray-900 hover:shadow-lg focus:bg-blue-500 focus:shadow-lg 
                             focus:outline-none focus:ring-0 active:bg-gray-900 active:shadow-lg 
                             transition duration-150 ease-in-out " @click="goCategoriesList">Categories</button>
                                 </li>
-                                <li>
+
+                                <!-- admin can see -->
+                                <li  v-if="userRole=='admin'">
                             <button type="button" class="inline-block px-2 py-2  bg-transparent text-white 
                             font-medium text-lg leading-tight  rounded 
                             hover:bg-gray-900 hover:shadow-lg focus:bg-blue-500 focus:shadow-lg 
                             focus:outline-none focus:ring-0 active:bg-gray-900 active:shadow-lg 
                             transition duration-150 ease-in-out " @click="goUserList">Users</button>
                                 </li>
+
+                                <!-- everyone can see -->
                                 <li>
                             <button type="button" class="inline-block px-2 py-2  bg-transparent text-white 
                             font-medium text-lg leading-tight  rounded 
@@ -136,13 +152,13 @@ setInterval(async () => {
                         </div>
 
                         <!-- third nav -->
-                        <div v-if="haveToken==false" class="lg:flex justify-end space-x-1 w-4/5">
-                            <div  class="lg:flex items-center space-x-1 w-1/5" >
+                        <div class="lg:flex justify-end space-x-1 w-4/5">
+                            <div class="lg:flex items-center space-x-1 w-1/5" >
                                 <button type="button" class="hover:underline bg-white text-gray-800 font-bold rounded-full 
                                 py-4 px-8 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 hover:bg-green-300
                                 duration-300 ease-in-out" @click="goCreateUser"> Sign up </button>
                             </div>
-                            <div class="lg:flex items-center space-x-1 w-1/5" >
+                            <div v-if="haveToken==false" class="lg:flex items-center space-x-1 w-1/5" >
                                 <button type="button" class="hover:underline bg-white text-gray-800 font-bold rounded-full 
                                 py-4 px-8 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 hover:bg-amber-400
                                 duration-300 ease-in-out" @click="goLogin"> Sign in </button>

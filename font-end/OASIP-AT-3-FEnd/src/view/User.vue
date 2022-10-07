@@ -5,8 +5,10 @@ import { onBeforeMount, ref , computed} from "vue";
 const { params } = useRoute();
 
 const db = "http://localhost:5000/booking";
-const userLink = `${import.meta.env.BASE_URL}api/users`;
-// const userLink = "http://localhost:8443/api/users";
+// const userLink = `${import.meta.env.BASE_URL}api/userList`;
+// const refreshLink = `${import.meta.env.BASE_URL}api/users/refresh`;
+const userLink = "http://localhost:8443/api/userList";
+const refreshLink = "http://localhost:8443/api/users/refresh";
 
 // ขาดเช็คชื่อ-เมล์ซ้ำ
 const id = params.id;
@@ -21,6 +23,7 @@ const userList=ref([])
 const isNotNull = ref(false);
 const myRouoter = useRouter();
 const goUserList = () => myRouoter.push({ name: "UserList" });
+const goHome = () => myRouoter.push({ name: "Home" });
 
 const roles = ['admin','lecturer','student']
 
@@ -61,42 +64,89 @@ let clock = () => {
 setInterval(clock, 1000);
 
 // get every 10 sec
-const getStatus=ref(undefined)
-const resGetUser=ref(undefined)
+// const getStatus=ref(undefined)
+// const resGetUser=ref(undefined)
+// setInterval(async ()=>{
+//   const key = localStorage.getItem('key')
+//   resGetUser.value= await fetch(userLink, {
+//     method: "GET",
+//     headers: {
+//             "Authorization":'Bearer ' + key ,
+//             "Accept": 'application/json',
+//             "content-type": "application/json",
+//         }
+//   })
+//   if (resGetUser.value.status === 200) {
+//     userList.value = await resGetUser.value.json();
+//     getStatus.value = true;
+//   }
+//     // refresh Token --------------------------------------- //
+//   else if (res.status === 401 && localStorage.getItem('token')==='accessToken') {
+//     console.log('test...')
+//     const resForRefresh = await fetch(refreshLink, {
+//       headers: {
+//         Authorization: "Bearer " + localStorage.getItem('key'),
+//         isRefreshToken: true ,
+//       },
+//     })
+//       const jwt = await resForRefresh.json()
+//       console.log(jwt)
+//       if(resForRefresh.status === 200){
+//         // set localStorage
+//         localStorage.setItem('key',jwt.token)
+//         localStorage.setItem('token','refreshToken')
+//         getUser()
+//       }
+//     }else if(res.status === 401 && localStorage.getItem('token')==='refreshToken'){
+//         localStorage.removeItem('key')
+//         localStorage.removeItem('token')
+//         goHome()
+//         console.log('เข้า')
+//     }
+//     // ------------------------------------------------- //
+//      else getStatus.value = false;
+// },10000)
 
-setInterval(async ()=>{
+//GET users
+const getUser = async () => {
   const key = localStorage.getItem('key')
-  resGetUser.value= await fetch(userLink, {
+
+  const res = await fetch(userLink, {
     method: "GET",
     headers: {
             "Authorization":'Bearer ' + key ,
             "Accept": 'application/json',
             "content-type": "application/json",
         }
-  })
-  if (resGetUser.value.status === 200) {
-    userList.value = await resGetUser.value.json();
-    getStatus.value = true;
-  } else getStatus.value = false;
-},10000)
-
-// first get user
-const getUserList =async()=>{
-  const key = localStorage.getItem('key')
-  // console.log(key)
-  resGetUser.value= await fetch(userLink, {
-    method: "GET",
-    headers: {
-            "Authorization":'Bearer ' + key ,
-            "Accept": 'application/json',
-            "content-type": "application/json",
-        }
-  })
-  if (resGetUser.value.status === 200) {
-    userList.value = await resGetUser.value.json();
-    getStatus.value = true;
-  } else getStatus.value = false;       
-}
+  });
+  if (res.status === 200) {
+    userList.value = await res.json();
+  } 
+  // refresh Token --------------------------------------- //
+  else if (res.status === 401 && localStorage.getItem('token')==='accessToken') {
+    console.log('test...')
+    const resForRefresh = await fetch(refreshLink, {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem('key'),
+        isRefreshToken: true ,
+      },
+    })
+      const jwt = await resForRefresh.json()
+      console.log(jwt)
+      if(resForRefresh.status === 200){
+        // set localStorage
+        localStorage.setItem('key',jwt.token)
+        localStorage.setItem('token','refreshToken')
+        getUser()
+      }
+    }else if(res.status === 401 && localStorage.getItem('token')==='refreshToken'){
+        localStorage.removeItem('key')
+        localStorage.removeItem('token')
+        goHome()
+        console.log('เข้า')
+    }
+    // ------------------------------------------------- //
+};
 
 // get value
 const getDetail = async () => {
@@ -123,6 +173,30 @@ const getDetail = async () => {
       console.log(userDetail.value)
     }
   }
+  // refresh token ----------------------------- //
+    else if (res.status === 401 && localStorage.getItem('token')==='accessToken') {
+    console.log('test...')
+    const resForRefresh = await fetch(refreshLink, {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem('key'),
+        isRefreshToken: true ,
+      },
+    })
+      const jwt = await resForRefresh.json()
+      console.log(jwt)
+      if(resForRefresh.status === 200){
+        // set localStorage
+        localStorage.setItem('key',jwt.token)
+        localStorage.setItem('token','refreshToken')
+        getUser()
+      }
+    }else if(res.status === 401 && localStorage.getItem('token')==='refreshToken'){
+        localStorage.removeItem('key')
+        localStorage.removeItem('token')
+        goHome()
+        console.log('เข้า')
+    }
+    // ------------------------------------------------- //
 };
 
 //format date
@@ -152,7 +226,7 @@ const formatTime = (datetime) => {
 
 
 onBeforeMount(async()=>{
-       await getUserList()
+       await getUser()
        await getDetail()
 });
 
@@ -171,7 +245,32 @@ const removeUser = async () => {
   if (res.status === 200) {
     console.log("delete successfully");
     goUserList();
-  } else console.log("error");
+  }
+  // refresh token ----------------------------- //
+    else if (res.status === 401 && localStorage.getItem('token')==='accessToken') {
+    console.log('test...')
+    const resForRefresh = await fetch(refreshLink, {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem('key'),
+        isRefreshToken: true ,
+      },
+    })
+      const jwt = await resForRefresh.json()
+      console.log(jwt)
+      if(resForRefresh.status === 200){
+        // set localStorage
+        localStorage.setItem('key',jwt.token)
+        localStorage.setItem('token','refreshToken')
+        getUser()
+      }
+    }else if(res.status === 401 && localStorage.getItem('token')==='refreshToken'){
+        localStorage.removeItem('key')
+        localStorage.removeItem('token')
+        goHome()
+        console.log('เข้า')
+    }
+    // ------------------------------------------------- // 
+    else console.log("error");
 };
 
 // assign to edit attribute
@@ -219,11 +318,36 @@ const edit =async()=>{
         isEdit.value = false;
         canEdit=true
         editSuccess.value=true
-       }else {
-              canEdit=false
-              editSuccess.value=false
        }
-       return canEdit
+       // refresh token ----------------------------- //
+      else if (res.status === 401 && localStorage.getItem('token')==='accessToken') {
+        console.log('test...')
+        const resForRefresh = await fetch(refreshLink, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem('key'),
+          isRefreshToken: true ,
+        },
+      })
+      const jwt = await resForRefresh.json()
+      console.log(jwt)
+      if(resForRefresh.status === 200){
+        // set localStorage
+        localStorage.setItem('key',jwt.token)
+        localStorage.setItem('token','refreshToken')
+        getUser()
+      }
+    } else if(res.status === 401 && localStorage.getItem('token')==='refreshToken'){
+        localStorage.removeItem('key')
+        localStorage.removeItem('token')
+        goHome()
+        console.log('เข้า')
+    }
+    // ------------------------------------------------- //
+    else {
+        canEdit=false
+        editSuccess.value=false
+    }
+    return canEdit
 }
 
 // submit
@@ -233,7 +357,7 @@ const editSuccess=ref(undefined)
 const submitt = async () => {
     edit()
     goUserList()
-    getUserList()
+    getUser()
 };
 
 

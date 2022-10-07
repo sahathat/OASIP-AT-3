@@ -20,9 +20,26 @@ const passwordLength = 14 ;
 const nameLength = 100;
 const emailLength = 50;
 
+const showPassword = ref(false);
+const toggleShow = () => {
+    showPassword.value = !showPassword.value;
+};
+const showConfirmPassword = ref(false);
+const toggleShowConfirm = () => {
+    showConfirmPassword.value = !showConfirmPassword.value;
+};
+
+//validate password
+const isPasswordEmpty = ref(undefined);
+const validationPassword = () => {
+    isPasswordEmpty.value = password.value == null || password.value == ''
+}
+
 const db = "http://localhost:5000/booking";
-const userLink= `${import.meta.env.BASE_URL}api/users`;
-// const userLink = 'http://localhost:8443/api/users';
+// const userLink= `${import.meta.env.BASE_URL}api/userList`;
+// const signupLink= `${import.meta.env.BASE_URL}api/userList/signup`;
+const userLink = 'http://localhost:8443/api/userList';
+const signupLink = 'http://localhost:8443/api/users/signup';
 
 
 
@@ -141,7 +158,7 @@ const status = ref(0)
 const isStatus = ref(undefined);
 const createUser = async () => {
   let createStatus = undefined;
-  const res = await fetch(`${userLink}/signup`, {
+  const res = await fetch(signupLink, {
     method: "POST",
     headers: {
       "content-type": "application/json",
@@ -317,7 +334,7 @@ onBeforeMount(async () => {
         
         <!-- Password -->
         <div class="mx-7 my-3 inline-flex px-4 w-full">
-          <div class="inline-block m-auto mx-2">
+          <div class="inline-block w-2/5 m-auto mx-2">
             <div class="px-3 w-full">
               <label for="name" class="font-medium m-auto text-sm text-gray-600"
                 >Password</label
@@ -329,19 +346,50 @@ onBeforeMount(async () => {
                 {{ password.length }}/{{ passwordLength }} charecters
               </span>
             </div>
+            <!-- open password -->
             <div>
               <input
+               v-if="showPassword"
+                v-model="password"
+                type="text"
+                name="password"
+                required
+                :style="[
+                  isPasswordEmpty == false ? 'border-color:red' : '',
+                ]"
+                class="w-4/5 px-3 py-2 mx-2 placeholder-gray-300 border border-gray-400 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300"
+              />
+
+            <!-- close password -->
+              <input
+               v-if="!showPassword"
                 v-model="password"
                 type="password"
-                name="name"
+                name="password"
                 required
-                class="w-80 px-3 py-2 mx-2 placeholder-gray-300 border border-gray-400 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300"
+                :style="[
+                  isPasswordEmpty == false ? 'border-color:red' : '',
+                ]"
+                class="w-4/5 px-3 py-2 mx-2 placeholder-gray-300 border border-gray-400 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300"
               />
+
+              <!-- button to show/hide password -->
+               <button
+                    class="w-8 h-8 flex-1 px-2 py-2 ml-1 text-gray-600 border border-gray-300 rounded-md focus:ring-gray-500 focus:border-gray-900 sm:text-sm focus:outline-none"
+                    @click="toggleShow">
+                    <span class="icon is-small is-right">
+                        <i class="fas" 
+                            :class="{
+                                'fa-eye-slash': !showPassword,
+                                'fa-eye': showPassword,
+                        }"></i>
+                    </span>
+                </button>
             </div>
           </div>
 
           <!-- Confirm Password -->
-          <div class="inline-block m-auto">
+          <div class="inline-block w-2/5">
             <div class="px-3 w-full">
               <label for="name" class="font-medium m-auto text-sm text-gray-600">
                 Confirm Password
@@ -355,12 +403,33 @@ onBeforeMount(async () => {
             </div>
             <div>
               <input
+                v-if="!showConfirmPassword"
                 v-model="confirmPassword"
                 type="password"
                 name="name"
                 required
-                class="w-80 px-3 py-2 mx-2 placeholder-gray-300 border border-gray-400 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300"
+                class="w-4/5 px-3 py-2 mx-2 placeholder-gray-300 border border-gray-400 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300"
               />
+
+              <input
+                v-if="showConfirmPassword"
+                v-model="confirmPassword"
+                type="text"
+                name="name"
+                required
+                class="w-4/5 px-3 py-2 mx-2 placeholder-gray-300 border border-gray-400 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300"
+              />
+            <button
+                    class="w-8 h-8 flex-1 px-2 py-2 ml-1 text-gray-600 border border-gray-300 rounded-md focus:ring-gray-500 focus:border-gray-900 sm:text-sm focus:outline-none"
+                    @click="toggleShowConfirm">
+                    <span class="icon is-small is-right">
+                        <i class="fas" 
+                            :class="{
+                                'fa-eye-slash': !showConfirmPassword,
+                                'fa-eye': showConfirmPassword,
+                        }"></i>
+                    </span>
+                </button>
             </div>
           </div>
         </div>
