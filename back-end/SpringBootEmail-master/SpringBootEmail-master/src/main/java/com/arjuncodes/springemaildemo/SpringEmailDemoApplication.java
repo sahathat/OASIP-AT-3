@@ -21,6 +21,5 @@ public class SpringEmailDemoApplication {
 		senderService.sendSimpleEmail("sahatat44@gmail.com",
 				"This is email body <h1> Test </h1>",
 				"This is email subject <h1> Test </h1>");
-
 	}
 }

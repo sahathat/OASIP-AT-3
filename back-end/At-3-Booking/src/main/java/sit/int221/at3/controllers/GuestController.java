@@ -9,6 +9,7 @@ import sit.int221.at3.entities.Event;
 import sit.int221.at3.services.CategoryService;
 import sit.int221.at3.services.EventService;
 
+import javax.mail.MessagingException;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -24,7 +25,7 @@ public class GuestController {
 
     @PostMapping("/events")
     @ResponseStatus(HttpStatus.CREATED)
-    public Event create(@Valid @RequestBody EventCreateDto newEvent) {
+    public Event create(@Valid @RequestBody EventCreateDto newEvent) throws MessagingException {
         return eventService.save(newEvent);
     }
 

@@ -20,6 +20,7 @@ import sit.int221.at3.repositories.EventRepository;
 import sit.int221.at3.repositories.LecturerMappingRepository;
 import sit.int221.at3.utils.ListMapper;
 
+import javax.mail.MessagingException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -43,6 +44,9 @@ public class EventService {
 
     @Autowired
     private ListMapper listMapper;
+
+    @Autowired
+    private EmailService emailService;
 
     private final List<SimpleGrantedAuthority> student = Arrays.asList(new SimpleGrantedAuthority(String.valueOf("ROLE_"+ Role.student)));
 
@@ -97,7 +101,7 @@ public class EventService {
                     .getLecturerMappingByCategory(event.getEventCategory().getId())
                     .stream().filter(lm ->
                             authentication.getName().equals(lm.getUser().getEmail())).toList();
-            
+
             // check if user email not equal owner clinic email sent error 403
             if (lecturerMapping.isEmpty() || !authentication.getName().equals(lecturerMapping.get(0).getUser().getEmail())) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN, authentication.getName() + " can see event in owner categories/clinics only");
@@ -127,7 +131,7 @@ public class EventService {
         return listMapper.mapList(event,EventDto.class,modelMapper);
     }
 
-    public Event save(EventCreateDto newEvent) {
+    public Event save(EventCreateDto newEvent) throws MessagingException {
         // find category id if new event are created
         Category category = categoryRepository.findById(newEvent.getEventCategoryId()).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, newEvent.getEventCategoryId() + " is not exist please find new id if exist.")
@@ -143,6 +147,22 @@ public class EventService {
         if (!checkNonOverLap(event, category)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "datetime should non overlap by categories");
         }
+
+        // email sending models
+        String to = newEvent.getBookingEmail();
+        String eventTime = newEvent.getEventStartTime().getDayOfWeek() + " " +
+                newEvent.getEventStartTime().getMonth() + " " +
+                newEvent.getEventStartTime().getDayOfMonth() + " , " +
+                newEvent.getEventStartTime().getYear() + " , " +
+                newEvent.getEventStartTime().toLocalTime() + " - " +
+                newEvent.getEventStartTime().plusMinutes(newEvent.getEventDuration()).toLocalTime() + " (ICT)";
+        String subject = "[OASIP] " + category.getEventCategoryName() + " @ " + eventTime;
+        String htmlBody = "<b>Booking name: </b>"  + newEvent.getBookingName() + "<br>" +
+                "<b>Event categories: </b>" + category.getEventCategoryName() + "<br>" +
+                "<b>When: </b>" + eventTime + "<br>" +
+                "<b>Event notes: </b>" + (newEvent.getEventNotes() == null ? "" : newEvent.getEventNotes());
+
+        emailService.sendSimpleEmail(to, subject, htmlBody);
 
         return eventRepository.saveAndFlush(event);
     }

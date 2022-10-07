@@ -1,4 +1,4 @@
-package com.arjuncodes.springemaildemo;
+package sit.int221.at3.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -9,7 +9,7 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
 @Service
-public class EmailSenderService {
+public class EmailService {
     @Autowired
     private JavaMailSender mailSender;
 

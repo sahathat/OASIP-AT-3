@@ -14,6 +14,7 @@ import sit.int221.at3.entities.Event;
 import sit.int221.at3.entities.Role;
 import sit.int221.at3.services.EventService;
 
+import javax.mail.MessagingException;
 import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -85,7 +86,7 @@ public class EventController {
     // /api/events [POST]
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
-    public Event create(@Valid @RequestBody EventCreateDto newEvent, Authentication authentication) {
+    public Event create(@Valid @RequestBody EventCreateDto newEvent, Authentication authentication) throws MessagingException {
         if (authentication.getAuthorities().equals(lecturer)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Forbidden");
         } else if (authentication.getAuthorities().equals(student) && !authentication.getName().equals(newEvent.getBookingEmail())) {
