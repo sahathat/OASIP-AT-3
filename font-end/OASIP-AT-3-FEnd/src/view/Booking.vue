@@ -20,24 +20,39 @@ const nameLength = 100;
 const emailLength = 100;
 const noteLength = 500;
 
+// check is Login ?
+const isLogin = () => {
+  if(loginEmail!==null && userRole.value!=='admin') eMail.value = loginEmail
+  else if(userRole.value=='admin') eMail.value = ''
+  else eMail.value = ''
+}
+
+const userRole = ref('guest')
+const checkRole = () => {
+    const role = localStorage.getItem('role')
+    // console.log(role.substring(6,role.length-1))
+    if(role !== null){
+        if(role.substring(6,role.length-1)=='admin') userRole.value = 'admin'
+        else if(role.substring(6,role.length-1)=='lecturer') userRole.value = 'lecturer'
+        else if(role.substring(6,role.length-1)=='student') userRole.value = 'student'
+    }
+    else userRole.value = 'guest'
+    return userRole.value
+}
+
 const db = "http://localhost:5000/booking";
 // const eventLink = `${import.meta.env.BASE_URL}api/events`;
 // const categoryLink = `${import.meta.env.BASE_URL}api/categories`;
 // const refreshLink = `${import.meta.env.BASE_URL}api/users/refresh`;
 const eventLink = "http://localhost:8443/api/events";
-const categoryLink = "http://localhost:8443/api/categories";
+const eventLinkForGuest = "http://localhost:8443/api/guests/events";
+const categoryLink = "http://localhost:8443/api/guests/categories";
 const refreshLink = "http://localhost:8443/api/users/refresh";
 
 const eventList = ref([]);
 const categoryList = ref([]);
 const addSuccess = ref(undefined);
 const getStatus = ref(undefined);
-
-// check is Login ?
-const isLogin = () => {
-  if(loginEmail!==null) eMail.value = loginEmail
-  else eMail.value = ''
-}
 
 // validate past
 const validateIsPast = ref(undefined);
@@ -298,10 +313,10 @@ const addBooking = async () => {
   const key = localStorage.getItem('key')
   // console.log(key)
 
-  const res = await fetch(eventLink, {
+  const res = await fetch(eventLinkForGuest, {
     method: "POST",
     headers: {
-            "Authorization":'Bearer ' + key ,
+            // "Authorization": "Bearer " + key,
             "Accept": 'application/json',
             "content-type": "application/json",
     },
@@ -475,6 +490,7 @@ onBeforeMount(async () => {
   await getCategory();
   await getEvent();
   isLogin()
+  checkRole()
 
 });
 </script>
@@ -534,7 +550,7 @@ onBeforeMount(async () => {
               </span>
             </div>
             <div>
-            <div v-if="loginEmail!==null">
+            <div v-if="loginEmail!==null && (userRole =='student' || userRole =='lecturer')">
               <input
                 type="email"
                 name="email"
@@ -547,7 +563,7 @@ onBeforeMount(async () => {
                 :disabled = true
               >
             </div>
-            <div v-else-if="loginEmail==null">
+            <div v-else-if="userRole=='guest'|| userRole=='admin'">
               <input
                 v-model="eMail"
                 type="email"
@@ -558,6 +574,7 @@ onBeforeMount(async () => {
                   validateEmailisNotNull == false ? 'border-color:red' : '',
                 ]"
                 class="w-80 px-3 py-2 mx-2 placeholder-gray-300 border border-gray-400 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300"
+                :disabled = false
               />
             </div>
             </div>
