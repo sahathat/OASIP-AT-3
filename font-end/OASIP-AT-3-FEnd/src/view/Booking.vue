@@ -37,17 +37,24 @@ const checkRole = () => {
         else if(role.substring(6,role.length-1)=='student') userRole.value = 'student'
     }
     else userRole.value = 'guest'
+    console.log(userRole.value)
     return userRole.value
 }
 
 const db = "http://localhost:5000/booking";
+// //for vm
 // const eventLink = `${import.meta.env.BASE_URL}api/events`;
 // const categoryLink = `${import.meta.env.BASE_URL}api/categories`;
+// const eventLinkForGuest = `${import.meta.env.BASE_URL}api/guests/events`;
+// const categoryLinkForGuest = `${import.meta.env.BASE_URL}api/guests/categories`;
 // const refreshLink = `${import.meta.env.BASE_URL}api/users/refresh`;
-const eventLink = "http://localhost:8443/api/events";
-const eventLinkForGuest = "http://localhost:8443/api/guests/events";
-const categoryLink = "http://localhost:8443/api/guests/categories";
-const refreshLink = "http://localhost:8443/api/users/refresh";
+
+//for localhost
+// const eventLink = "http://localhost:8443/api/events";
+// const categoryLink = "http://localhost:8443/api/categories";
+// const eventLinkForGuest = "http://localhost:8443/api/guests/events";
+// const categoryLinkForGuest = "http://localhost:8443/api/guests/categories";
+// const refreshLink = "http://localhost:8443/api/users/refresh";
 
 const eventList = ref([]);
 const categoryList = ref([]);
@@ -312,11 +319,14 @@ const addBooking = async () => {
   let createStatus = undefined;
   const key = localStorage.getItem('key')
   // console.log(key)
+  let eventForFetch 
+  if(userRole.value=='guest') eventForFetch = eventLinkForGuest
+  else if(userRole.value!=='guest') eventForFetch = eventLink
 
-  const res = await fetch(eventLinkForGuest, {
+  const res = await fetch(eventForFetch, {
     method: "POST",
     headers: {
-            // "Authorization": "Bearer " + key,
+            "Authorization": "Bearer " + key,
             "Accept": 'application/json',
             "content-type": "application/json",
     },
@@ -374,7 +384,11 @@ const addBooking = async () => {
 // first get Category
 const getCategory = async () => {
   const key = localStorage.getItem('key')
-  const res = await fetch(categoryLink,{
+  let categoryForFetch 
+  if(userRole.value=='guest') categoryForFetch = categoryLinkForGuest
+  else if(userRole.value!=='guest') eventForFetch = categoryLink
+  // console.log(categoryForFetch)
+  const res = await fetch(categoryForFetch,{
     method: "GET",
     headers: {
             "Authorization":'Bearer ' + key ,
@@ -440,7 +454,10 @@ const getCategory = async () => {
 //GET event
 const getEvent = async () => {
   const key = localStorage.getItem('key')
-  const res = await fetch(eventLink, {
+  let eventForFetch 
+  if(userRole.value=='guest') eventForFetch = eventLinkForGuest
+  else if(userRole.value!=='guest') eventForFetch = eventLink
+  const res = await fetch(eventForFetch, {
     method: "GET",
     headers: {
             "Authorization":'Bearer ' + key ,
