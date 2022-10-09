@@ -22,10 +22,7 @@ import sit.int221.at3.utils.ListMapper;
 
 import javax.mail.MessagingException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -82,7 +79,10 @@ public class EventService {
                 });
             });
 
-            events = new ArrayList<>(finalEvents);
+            // sorting by eventStartDate
+            events = new ArrayList<>(finalEvents).stream()
+                    .sorted(Comparator.comparing(Event::getEventStartTime)
+                            .reversed()).collect(Collectors.toList());
         }
         return listMapper.mapList(events, EventDto.class, modelMapper);
     }
