@@ -12,6 +12,7 @@ const refreshLink = "http://localhost:8443/api/users/refresh";
 const { params } = useRoute();
 const myRouoter = useRouter();
 const goHome = () => myRouoter.push({ name: "Home" });
+const goCreateUser = ()=>myRouter.push({name:'CreateUser'})
 
 //GET users
 const getUser = async () => {
@@ -74,17 +75,25 @@ onUpdated(async () => {
 <template>
   <!-- for user table -->
   <div
-    class="showUp bg-gray-200 md:inline-block mx-auto mt-10 p-4 rounded-r"
-    style="height: 510px; width: 80%"
+    class="showUp bg-gray-200 md:inline-block mx-auto mt-5 p-4 rounded-r"
+    style="height: 540px; width: 80%"
   >
-      <p class="text-right mr-2 text-lg font-bold mb-3 text-gray-900">
+    <div class="my-auto">
+      <p class="text-right text-lg font-bold text-gray-900">
           The total of users are <span class="text-xl text-red-500">{{ userList.length }}</span> users
-    </p>
+        <button class="items-center">
+          <img src="../assets/add-user.png" 
+              @click="goCreateUser"
+              class="w-10">
+        </button>
+      </p>
+    </div>
     <div v-if="userList.length === 0">
       <h1 class="drop-shadow-2xl mx-auto w-fit my-20 font-semibold">
         No user
       </h1>
     </div>
+    
 
     <div
       v-if="userList.length !== 0"

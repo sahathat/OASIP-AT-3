@@ -152,13 +152,13 @@ setInterval(async () => {
                         </div>
 
                         <!-- third nav -->
-                        <div class="lg:flex justify-end space-x-1 w-4/5">
+                        <div v-if="haveToken==false" class="lg:flex justify-end space-x-1 w-4/5">
                             <div class="lg:flex items-center space-x-1 w-1/5" >
                                 <button type="button" class="hover:underline bg-white text-gray-800 font-bold rounded-full 
                                 py-4 px-8 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 hover:bg-green-300
                                 duration-300 ease-in-out" @click="goCreateUser"> Sign up </button>
                             </div>
-                            <div v-if="haveToken==false" class="lg:flex items-center space-x-1 w-1/5" >
+                            <div class="lg:flex items-center space-x-1 w-1/5" >
                                 <button type="button" class="hover:underline bg-white text-gray-800 font-bold rounded-full 
                                 py-4 px-8 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 hover:bg-amber-400
                                 duration-300 ease-in-out" @click="goLogin"> Sign in </button>
@@ -167,13 +167,41 @@ setInterval(async () => {
 
                         <!-- sign out button -->
                         <div v-if="haveToken==true" class="lg:flex justify-end items-center w-1/5" >
-                            <button type="button" class="hover:underline bg-white text-gray-800 font-bold rounded-full 
-                            text-center w-full h-1/2 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 hover:bg-amber-400
-                            duration-300 ease-in-out" @click="signOut"> Sign Out </button>
+                                <a  
+                                class="hover:underline bg-white text-gray-800 font-bold rounded-full 
+                                text-center w-full h-1/2 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 hover:bg-amber-400
+                                duration-300 ease-in-out signout"
+                                href="#signout"> 
+                                    Sign Out 
+                                </a>
+
                         </div>
                     </div>
                 </div>
             </nav>
+
+            <!-- for confirm signout  -->
+            <div id="signout" class="overlay">
+                <div class="popup2 h-96">
+                    <h2 class="mb-5 text-xl font-bold bg-white mx-auto w-fit">
+                    Are you sure (Sign out) ?
+                    </h2>
+
+                    <div class="option flex m-auto w-full mt-10">
+                        <a
+                            @click="signOut"
+                            href="#"
+                            class="w-full text-center p-2 px-2 bg-gray-200 hover:bg-green-500 font-bold hover:text-white"
+                            >Yes
+                        </a>
+                        <a
+                            href="#"
+                            class="w-full text-center p-2 px-2 bg-gray-200 hover:bg-rose-500 font-bold hover:text-white"
+                            >No
+                        </a>
+                    </div>
+                </div>
+            </div>
 
             <div class="flex  object-cover ">
                 <router-view></router-view> 
@@ -201,6 +229,65 @@ ul li {
 	background-size: 400% 400%;
 	animation: gradient 30s ease infinite;
 	height: 100vh;
+}
+/* remove */
+.signout {
+  background: #fff;
+  color: #000;
+  line-height: 3em;
+  padding: 3;
+  border: none;
+}
+.signout:before,
+.signout:after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 2px;
+  width: 0;
+  background: #000;
+  transition: 400ms ease all;
+}
+.signout:after {
+  right: inherit;
+  top: inherit;
+  left: 0;
+  bottom: 0;
+}
+
+.popup2 {
+  margin: auto;
+  margin-top: 17%;
+  padding-top: 23px;
+  background: #fff;
+  width: 20%;
+  height: 130px;
+  position: relative;
+  transition: all 5s ease-in-out;
+}
+.popup2 h2 {
+  margin-top: 0;
+  color: #333;
+}
+.popup2 .option {
+  bottom: 0;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.7);
+  transition: opacity 500ms;
+  visibility: hidden;
+  opacity: 0;
+}
+.overlay:target {
+  visibility: visible;
+  opacity: 10;
 }
 
 /* animation */

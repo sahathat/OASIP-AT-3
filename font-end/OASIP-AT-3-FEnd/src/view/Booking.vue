@@ -23,8 +23,8 @@ const noteLength = 500;
 // check is Login ?
 const isLogin = () => {
   if(loginEmail!==null && userRole.value!=='admin') eMail.value = loginEmail
-  else if(userRole.value=='admin') eMail.value = ''
-  else eMail.value = ''
+  else if(userRole.value=='admin' || userRole.value=='admin') eMail.value = ''
+  return eMail.value
 }
 
 const userRole = ref('guest')
@@ -37,7 +37,6 @@ const checkRole = () => {
         else if(role.substring(6,role.length-1)=='student') userRole.value = 'student'
     }
     else userRole.value = 'guest'
-    console.log(userRole.value)
     return userRole.value
 }
 
@@ -50,11 +49,11 @@ const db = "http://localhost:5000/booking";
 // const refreshLink = `${import.meta.env.BASE_URL}api/users/refresh`;
 
 //for localhost
-// const eventLink = "http://localhost:8443/api/events";
-// const categoryLink = "http://localhost:8443/api/categories";
-// const eventLinkForGuest = "http://localhost:8443/api/guests/events";
-// const categoryLinkForGuest = "http://localhost:8443/api/guests/categories";
-// const refreshLink = "http://localhost:8443/api/users/refresh";
+const eventLink = "http://localhost:8443/api/events";
+const categoryLink = "http://localhost:8443/api/categories";
+const eventLinkForGuest = "http://localhost:8443/api/guests/events";
+const categoryLinkForGuest = "http://localhost:8443/api/guests/categories";
+const refreshLink = "http://localhost:8443/api/users/refresh";
 
 const eventList = ref([]);
 const categoryList = ref([]);
@@ -386,7 +385,7 @@ const getCategory = async () => {
   const key = localStorage.getItem('key')
   let categoryForFetch 
   if(userRole.value=='guest') categoryForFetch = categoryLinkForGuest
-  else if(userRole.value!=='guest') eventForFetch = categoryLink
+  else if(userRole.value!=='guest') categoryForFetch = categoryLink
   // console.log(categoryForFetch)
   const res = await fetch(categoryForFetch,{
     method: "GET",
@@ -454,10 +453,10 @@ const getCategory = async () => {
 //GET event
 const getEvent = async () => {
   const key = localStorage.getItem('key')
-  let eventForFetch 
-  if(userRole.value=='guest') eventForFetch = eventLinkForGuest
-  else if(userRole.value!=='guest') eventForFetch = eventLink
-  const res = await fetch(eventForFetch, {
+  // let eventForFetch 
+  // if(userRole.value=='guest') eventForFetch = eventLinkForGuest
+  // else if(userRole.value!=='guest') eventForFetch = eventLink
+  const res = await fetch(eventLink, {
     method: "GET",
     headers: {
             "Authorization":'Bearer ' + key ,
@@ -508,8 +507,13 @@ onBeforeMount(async () => {
   await getEvent();
   isLogin()
   checkRole()
-
 });
+
+onUpdated(async () => {
+  isLogin()
+  checkRole()
+});
+
 </script>
 
 <template>

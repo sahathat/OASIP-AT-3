@@ -26,6 +26,21 @@ const myRouoter = useRouter();
 const goReservation = () => myRouoter.push({ name: "ReservationList" });
 const goHome = () => myRouoter.push({ name: "Home" });
 
+const userRole = ref('guest')
+const checkRole = () => {
+    // const getRole = localStorage.getItem('role')
+    // const role = getRole.substring(6,getRole.length-1)
+    const role = localStorage.getItem('role')
+    // console.log(role.substring(6,role.length-1))
+    if(role !== null){
+        if(role.substring(6,role.length-1)=='admin') userRole.value = 'admin'
+        else if(role.substring(6,role.length-1)=='lecturer') userRole.value = 'lecturer'
+    }
+    else userRole.value = 'guest'
+    // console.log(userRole.value)
+    return userRole.value
+}
+
 // timer
 const day = ref();
 const month = ref();
@@ -178,6 +193,7 @@ const getDetail = async () => {
 onBeforeMount(async()=>{
        await  getEvent()
        await getDetail()
+       checkRole()
 });
 
 //remove information
@@ -555,7 +571,7 @@ const calTime = (hour, minute, addTime) => {
           </div>
         </div>
        <!-- button not edit mode -->
-        <div v-if="isEdit == false" class="showUp m-auto w-fit">
+        <div v-if="isEdit == false && userRole!=='lecturer'" class="showUp m-auto w-fit">
           <button @click="editInfo" class="m-4 custom-btn edit">Edit</button>
           <a  href="#remove" class="m-4 custom-btn remove">
             Remove
@@ -626,7 +642,7 @@ const calTime = (hour, minute, addTime) => {
     </div>
   </div>
 
-           <!-- for remove  -->
+  <!-- for remove  -->
   <div id="remove" class="overlay">
     <div class="popup2 h-96">
       <h2 class="mb-5 text-xl font-bold bg-white mx-auto w-fit">
