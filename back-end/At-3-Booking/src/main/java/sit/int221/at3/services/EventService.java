@@ -45,6 +45,9 @@ public class EventService {
     @Autowired
     private EmailService emailService;
 
+    @Autowired
+    private FileService fileService;
+
     private final List<SimpleGrantedAuthority> student = Arrays.asList(new SimpleGrantedAuthority(String.valueOf("ROLE_"+ Role.student)));
 
     private final List<SimpleGrantedAuthority> lecturer = Arrays.asList(new SimpleGrantedAuthority(String.valueOf("ROLE_"+ Role.lecturer)));
@@ -176,6 +179,9 @@ public class EventService {
         if (authentication.getAuthorities().equals(student) && !authentication.getName().equals(event.getBookingEmail())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "id of email event should same by student email");
         }
+
+        // delete file by id
+        fileService.deleteFileAsResource(id);
 
         // and delete id.
         eventRepository.deleteById(id);
