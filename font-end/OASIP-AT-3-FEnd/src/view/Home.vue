@@ -1,8 +1,26 @@
 <script setup>
 import { useRouter } from "vue-router";
+import { onBeforeMount, ref } from "vue";
+
 const myRouter = useRouter();
 const goLogin = () => myRouter.push({ name: "Login" });
 const goBooking = () => myRouter.push({ name: "Booking" });
+
+const userRole = ref('guest')
+const checkRole = () => {
+    const role = localStorage.getItem('role')
+    if(role !== null){
+        if(role.substring(6,role.length-1)=='admin') userRole.value = 'admin'
+        else if(role.substring(6,role.length-1)=='lecturer') userRole.value = 'lecturer'
+        else if(role.substring(6,role.length-1)=='student') userRole.value = 'student'
+    }
+    else userRole.value = 'guest'
+    return userRole.value
+}
+onBeforeMount(async () => {
+  checkRole()
+});
+
 </script>
 
 <template>
@@ -27,7 +45,7 @@ const goBooking = () => myRouter.push({ name: "Booking" });
           Start
         </button>
       </div>
-      <div class="w-fit mt-2">
+      <div v-if="userRole=='guest'" class="w-fit mt-2">
         <button
           class="hover:underline bg-white text-gray-800 font-bold rounded-full py-4 px-8 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out"
           @click="goBooking"

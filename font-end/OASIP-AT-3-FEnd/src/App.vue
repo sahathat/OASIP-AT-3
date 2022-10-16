@@ -165,8 +165,10 @@ setInterval(async () => {
                             </div>
                         </div>
 
+                        <!-- user account -->
+
                         <!-- sign out button -->
-                        <div v-if="haveToken==true" class="lg:flex justify-end items-center w-1/5" >
+                        <div v-if="haveToken==true" class="lg:flex justify-end items-center w-1/6" >
                                 <a  
                                 class="hover:underline bg-white text-gray-800 font-bold rounded-full 
                                 text-center w-full h-1/2 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 hover:bg-amber-400
@@ -179,6 +181,10 @@ setInterval(async () => {
                     </div>
                 </div>
             </nav>
+            
+            <div class="flex object-cover ">
+                <router-view></router-view> 
+            </div>
 
             <!-- for confirm signout  -->
             <div id="signout" class="overlay">
@@ -201,11 +207,6 @@ setInterval(async () => {
                         </a>
                     </div>
                 </div>
-            </div>
-
-            <div class="flex  object-cover ">
-                <router-view></router-view> 
-
             </div>
   </div>
  
@@ -230,7 +231,7 @@ ul li {
 	animation: gradient 30s ease infinite;
 	height: 100vh;
 }
-/* remove */
+/* signout */
 .signout {
   background: #fff;
   color: #000;
@@ -241,7 +242,7 @@ ul li {
 .signout:before,
 .signout:after {
   content: "";
-  position: absolute;
+  position: absolute ;
   top: 0;
   right: 0;
   height: 2px;

@@ -14,6 +14,18 @@ const db = "http://localhost:5000/booking";
 const categoryLink = "http://localhost:8443/api/categories";
 const refreshLink  = "http://localhost:8443/api/users/refresh";
 
+const userRole = ref('guest')
+const checkRole = () => {
+    const role = localStorage.getItem('role')
+    if(role !== null){
+        if(role.substring(6,role.length-1)=='admin') userRole.value = 'admin'
+        else if(role.substring(6,role.length-1)=='lecturer') userRole.value = 'lecturer'
+        else if(role.substring(6,role.length-1)=='student') userRole.value = 'student'
+    }
+    else userRole.value = 'guest'
+    return userRole.value
+}
+
 //GET category
 const getCategory = async () => {
   const key = localStorage.getItem('key')
@@ -64,6 +76,7 @@ const goCategories= (input) =>
 
 onBeforeMount(async () => {
   await getCategory();
+  checkRole()
 });
 onUpdated(async () => {
   await getCategory();
@@ -77,17 +90,27 @@ onUpdated(async () => {
     class="showUp bg-gray-200 md:inline-block mx-auto mt-10 p-4 rounded-r"
     style="height: 510px; width: 70%"
   >
-      <p class="text-right mr-2 text-lg font-bold mb-3 text-gray-900">
-          The total of Clinic are <span class="text-xl text-red-500">{{ categoryList.length }}</span> categories
+      <p v-if="(userRole=='admin' || userRole=='lecturer')" 
+         class="text-right mr-2 text-lg font-bold mb-3 text-gray-900"
+         >
+          The total of Clinic are 
+          <span class="text-xl text-red-500">{{ categoryList.length }}</span> 
+          categories
     </p>
-    <div v-if="categoryList.length === 0">
+    <div v-if="userRole!=='admin' && userRole!=='lecturer'">
+      <h1 class="drop-shadow-2xl mx-auto w-fit my-20 font-semibold">
+        Only admins and lecturers can view this page.
+      </h1>
+    </div>
+
+    <div v-else-if="categoryList.length === 0 && (userRole=='admin' || userRole=='lecturer')">
       <h1 class="drop-shadow-2xl mx-auto w-fit my-20 font-semibold">
         No category
       </h1>
     </div>
 
     <div
-      v-if="categoryList.length !== 0"
+      v-if="categoryList.length !== 0 && (userRole=='admin' || userRole=='lecturer')"
       class="drop-shadow-2xl bg-white overflow-y-auto mx-auto h-fit"
       style="height: 90%; width: 100%"
     >

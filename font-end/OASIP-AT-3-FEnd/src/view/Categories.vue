@@ -31,6 +31,7 @@ const checkRole = () => {
     if(role !== null){
         if(role.substring(6,role.length-1)=='admin') userRole.value = 'admin'
         else if(role.substring(6,role.length-1)=='lecturer') userRole.value = 'lecturer'
+        else if(role.substring(6,role.length-1)=='student') userRole.value = 'student'
     }
     else userRole.value = 'guest'
     // console.log(userRole.value)

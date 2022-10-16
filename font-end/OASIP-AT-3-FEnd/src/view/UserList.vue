@@ -63,8 +63,25 @@ const goUserInfo= (input) =>
     },
   });
 
+const userRole = ref('guest')
+const checkRole = () => {
+    // const getRole = localStorage.getItem('role')
+    // const role = getRole.substring(6,getRole.length-1)
+    const role = localStorage.getItem('role')
+    // console.log(role.substring(6,role.length-1))
+    if(role !== null){
+        if(role.substring(6,role.length-1)=='admin') userRole.value = 'admin'
+        else if(role.substring(6,role.length-1)=='lecturer') userRole.value = 'lecturer'
+        else if(role.substring(6,role.length-1)=='student') userRole.value = 'student'
+    }
+    else userRole.value = 'guest'
+    // console.log(userRole.value)
+    return userRole.value
+}
+
 onBeforeMount(async () => {
   await getUser();
+  checkRole()
 });
 onUpdated(async () => {
   await getUser();
@@ -78,7 +95,7 @@ onUpdated(async () => {
     class="showUp bg-gray-200 md:inline-block mx-auto mt-5 p-4 rounded-r"
     style="height: 540px; width: 80%"
   >
-    <div class="my-auto">
+    <div class="my-auto" v-if="userRole=='admin'">
       <p class="text-right text-lg font-bold text-gray-900">
           The total of users are <span class="text-xl text-red-500">{{ userList.length }}</span> users
         <button class="items-center">
@@ -88,7 +105,13 @@ onUpdated(async () => {
         </button>
       </p>
     </div>
-    <div v-if="userList.length === 0">
+    <div v-if="userRole!=='admin'">
+      <h1 class="drop-shadow-2xl mx-auto w-fit my-20 font-semibold">
+        Only admins can view this page.
+      </h1>
+    </div>
+
+    <div v-if="userList.length === 0 && userRole=='admin'">
       <h1 class="drop-shadow-2xl mx-auto w-fit my-20 font-semibold">
         No user
       </h1>
@@ -96,7 +119,7 @@ onUpdated(async () => {
     
 
     <div
-      v-if="userList.length !== 0"
+      v-if="userList.length !== 0 && userRole=='admin'"
       class="drop-shadow-2xl bg-white overflow-y-auto mx-auto h-fit"
       style="height: 90%; width: 100%"
     >

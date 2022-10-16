@@ -524,7 +524,7 @@ const calTime = (hour, minute, addTime) => {
 
 
   <!-- for alert -->
-  <!-- <div class="alert-area">
+  <div class="alert-area">
     <div v-if="isPast == true" class="alert warning text-sm">
       <span class="closebtn" @click="isPast = undefined">x</span>
       <strong class="block">Error!</strong> Can't select past date and time.
@@ -552,7 +552,7 @@ const calTime = (hour, minute, addTime) => {
           <strong class="block">Success!</strong> Edit data success.
         </div>
 
-  </div> -->
+  </div>
 
          <!-- for submit  -->
   <div id="submit" class="overlay">
