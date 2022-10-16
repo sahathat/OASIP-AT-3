@@ -2,6 +2,7 @@ package sit.int221.at3.services;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
@@ -180,8 +181,13 @@ public class EventService {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "id of email event should same by student email");
         }
 
-        // delete file by id
-        fileService.deleteFileAsResource(id);
+        // find file is found
+        Resource resource = fileService.loadFileAsResource(id);
+
+        // if file is found then delete file by id
+        if(resource != null) {
+            fileService.deleteFileAsResource(id);
+        }
 
         // and delete id.
         eventRepository.deleteById(id);
