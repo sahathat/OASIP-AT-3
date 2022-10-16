@@ -67,7 +67,7 @@ public class FileService {
             if (resource.exists()) {
                 return resource;
             } else {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND,"File not found");
+                return null;
             }
         } catch (MalformedURLException ex) {
             throw new ResponseStatusException(HttpStatus.METHOD_NOT_ALLOWED,"File not found", ex);
