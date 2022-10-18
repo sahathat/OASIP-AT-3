@@ -1,14 +1,17 @@
 <script setup>
 import { useRoute, useRouter } from "vue-router";
 import { onBeforeMount, ref } from "vue";
+import 'boxicons'
 
 const { params } = useRoute();
 
 const db = "http://localhost:5000/booking";
 // const eventLink = `${import.meta.env.BASE_URL}api/events`;
 // const refreshLink = `${import.meta.env.BASE_URL}api/users/refresh`;
+// const fileLink = `${import.meta.env.VITE_BACK_URL}api/files/events`;
 const eventLink = "http://localhost:8443/api/events";
 const refreshLink = "http://localhost:8443/api/users/refresh";
+const fileLink = "http://localhost:8443/api/files/events";
 
 const id = params.id;
 const name = ref("");
@@ -40,6 +43,60 @@ const checkRole = () => {
     // console.log(userRole.value)
     return userRole.value
 }
+
+onBeforeMount(async()=>{
+       await  getEvent()
+       await getDetail()
+       checkRole()
+       fileUrl.value = await downloadFile(detailBooking.value.id);
+       console.log(fileUrl.value);
+})
+
+const fileUrl = ref("")
+const downloadFile = async (eventId) => {
+  console.log("In progress (Get UserDetail)");
+  const key = localStorage.getItem('key')
+  const res = await fetch(`${fileLink}/${eventId}`,
+    {
+      headers: {
+        "Authorization":'Bearer ' + key ,
+        "Accept": 'application/json',
+        "content-type": "application/json"
+      },
+    }
+  );
+
+  if (res.status === 200) {
+    console.log("Successfully executed! " + res.status);
+    const blob = await res.blob();
+    return window.URL.createObjectURL(blob);
+    console.log(blob);
+    console.log(fileUrl.value);
+    // return await res.json();
+  } else if (res.status === 401 && localStorage.getItem('token')==='accessToken') {
+    console.log('test...')
+    const resForRefresh = await fetch(refreshLink, {
+      headers: {
+        Authorization: "Bearer " + key ,
+        isRefreshToken: true ,
+      },
+    })
+      const jwt = await resForRefresh.json()
+      console.log(jwt)
+      if(resForRefresh.status === 200){
+        // set localStorage
+        localStorage.setItem('key',jwt.token)
+        localStorage.setItem('token','refreshToken')
+        getEvent()
+      }
+    } else if(res.status === 401 && localStorage.getItem('token')==='refreshToken'){
+        localStorage.removeItem('key')
+        localStorage.removeItem('token')
+        goHome()
+        console.log('เข้า')
+    }
+};
+
 
 // timer
 const day = ref();
@@ -189,12 +246,6 @@ const getDetail = async () => {
         // console.log('เข้า')
       } 
 };
-
-onBeforeMount(async()=>{
-       await  getEvent()
-       await getDetail()
-       checkRole()
-});
 
 //remove information
 const removeInfo = async () => {
@@ -550,12 +601,12 @@ const calTime = (hour, minute, addTime) => {
           class="inline-block"
         >
           <div class="px-2 font-semibold w-fit text-gray-400">Note :</div>
-          <div class="ml-5 w-fit">
+          <div class="ml-2 mr-6 w-fit">
             <textarea
               readonly
               v-if="isEdit == false"
               rows="4"
-              cols="50"
+              cols="35"
               class=" text-black block px-3 py-2 placeholder-gray-300 border resize-none rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300"
               v-model="noteT"
             >
@@ -570,6 +621,20 @@ const calTime = (hour, minute, addTime) => {
             </textarea>
           </div>
         </div>
+
+       <!-- Attachment File -->
+       <div class="px-2 font-semibold w-fit text-gray-400" v-if="fileUrl!==undefined">
+              Attachment File :
+              <div class="text-black block px-3 py-2 placeholder-gray-300 border resize-none rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300">
+                <div class="grid grid-cols-6 gap-4 content-center "> 
+                  <span class="col-span-5 self-center text-sm"> click to download file</span>
+                  <a :href="fileUrl" :download="id"><box-icon name='cloud-download' size='md' border='circle' animation='tada-hover' class="" ></box-icon></a>
+                  <!-- <a :href="fileUrl" :download="fileName"><box-icon name='cloud-download' size='md' border='circle' animation='tada-hover' class="" ></box-icon></a> -->
+                </div>
+              </div>
+        </div>
+      </div>
+
        <!-- button not edit mode -->
         <div v-if="isEdit == false && userRole!=='lecturer'" class="showUp m-auto w-fit">
           <button @click="editInfo" class="m-4 custom-btn edit">Edit</button>
@@ -587,7 +652,6 @@ const calTime = (hour, minute, addTime) => {
         </div>
       </div>
     </div>
-  </div>
 
   <!-- for alert -->
   <div class="alert-area">
