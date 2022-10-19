@@ -64,9 +64,9 @@ const checkMatchTODB = async () => {
         body: JSON.stringify({ email: email.value, password: password.value })
     })
     console.log(res.status);
+
     //get token
     const jwt = await res.json()
-    console.log(jwt.token)
     
     // set localStorage
     localStorage.setItem('key',jwt.token)
@@ -81,7 +81,6 @@ const checkMatchTODB = async () => {
     statusMessage.value = res.status == 200 ? 'Login Successful !' && goHome() :
         res.status == 401 ? 'Password Incorrect !' :
         res.status == 404 ? 'A user with the specified email DOES NOT exist and allow the user to edit the email' : ''
-    // console.log(this.token)
 }
 
 

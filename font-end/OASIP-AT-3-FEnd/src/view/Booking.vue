@@ -2,6 +2,13 @@
 import { computed } from "@vue/reactivity";
 import { onBeforeMount, onUpdated, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import vueFilePond from "vue-filepond";
+
+// Create component
+// const FilePond = vueFilePond(
+//   FilePondPluginFileValidateType,
+//   FilePondPluginImagePreview
+// );
 
 const name = ref("");
 const eMail = ref('')
@@ -47,6 +54,7 @@ const db = "http://localhost:5000/booking";
 // const eventLinkForGuest = `${import.meta.env.BASE_URL}api/guests/events`;
 // const categoryLinkForGuest = `${import.meta.env.BASE_URL}api/guests/categories`;
 // const refreshLink = `${import.meta.env.BASE_URL}api/users/refresh`;
+// const fileLink = `${import.meta.env.BASE_URL}api/files/events`;
 
 //for localhost
 const eventLink = "http://localhost:8443/api/events";
@@ -54,6 +62,7 @@ const categoryLink = "http://localhost:8443/api/categories";
 const eventLinkForGuest = "http://localhost:8443/api/guests/events";
 const categoryLinkForGuest = "http://localhost:8443/api/guests/categories";
 const refreshLink = "http://localhost:8443/api/users/refresh";
+const fileLink = "http://localhost:8443/api/files/events";
 
 const eventList = ref([]);
 const categoryList = ref([]);
@@ -337,7 +346,28 @@ const addBooking = async () => {
       eventCategoryId: cateId.value,
     }),
   });
-  if (res.status === 201) {
+
+  //add file
+  const resFile = await fetch(fileLink, {
+    method: "POST",
+    headers: {
+            "Authorization": "Bearer " + key,
+            "Accept": 'application/json',
+            "content-type": "application/json",
+            "key":"file",
+            "value": fileName
+    },
+    body: JSON.stringify({
+      bookingName: name.value,
+      bookingEmail: eMail.value,
+      eventStartTime: `${startDate.value}T${startTime.value}:00+07:00`,
+      eventNotes: noteText.value,
+      eventCategoryId: cateId.value,
+    }),
+  });
+
+
+  if (res.status === 201 && resFile.status === 201) {
     addSuccess.value = true;
     createStatus = true;
     isStatus.value = true;
@@ -502,6 +532,12 @@ const durationTime = computed(() => {
   return value;
 });
 
+const fileName = ref("")
+const fileChanged = (e) => {
+  fileName.value = e.target.files[0]
+  console.log(fileName.value);
+}
+
 onBeforeMount(async () => {
   await getCategory();
   await getEvent();
@@ -519,7 +555,7 @@ onUpdated(async () => {
 <template>
   <div class="showUp container mx-auto">
     <div
-      class="max-w-screen-md p-5 pb-7 mx-auto mt-14 bg-gray-200 rounded-md shadow-xl"
+      class="max-w-screen-md p-5 pb-7 mx-auto mt-4 bg-gray-200 rounded-md shadow-xl"
     >
       <div class="text-center">
         <h1 class="my-3 text-3xl font-semibold text-gray-700">Booking</h1>
@@ -707,7 +743,7 @@ onUpdated(async () => {
         </div>
 
         <!-- note & button-->
-        <div class="inline-flex w-full px-4">
+        <div class="inline-flex w-full px-4 mx-2">
           <!-- note -->
           <div class="w-3/5 block m-auto">
             <label for="textA" class="font-medium text-sm text-gray-600"
@@ -730,17 +766,35 @@ onUpdated(async () => {
             </textarea>
           </div>
 
+          <!-- add file -->
+          <div class="w-3/5 block m-auto mx-6">
+            <label for="addFile" class="font-medium text-sm text-gray-600"
+              >Add file
+              <span
+                class="text-gray-300"
+                >The file size cannot be larger than 10 MB.
+              </span>
+            </label>
+            <!-- <input type="file" name="file"> -->
+            <input 
+                name="file"
+                type="file" 
+                ref="pond" 
+                @change="fileChanged($event)" 
+                label-idle="Drop files here or <span class='filepond--label-action'>Browse</span>" >
+          </div>
+        </div>
+
           <!-- booking button -->
-          <div class="inline-flex m-auto p-5 w-60">
+          <div class="w-full py-5 my-4" align="right">
             <a
               href="#submit"
-              class="font-bold text-gray-900 hover:text-white border border-gray-800 hover:bg-gray-900 focus:ring-4 focus:outline-none focus:ring-gray-300 rounded-lg text-sm text-center dark:border-gray-600 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-800 m-auto p-5"
+              class="font-bold text-gray-900 hover:text-white border border-gray-800 hover:bg-gray-900 focus:ring-4 focus:outline-none focus:ring-gray-300 rounded-lg text-sm text-center dark:border-gray-600 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-800 p-5"
             >
               Submit !
             </a>
           </div>
         </div>
-      </div>
 
       <!-- for submit  -->
       <div id="submit" class="overlay">
