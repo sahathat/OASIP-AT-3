@@ -1,6 +1,5 @@
 package sit.int221.at3.controllers;
 
-import org.hibernate.event.spi.EvictEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
@@ -12,6 +11,7 @@ import org.springframework.web.server.ResponseStatusException;
 import sit.int221.at3.repositories.EventRepository;
 import sit.int221.at3.services.FileService;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @RestController
@@ -21,21 +21,19 @@ public class FileController {
     private final FileService fileService;
 
     @Autowired
-    private EventRepository eventRepository;
-
-    @Autowired
     public FileController(FileService fileService) {
         this.fileService = fileService;
     }
 
     @GetMapping("events/{id}/{fileName:.+}")
     @ResponseBody
-    public ResponseEntity<Resource> readFile(@PathVariable Integer id, @PathVariable String fileName) throws IOException {
+    public ResponseEntity<Resource> readFile(HttpServletResponse response, @PathVariable Integer id, @PathVariable String fileName) throws IOException {
         Resource file = fileService.loadFileAsResource(id, fileName);
         if (file == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "File not found");
         }
-        return ResponseEntity.ok().contentType(MediaType.MULTIPART_FORM_DATA).body(file);
+        response.setHeader("Content-Disposition", String.format("inline; filename=\"" + fileName + "\""));
+        return ResponseEntity.ok().contentType(MediaType.APPLICATION_OCTET_STREAM).body(file);
     }
 
     @PostMapping("events/{id}")
