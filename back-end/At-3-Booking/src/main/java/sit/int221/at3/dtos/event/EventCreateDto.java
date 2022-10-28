@@ -2,7 +2,6 @@ package sit.int221.at3.dtos.event;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
-import lombok.Setter;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Future;
