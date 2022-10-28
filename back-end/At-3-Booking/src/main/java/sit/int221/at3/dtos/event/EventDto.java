@@ -1,6 +1,7 @@
 package sit.int221.at3.dtos.event;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.Setter;
 import sit.int221.at3.dtos.category.CategoryDto;
@@ -34,4 +35,7 @@ public class EventDto implements Serializable {
     }
 
     private String eventNotes;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public String eventFile;
 }

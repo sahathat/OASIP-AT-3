@@ -33,6 +33,17 @@ public class Event {
     @Column(name = "eventNotes", length = 500)
     private String eventNotes;
 
+    @Column(name = "eventFile", length = 100)
+    private String eventFile;
+
+    public String getEventFile() {
+        return eventFile;
+    }
+
+    public void setEventFile(String eventFile) {
+        this.eventFile = eventFile;
+    }
+
     public String getEventNotes() {
         return eventNotes;
     }

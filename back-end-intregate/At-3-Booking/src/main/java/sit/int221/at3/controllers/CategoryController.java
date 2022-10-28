@@ -2,19 +2,14 @@ package sit.int221.at3.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 import sit.int221.at3.dtos.category.CategoryDto;
 import sit.int221.at3.dtos.category.CategoryUpdateDto;
 import sit.int221.at3.dtos.event.EventDto;
 import sit.int221.at3.entities.Category;
-import sit.int221.at3.entities.LecturerMapping;
-import sit.int221.at3.entities.Role;
-import sit.int221.at3.repositories.LecturerMappingRepository;
 import sit.int221.at3.services.CategoryService;
 
 import javax.validation.Valid;
-import java.util.Arrays;
 import java.util.List;
 
 @RestController

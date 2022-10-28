@@ -53,10 +53,6 @@ public class UserService implements UserDetailsService {
             newUser.setRole(Role.student);
         }
 
-        // if user input event by string " input it " that return "input it"
-//        newUser.setName(newUser.getName().trim());
-//        newUser.setEmail(newUser.getEmail().trim());
-
         // mapped event if created
         User user = modelMapper.map(newUser, User.class);
 
