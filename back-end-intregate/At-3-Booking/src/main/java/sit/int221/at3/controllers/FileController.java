@@ -12,6 +12,7 @@ import org.springframework.web.server.ResponseStatusException;
 import sit.int221.at3.repositories.EventRepository;
 import sit.int221.at3.services.FileService;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @RestController
@@ -30,11 +31,12 @@ public class FileController {
 
     @GetMapping("events/{id}/{fileName:.+}")
     @ResponseBody
-    public ResponseEntity<Resource> readFile(@PathVariable Integer id, @PathVariable String fileName) throws IOException {
+    public ResponseEntity<Resource> readFile(HttpServletResponse response, @PathVariable Integer id, @PathVariable String fileName) throws IOException {
         Resource file = fileService.loadFileAsResource(id, fileName);
         if (file == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "File not found");
         }
+        response.setHeader("Content-Disposition", String.format("inline; filename=\"" + fileName + "\""));
         return ResponseEntity.ok().contentType(MediaType.MULTIPART_FORM_DATA).body(file);
     }
 
