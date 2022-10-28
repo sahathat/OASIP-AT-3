@@ -181,13 +181,19 @@ public class EventService {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "id of email event should same by student email");
         }
 
+        // initial value resource
+        Resource resource = null;
+
         // find file is found
-        Resource resource = fileService.loadFileAsResource(id);
+        if(event.getEventFile() != null){
+            resource = fileService.loadFileAsResource(id, event.getEventFile());
+        }
 
         // if file is found then delete file by id
         if(resource != null) {
             fileService.deleteFileAsResource(id);
         }
+
         // and delete id.
         eventRepository.deleteById(id);
     }
