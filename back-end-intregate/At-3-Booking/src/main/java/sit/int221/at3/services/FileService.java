@@ -13,12 +13,14 @@ import sit.int221.at3.config.FileStorageProperties;
 import sit.int221.at3.entities.Event;
 import sit.int221.at3.repositories.EventRepository;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Comparator;
 
 @Service
 public class FileService {
@@ -45,12 +47,38 @@ public class FileService {
             if (fileName.contains("..")) {
                 throw new RuntimeException("Sorry! Filename contains invalid path sequence " + fileName);
             }
-            // If event is found then create event
-            Event event = eventRepository.findById(id).orElseThrow(
+
+            System.out.println(file.getContentType());
+
+            // If event is found then update event filename
+            Event findEvent = eventRepository.findById(id).orElseThrow(
                     () -> new ResponseStatusException(HttpStatus.NOT_FOUND, id + " is not exist please find new id if exist.")
             );
+
+            Event event = eventRepository.findById(id).map(o -> mapFile(o, fileName)).orElseGet(() -> {
+                findEvent.setId(id);
+                return findEvent;
+            });
+
+            System.out.println(event.getId() + " " + event.getEventFile());
+
+            // update file name in database
+            eventRepository.saveAndFlush(event);
+
+            // Find path and Resource
+            Path idPath = this.fileStorageLocation.resolve(String.valueOf(id));
+            Resource resource = new UrlResource(idPath.toUri());
+
+            // If directory have files that delete on directory
+            if(resource.exists()){
+                deleteFileAsResource(id);
+            }
+
+            // Create directory
+            Files.createDirectories(idPath);
+
             // Copy file to the target location (Replacing existing file with the same name)
-            Path targetLocation = this.fileStorageLocation.resolve(id + ".jpg");
+            Path targetLocation = this.fileStorageLocation.resolve(String.valueOf(id) + "/" + fileName);
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
             return fileName;
         } catch (FileSizeLimitExceededException ex) {
@@ -60,9 +88,15 @@ public class FileService {
         }
     }
 
-    public Resource loadFileAsResource(Integer id) {
+    private Event mapFile(Event existingEvent, String fileName) {
+        // fields who update
+        existingEvent.setEventFile(fileName);
+        return existingEvent;
+    }
+
+    public Resource loadFileAsResource(Integer id, String fileName) {
         try {
-            Path filePath = this.fileStorageLocation.resolve(id + ".jpg").normalize();
+            Path filePath = this.fileStorageLocation.resolve(String.valueOf(id) + "/" + fileName).normalize();
             Resource resource = new UrlResource(filePath.toUri());
             if (resource.exists()) {
                 return resource;
@@ -76,10 +110,26 @@ public class FileService {
 
     public void deleteFileAsResource(Integer id) {
         try {
-            Path filePath = this.fileStorageLocation.resolve(id + ".jpg").normalize();
+            Path filePath = this.fileStorageLocation.resolve(String.valueOf(id)).normalize();
             Resource resource = new UrlResource(filePath.toUri());
             if (resource.exists()) {
-                resource.getFile().delete();
+                // delete all file in directory
+                Files.walk(filePath)
+                        .sorted(Comparator.reverseOrder())
+                        .map(Path::toFile)
+                        .forEach(File::delete);
+
+                // If event is found then update event filename
+                Event findEvent = eventRepository.findById(id).orElseThrow(
+                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, id + " is not exist please find new id if exist.")
+                );
+
+                Event event = eventRepository.findById(id).map(o -> mapFile(o, null)).orElseGet(() -> {
+                    findEvent.setId(id);
+                    return findEvent;
+                });
+                eventRepository.saveAndFlush(event);
+
             } else {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "File not found");
             }

@@ -8,10 +8,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
-import sit.int221.at3.entities.Event;
-import sit.int221.at3.services.EventService;
+import sit.int221.at3.repositories.EventRepository;
 import sit.int221.at3.services.FileService;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @RestController
@@ -25,14 +25,15 @@ public class FileController {
         this.fileService = fileService;
     }
 
-    @GetMapping("events/{id}")
+    @GetMapping("events/{id}/{fileName:.+}")
     @ResponseBody
-    public ResponseEntity<Resource> readFile(@PathVariable Integer id) throws IOException {
-        Resource file = fileService.loadFileAsResource(id);
+    public ResponseEntity<Resource> readFile(HttpServletResponse response, @PathVariable Integer id, @PathVariable String fileName) throws IOException {
+        Resource file = fileService.loadFileAsResource(id, fileName);
         if (file == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "File not found");
         }
-        return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(file);
+        response.setHeader("Content-Disposition", String.format("inline; filename=\"" + fileName + "\""));
+        return ResponseEntity.ok().contentType(MediaType.APPLICATION_OCTET_STREAM).body(file);
     }
 
     @PostMapping("events/{id}")
@@ -44,8 +45,7 @@ public class FileController {
     @DeleteMapping("events/{id}")
     @ResponseBody
     public String deleteFile(@PathVariable Integer id) {
-        Resource file = fileService.loadFileAsResource(id);
         fileService.deleteFileAsResource(id);
-        return "File " + file.getFilename() + " has been delete.";
+        return "File has been delete.";
     }
 }
