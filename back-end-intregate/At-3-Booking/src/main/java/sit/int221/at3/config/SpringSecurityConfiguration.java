@@ -48,7 +48,7 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter{
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable()
+        http.cors().and().csrf().disable()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.GET,"/api/events/**").hasAnyRole("admin","student","lecturer")
                 .antMatchers(HttpMethod.POST,"/api/events/**").hasAnyRole("admin","student")
