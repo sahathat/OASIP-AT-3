@@ -48,22 +48,10 @@ public class FileService {
                 throw new RuntimeException("Sorry! Filename contains invalid path sequence " + fileName);
             }
 
-            System.out.println(file.getContentType());
-
             // If event is found then update event filename
             Event findEvent = eventRepository.findById(id).orElseThrow(
                     () -> new ResponseStatusException(HttpStatus.NOT_FOUND, id + " is not exist please find new id if exist.")
             );
-
-            Event event = eventRepository.findById(id).map(o -> mapFile(o, fileName)).orElseGet(() -> {
-                findEvent.setId(id);
-                return findEvent;
-            });
-
-            System.out.println(event.getId() + " " + event.getEventFile());
-
-            // update file name in database
-            eventRepository.saveAndFlush(event);
 
             // Find path and Resource
             Path idPath = this.fileStorageLocation.resolve(String.valueOf(id));
@@ -74,6 +62,14 @@ public class FileService {
                 deleteFileAsResource(id);
             }
 
+            // update file name on eventFile
+            Event event = eventRepository.findById(id).map(o -> mapFile(o, fileName)).orElseGet(() -> {
+                findEvent.setId(id);
+                return findEvent;
+            });
+
+            // update file name in database
+            eventRepository.saveAndFlush(event);
             // Create directory
             Files.createDirectories(idPath);
 
