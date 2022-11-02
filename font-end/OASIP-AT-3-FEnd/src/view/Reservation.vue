@@ -21,6 +21,7 @@ const startDate = ref("");
 const startTime = ref("");
 const duration = ref("");
 const noteT = ref("");
+const eventFile = ref("");
 const detailBooking = ref({});
 const eventList=ref([])
 const isNotNull = ref(false);
@@ -31,16 +32,13 @@ const goHome = () => myRouoter.push({ name: "Home" });
 
 const userRole = ref('guest')
 const checkRole = () => {
-    // const getRole = localStorage.getItem('role')
-    // const role = getRole.substring(6,getRole.length-1)
     const role = localStorage.getItem('role')
-    // console.log(role.substring(6,role.length-1))
     if(role !== null){
         if(role.substring(6,role.length-1)=='admin') userRole.value = 'admin'
         else if(role.substring(6,role.length-1)=='lecturer') userRole.value = 'lecturer'
+        else if(role.substring(6,role.length-1)=='student') userRole.value = 'student'
     }
     else userRole.value = 'guest'
-    // console.log(userRole.value)
     return userRole.value
 }
 
@@ -50,13 +48,14 @@ onBeforeMount(async()=>{
        checkRole()
        fileUrl.value = await downloadFile(detailBooking.value.id);
        console.log(fileUrl.value);
+      //  console.log(detailBooking.value.eventFile);
 })
 
 const fileUrl = ref("")
 const downloadFile = async (eventId) => {
   console.log("In progress (Get UserDetail)");
   const key = localStorage.getItem('key')
-  const res = await fetch(`${fileLink}/${eventId}`,
+  const res = await fetch(`${fileLink}/${eventId}/${detailBooking.value.eventFile}`,
     {
       headers: {
         "Authorization":'Bearer ' + key ,
@@ -69,9 +68,9 @@ const downloadFile = async (eventId) => {
   if (res.status === 200) {
     console.log("Successfully executed! " + res.status);
     const blob = await res.blob();
-    return window.URL.createObjectURL(blob);
-    console.log(blob);
     console.log(fileUrl.value);
+    console.log(blob);
+    return window.URL.createObjectURL(blob);
     // return await res.json();
   } else if (res.status === 401 && localStorage.getItem('token')==='accessToken') {
     console.log('test...')
@@ -220,7 +219,10 @@ const getDetail = async () => {
       startTime.value = detailBooking.value.eventStartTime.substring(11, 16);
       duration.value = detailBooking.value.eventDuration;
       noteT.value = detailBooking.value.eventNotes;
+      eventFile.value = detailBooking.value.eventFile
     }
+    console.log(detailBooking.value)
+    console.log(fileUrl)
   }
   // refresh token ----------------------------------------------------------- //
       else if (res.status === 401 && localStorage.getItem('token')==='accessToken') {
@@ -294,24 +296,95 @@ const isEdit = ref(false);
 const editStartTime = ref("");
 const editStartDate = ref("");
 const editNote = ref("");
+const editFile = ref("")
+const editFileName = ref("");
+console.log(editFileName.value)
 
 const editInfo = () => {
   isEdit.value = true;
   editStartTime.value = startTime.value;
   editStartDate.value = startDate.value;
   editNote.value = noteT.value;
+  editFileName.value = eventFile.value
 };
 
 const cancel = () => {
   isEdit.value = false;
+  changeFile.value = false;
   editStartTime.value = "";
   editStartDate.value = "";
+  editFileName.value = detailBooking.value.eventFile;
 };
 
-const edit =async()=>{
-      const key = localStorage.getItem('key')
+//edit file
+const changeFile = ref(false)
+const openChangeFile = () => { changeFile.value = !changeFile.value }
+const editFileChanged = (e) => {
+  editFile.value = e.target.files[0]
+  editFileName.value = e.target.files[0].name
+  console.log(editFile.value);
+  console.log(editFileName.value);
+  console.log(eventFile.value);
+}
 
+//delete file
+const deleteFile = () => {
+  editFileName.value = undefined
+  editFile.value = null
+  console.log(editFile.value);
+  console.log(editFileName.value);
+}
+const editFileToDB = async() => {
+  const key = localStorage.getItem('key')
+      console.log(editStartTime.value)
+      console.log(editStartDate.value)
+      console.log(editNote.value)
        let canEdit=undefined
+       console.log(eventFile.value)
+       if(editFileName.value!==eventFile.value){
+         console.log('เข้า')
+         if(editFileName.value!==undefined) {
+          console.log(editStartTime.value)
+              console.log(editStartDate.value)
+              console.log(editNote.value)
+          console.log('เข้า if')
+          console.log(editFile.value)
+            const data = new FormData();
+            data.append("file",editFile.value)
+            console.log(data.values)
+            const resFile = await fetch(`${fileLink}/${id}`, {
+              method: "POST",
+              headers: {
+                "Authorization": "Bearer " + key,
+              },
+              body: data
+            });
+            console.log(resFile)
+
+            if(resFile.status==200){
+              eventFile.value = editFileName.value
+              console.log(eventFile.value)
+              
+            }
+          }
+          else{
+            console.log('เข้า else')
+            console.log(editFile.value)
+            const resFile = await fetch(`${fileLink}/${id}`, {
+              method: "DELETE",
+              headers: {
+                "Authorization": "Bearer " + key,
+              }
+            });
+            console.log(resFile)
+          }
+        }
+}
+const editEvent =async()=>{
+      const key = localStorage.getItem('key')
+              console.log(editStartTime.value)
+        console.log(editStartDate.value)
+        console.log(editNote.value)
         const res = await fetch(`${eventLink}/${id}`, {
         method: "PUT",
         headers: {
@@ -324,11 +397,14 @@ const edit =async()=>{
           eventNotes: editNote.value,
         }),
       });
+
       if (res.status == 200) {
         let editDetailNote = await res.json();
         startDate.value = editDetailNote.eventStartTime.substring(0, 10);
         startTime.value = editDetailNote.eventStartTime.substring(11, 16);
         noteT.value = editDetailNote.eventNotes;
+        // eventFile.value = editDetailNote.eventFile
+
         isEdit.value = false;
         canEdit=true
         editSuccess.value=true
@@ -362,6 +438,11 @@ const edit =async()=>{
               editSuccess.value=false
        }
        return canEdit
+}
+
+const edit = ()=> {
+  editFileToDB()
+  editEvent()
 }
 
 // submit
@@ -491,7 +572,7 @@ const calTime = (hour, minute, addTime) => {
 
 <template>
   <div
-    class="showUp w-3/5 p-5 pb-7 mx-auto mt-10 bg-white rounded-md shadow-xl"
+    class="showUp w-5/5 p-5 pb-7 mx-auto mt-5 bg-white rounded-md shadow-xl"
   >
     <!-- no data -->
     <div v-if="isNotNull == false">
@@ -613,7 +694,7 @@ const calTime = (hour, minute, addTime) => {
             </textarea>
             <textarea
               rows="4"
-              cols="50"
+              cols="35"
               v-if="isEdit == true"
               class="eidt-color showUp text-black block px-3 py-2 placeholder-gray-300 border resize-none rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300"
               v-model="editNote"
@@ -623,16 +704,44 @@ const calTime = (hour, minute, addTime) => {
         </div>
 
        <!-- Attachment File -->
-       <div class="px-2 font-semibold w-fit text-gray-400" v-if="fileUrl!==undefined">
+       <div class="px-2 font-semibold w-fit text-gray-400" v-if="eventFile!==undefined && isEdit == false">
               Attachment File :
               <div class="text-black block px-3 py-2 placeholder-gray-300 border resize-none rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300">
                 <div class="grid grid-cols-6 gap-4 content-center "> 
-                  <span class="col-span-5 self-center text-sm"> click to download file</span>
+                  <span class="col-span-5 self-center text-sm"> {{ eventFile }} </span>
                   <a :href="fileUrl" :download="id"><box-icon name='cloud-download' size='md' border='circle' animation='tada-hover' class="" ></box-icon></a>
                   <!-- <a :href="fileUrl" :download="fileName"><box-icon name='cloud-download' size='md' border='circle' animation='tada-hover' class="" ></box-icon></a> -->
                 </div>
               </div>
         </div>
+
+        <div class="w-3/5 block border-2" v-if="isEdit == true">
+            <label for="addFile" class="font-semibold w-fit text-gray-400"
+              >Add file
+              <span
+                class="text-gray-300 text-sm"
+                >The file size cannot be larger than 10 MB.
+              </span>
+            </label>
+
+            <div 
+              class="text-black block px-3 py-2 placeholder-gray-300 border resize-none rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300"
+              v-if="editFileName!==undefined">
+                <div class="grid grid-cols-6 gap-4 content-center "> 
+                  <span class="col-span-4 self-center text-sm"> {{ editFileName }} </span>
+                  <button @click="openChangeFile"> Change file </button>
+                  <button @click="deleteFile"> Delete file </button>
+                </div>
+            </div>
+            <!-- <input type="file" name="file"> -->
+            <input v-if="changeFile==true || editFileName==undefined"
+                name="file"
+                type="file" 
+                ref="pond" 
+                @change="editFileChanged($event)" 
+                label-idle="Drop files here or <span class='filepond--label-action'>Browse</span>" 
+                class="my-2">
+          </div>
       </div>
 
        <!-- button not edit mode -->

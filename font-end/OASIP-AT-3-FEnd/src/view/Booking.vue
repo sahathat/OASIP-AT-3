@@ -30,7 +30,7 @@ const noteLength = 500;
 // check is Login ?
 const isLogin = () => {
   if(loginEmail!==null && userRole.value!=='admin') eMail.value = loginEmail
-  else if(userRole.value=='admin' || userRole.value=='admin') eMail.value = ''
+  else if(userRole.value=='admin' || userRole.value=='guest') eMail.value = ''
   return eMail.value
 }
 
@@ -347,32 +347,31 @@ const addBooking = async () => {
     }),
   });
 
-  //add file
-  const resFile = await fetch(fileLink, {
-    method: "POST",
-    headers: {
-            "Authorization": "Bearer " + key,
-            "Accept": 'application/json',
-            "content-type": "application/json",
-            "key":"file",
-            "value": fileName
-    },
-    body: JSON.stringify({
-      bookingName: name.value,
-      bookingEmail: eMail.value,
-      eventStartTime: `${startDate.value}T${startTime.value}:00+07:00`,
-      eventNotes: noteText.value,
-      eventCategoryId: cateId.value,
-    }),
-  });
-
-
-  if (res.status === 201 && resFile.status === 201) {
+  const event = ref(0)
+  if (res.status === 201) {
     addSuccess.value = true;
     createStatus = true;
     isStatus.value = true;
-    console.log('เข้า')
+    isLogin()
+    
+    event.value = await res.json()
+    console.log(event.value.id)
+
+    const data = new FormData();
+    if(fileName.value.length != 0) data.append("file",fileName.value)
+    console.log(data.values)
+
+    //add file
+    const resFile = await fetch(`${fileLink}/${event.value.id}`, {
+      method: "POST",
+      headers: {
+            "Authorization": "Bearer " + key,
+      },
+      body: data
+    });
+    console.log(resFile.status)
     setTimeout(() => (addSuccess.value = false), 5000);
+
   } else if (res.status === 400) {
     validateBetweenDate.value = true;
     isStatus.value = false;
@@ -409,7 +408,6 @@ const addBooking = async () => {
 };
 
 //GET category
-
 // first get Category
 const getCategory = async () => {
   const key = localStorage.getItem('key')
@@ -546,7 +544,6 @@ onBeforeMount(async () => {
 });
 
 onUpdated(async () => {
-  isLogin()
   checkRole()
 });
 
