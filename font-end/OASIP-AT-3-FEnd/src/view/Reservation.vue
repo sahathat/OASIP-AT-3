@@ -6,12 +6,12 @@ import 'boxicons'
 const { params } = useRoute();
 
 const db = "http://localhost:5000/booking";
-// const eventLink = `${import.meta.env.BASE_URL}api/events`;
-// const refreshLink = `${import.meta.env.BASE_URL}api/users/refresh`;
-// const fileLink = `${import.meta.env.VITE_BACK_URL}api/files/events`;
-const eventLink = "http://localhost:8443/api/events";
-const refreshLink = "http://localhost:8443/api/users/refresh";
-const fileLink = "http://localhost:8443/api/files/events";
+const eventLink = `${import.meta.env.BASE_URL}api/events`;
+const refreshLink = `${import.meta.env.BASE_URL}api/users/refresh`;
+const fileLink = `${import.meta.env.VITE_BACK_URL}api/files/events`;
+// const eventLink = "http://localhost:8443/api/events";
+// const refreshLink = "http://localhost:8443/api/users/refresh";
+// const fileLink = "http://localhost:8443/api/files/events";
 
 const id = params.id;
 const name = ref("");
