@@ -20,7 +20,7 @@ services:
     container_name: backend1
     image: backend
     build:
-      context: ./At-3-Booking
+      context: .back-end/At-3-Booking
     ports:
       - "8443:8080"
     environment:
@@ -33,7 +33,7 @@ services:
     container_name: frontend
     image: frontend
     build:
-      context: ./OASIP-AT-3-FEnd
+      context: .font-end/OASIP-AT-3-FEnd
     depends_on:
       - oasipdbbooking
       - backend1
