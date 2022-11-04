@@ -1,6 +1,7 @@
 services:
   oasipdbbooking:
     container_name: oasipdbbooking
+    platform: linux/x86_64
     image: mysql/mysql-server:8.0.29
     volumes:
       - type: bind
