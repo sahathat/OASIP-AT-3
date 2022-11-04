@@ -10,7 +10,7 @@ services:
         source: ./datadir
         target: /var/lib/mysql
     environment:
-      - MYSQL_PASSWORD=int221_at3
+      - MYSQL_ROOT_PASSWORD=int221_at3
       - MYSQL_DB_HOST=int221-at3-server
       - MYSQL_DB_USER=root
     ports:
@@ -22,7 +22,7 @@ services:
     build:
       context: ./back-end/At-3-Booking
     ports:
-      - "8443:8080"
+      - "8443:8443"
     environment:
       - spring.datasource.url=jdbc:mysql://oasipdbbooking:3306/booking
     depends_on:
