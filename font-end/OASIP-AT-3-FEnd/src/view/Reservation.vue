@@ -8,7 +8,8 @@ const { params } = useRoute();
 const db = "http://localhost:5000/booking";
 const eventLink = `${import.meta.env.BASE_URL}api/events`;
 const refreshLink = `${import.meta.env.BASE_URL}api/users/refresh`;
-const fileLink = `${import.meta.env.VITE_BACK_URL}api/files/events`;
+const fileLink = `${import.meta.env.BASE_URL}api/files/events`;
+
 // const eventLink = "http://localhost:8443/api/events";
 // const refreshLink = "http://localhost:8443/api/users/refresh";
 // const fileLink = "http://localhost:8443/api/files/events";
@@ -132,26 +133,6 @@ let clock = () => {
   date.value = `${year.value}-${month.value}-${day.value}`;
 };
 setInterval(clock, 1000);
-
-// get every 10 sec
-// const getStatus=ref(undefined)
-// const resGetEvent=ref(undefined)
-
-// setInterval(async ()=>{
-//   const key = localStorage.getItem('key')
-//   resGetEvent.value= await fetch(eventLink,{
-//     method: 'GET',
-//     headers: {
-//             "Authorization":'Bearer ' + key ,
-//             "Accept": 'application/json',
-//             "content-type": "application/json",
-//         }
-//   })
-//   if (resGetEvent.value.status === 200) {
-//     eventList.value = await resGetEvent.value.json();
-//     getStatus.value = true;
-//   } else getStatus.value = false;
-// },10000)
 
 //GET event
 const getEvent = async () => {
@@ -339,8 +320,7 @@ const editFileToDB = async() => {
       console.log(editStartTime.value)
       console.log(editStartDate.value)
       console.log(editNote.value)
-       let canEdit=undefined
-       console.log(eventFile.value)
+      console.log(eventFile.value)
        if(editFileName.value!==eventFile.value){
          console.log('เข้า')
          if(editFileName.value!==undefined) {
@@ -406,7 +386,7 @@ const editEvent =async()=>{
         // eventFile.value = editDetailNote.eventFile
 
         isEdit.value = false;
-        canEdit=true
+        canEdit.value=true
         editSuccess.value=true
        }
        // refresh token ----------------------------------------------------------- //
@@ -434,10 +414,10 @@ const editEvent =async()=>{
       } 
       // ------------------------------------------------------------------------- //
         else {
-              canEdit=false
+              canEdit.value=false
               editSuccess.value=false
        }
-       return canEdit
+       return canEdit.value
 }
 
 const edit = ()=> {
@@ -450,6 +430,7 @@ const isInput=ref(undefined)
 const isPast =ref(undefined)
 const isOverlap =ref(undefined)
 const editSuccess=ref(undefined)
+const canEdit= ref(undefined)
 
 const submitt = async () => {
        isInput.value=undefined
@@ -477,13 +458,11 @@ const betweenDateWarning=ref(undefined)
 const overlap = () => {
   betweenDateWarning.value = undefined;
   let isOverlap = undefined;
-for (let check of eventList.value) {
+  const newEventList = eventList.value.filter((event) => {
+    return event.id != id
+  })
+  for (let check of newEventList) {
     if (check.categoryName == category.value&&check.id!==id) {
-//       console.log(Date.parse(`${editStartDate.value}T${editStartTime.value}:00+07:00`))
-//       console.log(Date.parse(check.eventStartTime))
-//       console.log(Date.parse(`${check.eventStartTime.substring(0,10)}T${calTime(parseInt(check.eventStartTime.substring(11,13)) ,parseInt(check.eventStartTime.substring(14,16)),check.eventDuration)}:00+07:00`))
-//       console.log('cut')
-
       if (
         Date.parse(`${editStartDate.value}T${editStartTime.value}:00+07:00`) >=
         Date.parse(check.eventStartTime) &&

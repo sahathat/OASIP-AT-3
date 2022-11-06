@@ -21,6 +21,10 @@ onBeforeMount(async () => {
   checkRole()
 });
 
+setInterval(async () => {
+    checkRole()
+}, 1000);
+
 </script>
 
 <template>

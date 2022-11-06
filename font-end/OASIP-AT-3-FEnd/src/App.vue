@@ -29,8 +29,8 @@ const signOut = () => {
 const haveToken = ref(null)
 const isHaveToken = () => {
     const token = localStorage.getItem('key')
-    if(token!==null && token!==undefined) haveToken.value = true
-    else haveToken.value = false
+    if(token==null || token==undefined) haveToken.value = false
+    else if(token!==null && token!==undefined) haveToken.value = true
     return haveToken.value
 }
 
@@ -93,7 +93,7 @@ setInterval(async () => {
                         
 
                         <!-- secondary nav -->
-                        <div v-show="haveToken==true" class="w-full lg:flex items-center py-3 mx-auto" >
+                        <div v-show="haveToken==true && userRole!=='guest'" class="w-full lg:flex items-center py-3 mx-auto" >
                             <ul>
 
                                 <li>
@@ -152,7 +152,7 @@ setInterval(async () => {
                         </div>
 
                         <!-- third nav -->
-                        <div v-if="haveToken==false" class="lg:flex justify-end space-x-1 w-4/5">
+                        <div v-if="haveToken==false || userRole=='guest'" class="lg:flex justify-end space-x-1 w-4/5">
                             <div class="lg:flex items-center space-x-1 w-1/5" >
                                 <button type="button" class="hover:underline bg-white text-gray-800 font-bold rounded-full 
                                 py-4 px-8 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 hover:bg-green-300
@@ -168,7 +168,7 @@ setInterval(async () => {
                         <!-- user account -->
 
                         <!-- sign out button -->
-                        <div v-if="haveToken==true" class="lg:flex justify-end items-center w-1/6" >
+                        <div v-if="haveToken==true && userRole!=='guest'" class="lg:flex justify-end items-center w-1/6" >
                                 <a  
                                 class="hover:underline bg-white text-gray-800 font-bold rounded-full 
                                 text-center w-full h-1/2 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 hover:bg-amber-400
