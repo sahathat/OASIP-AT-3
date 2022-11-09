@@ -3,10 +3,10 @@ import { useRoute, useRouter } from "vue-router";
 import { onBeforeMount, ref } from "vue";
 
 const db = "http://localhost:5000/booking";
-const categoryLink = `${import.meta.env.BASE_URL}api/categories`;
-const refreshLink = `${import.meta.env.BASE_URL}api/users/refresh`;
-// const categoryLink = "http://localhost:8443/api/categories";
-// const refreshLink = "http://localhost:8443/api/users/refresh";
+// const categoryLink = `${import.meta.env.BASE_URL}api/categories`;
+// const refreshLink = `${import.meta.env.BASE_URL}api/users/refresh`;
+const categoryLink = "http://localhost:8443/api/categories";
+const refreshLink = "http://localhost:8443/api/users/refresh";
 
 const { params } = useRoute();
 const myRouoter = useRouter();

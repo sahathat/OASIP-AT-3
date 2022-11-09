@@ -59,19 +59,16 @@ const downloadFile = async (eventId) => {
   const res = await fetch(`${fileLink}/${eventId}/${detailBooking.value.eventFile}`,
     {
       headers: {
-        "Authorization":'Bearer ' + key ,
-        "Accept": 'application/json',
-        "content-type": "application/json"
+        "content-type": "application/octet-stream"
       },
     }
   );
 
   if (res.status === 200) {
     console.log("Successfully executed! " + res.status);
-    const blob = await res.blob();
     console.log(fileUrl.value);
-    console.log(blob);
-    return window.URL.createObjectURL(blob);
+    console.log(res);
+    return res.url;
     // return await res.json();
   } else if (res.status === 401 && localStorage.getItem('token')==='accessToken') {
     console.log('test...')
@@ -315,6 +312,7 @@ const deleteFile = () => {
   console.log(editFile.value);
   console.log(editFileName.value);
 }
+const editFileSuccess = ref(undefined) 
 const editFileToDB = async() => {
   const key = localStorage.getItem('key')
       console.log(editStartTime.value)
@@ -340,12 +338,12 @@ const editFileToDB = async() => {
               body: data
             });
             console.log(resFile)
-
+            getDetail()
             if(resFile.status==200){
               eventFile.value = editFileName.value
               console.log(eventFile.value)
-              
             }
+            else if(resFile.status!==200) editFileSuccess.value = false
           }
           else{
             console.log('เข้า else')
@@ -357,8 +355,11 @@ const editFileToDB = async() => {
               }
             });
             console.log(resFile)
+            
+            if(resFile.status!==200) editFileSuccess.value = false
           }
-        }
+        } 
+        getDetail() 
 }
 const editEvent =async()=>{
       const key = localStorage.getItem('key')
@@ -458,10 +459,10 @@ const betweenDateWarning=ref(undefined)
 const overlap = () => {
   betweenDateWarning.value = undefined;
   let isOverlap = undefined;
-  const newEventList = eventList.value.filter((event) => {
+  const filterEventList = eventList.value.filter((event) => {
     return event.id != id
   })
-  for (let check of newEventList) {
+  for (let check of filterEventList) {
     if (check.categoryName == category.value&&check.id!==id) {
       if (
         Date.parse(`${editStartDate.value}T${editStartTime.value}:00+07:00`) >=
@@ -551,7 +552,7 @@ const calTime = (hour, minute, addTime) => {
 
 <template>
   <div
-    class="showUp w-5/5 p-5 pb-7 mx-auto mt-5 bg-white rounded-md shadow-xl"
+    class="showUp w-5/6 p-5 pb-7 mx-auto bg-white rounded-md shadow-xl"
   >
     <!-- no data -->
     <div v-if="isNotNull == false">
@@ -564,7 +565,7 @@ const calTime = (hour, minute, addTime) => {
     <!-- have data -->
     <div
       v-else-if="isNotNull == true"
-      class="p-4 border-double border-4 border-neutral-300 max-w-screen-lg"
+      class="p-4 border-double border-4 border-neutral-300 max-w-screen-2xl"
     >
       <div class="mx-2 w-full">
         <h1 class="text-center mb-1 font-bold text-2xl">Reservation</h1>
@@ -594,14 +595,14 @@ const calTime = (hour, minute, addTime) => {
         </div>
       </div>
       <!-- start date ,time and duration -->
-      <div class="flex my-4 w-full">
-        <div class="px-1 w-fit block">
+      <div class="flex m-auto my-4 w-full">
+        <div class="px-2 w-2/5 inline-flex">
           <div class="p-3 font-semibold inline-block m-auto text-gray-400">
             Start date :
           </div>
           <div
             v-if="isEdit == false"
-            class="border-2 rounded-md p-1.5 font-normal bg-white inline-block w-fit h-10"
+            class="border-2 rounded-md py-2 text-center font-normal bg-white inline-block w-2/4 h-10"
           >
             {{ startDate }}
           </div>
@@ -612,13 +613,13 @@ const calTime = (hour, minute, addTime) => {
             <input type="date" :min="date" v-model="editStartDate" />
           </div>
         </div>
-        <div class="px-1 w-fit block">
+        <div class="px-2 w-2/5 inline-flex">
           <div class="p-3 font-semibold inline-block m-auto w-fit  text-gray-400">
             Start time :
           </div>
           <div
             v-if="isEdit == false"
-            class="text-black border-2 rounded-md p-1.5 font-normal bg-white inline-block text-center w-20 h-10"
+            class="border-2 rounded-md py-2 text-center font-normal bg-white inline-block w-2/4 h-10"
           >
             {{ startTime }}
           </div>
@@ -629,12 +630,12 @@ const calTime = (hour, minute, addTime) => {
             <input type="time" v-model="editStartTime" />
           </div>
         </div>
-        <div class="px-1 w-fit block">
+        <div class="px-2 w-2/5 inline-flex">
           <div class="p-3 font-semibold inline-block m-auto text-gray-400">
             Duration :
           </div>
           <div
-            class="border-2 text-black rounded-md p-1.5 font-normal bg-white inline-block text-center w-16 h-10"
+            class="border-2 rounded-md py-2 text-center font-normal bg-white inline-block w-1/4 h-10"
           >
             {{ duration }}
           </div>
@@ -694,7 +695,7 @@ const calTime = (hour, minute, addTime) => {
               </div>
         </div>
 
-        <div class="w-3/5 block border-2" v-if="isEdit == true">
+        <div class="w-2/5 block" v-if="isEdit == true">
             <label for="addFile" class="font-semibold w-fit text-gray-400"
               >Add file
               <span
@@ -767,6 +768,11 @@ const calTime = (hour, minute, addTime) => {
        <div v-if="editSuccess == true" class="alert success text-sm">
           <span class="closebtn" @click="editSuccess = false">x</span>
           <strong class="block">Success!</strong> Edit data success.
+        </div>
+
+        <div v-if="editFileSuccess == false" class="alert success text-sm">
+          <span class="closebtn" @click="editSuccess = undefined">x</span>
+          <strong class="block">Error!</strong> can not edit with this file.
         </div>
 
   </div>

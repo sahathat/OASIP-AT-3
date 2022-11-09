@@ -50,15 +50,23 @@ const checkRole = () => {
     return userRole.value
 }
 
+const userEmail = ref('')
+const getUserEmail = () => {
+    const email = localStorage.getItem('email')
+    userEmail.value = email
+}
+
 //show navbar2
 onBeforeMount(async () => {
     isHaveToken()
     checkRole()
+    getUserEmail()
 })
 
 setInterval(async () => {
     isHaveToken()
     checkRole()
+    getUserEmail()
 }, 1000);
 
 </script>
@@ -166,6 +174,16 @@ setInterval(async () => {
                         </div>
 
                         <!-- user account -->
+                        <div v-if="haveToken==true && userRole!=='guest'" class="lg:flex justify-end items-center w-1/6" >
+                            <p class="inline-block px-2 py-2 mx-4 bg-transparent text-white 
+                            font-medium text-lg leading-tight  rounded 
+                            hover:bg-orange-600 hover:shadow-lg focus:bg-blue-500 focus:shadow-lg 
+                            focus:outline-none focus:ring-0 active:bg-amber-600 active:shadow-lg 
+                            transition duration-150 ease-in-out "> 
+                                {{ userEmail }}
+                            </p>
+
+                        </div>
 
                         <!-- sign out button -->
                         <div v-if="haveToken==true && userRole!=='guest'" class="lg:flex justify-end items-center w-1/6" >
