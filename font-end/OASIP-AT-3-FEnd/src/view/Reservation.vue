@@ -348,12 +348,14 @@ const editFileToDB = async() => {
           else{
             console.log('เข้า else')
             console.log(editFile.value)
+            getDetail()
             const resFile = await fetch(`${fileLink}/${id}`, {
               method: "DELETE",
               headers: {
                 "Authorization": "Bearer " + key,
               }
             });
+            
             console.log(resFile)
             
             if(resFile.status!==200) editFileSuccess.value = false
@@ -362,8 +364,8 @@ const editFileToDB = async() => {
         getDetail() 
 }
 const editEvent =async()=>{
-      const key = localStorage.getItem('key')
-              console.log(editStartTime.value)
+        const key = localStorage.getItem('key')
+        console.log(editStartTime.value)
         console.log(editStartDate.value)
         console.log(editNote.value)
         const res = await fetch(`${eventLink}/${id}`, {
@@ -418,6 +420,7 @@ const editEvent =async()=>{
               canEdit.value=false
               editSuccess.value=false
        }
+       getDetail()
        return canEdit.value
 }
 
@@ -744,12 +747,12 @@ const calTime = (hour, minute, addTime) => {
 
   <!-- for alert -->
   <div class="alert-area">
-    <div v-if="isPast == true" class="alert warning text-sm">
+    <div v-if="isPast == true" class="alert text-sm">
       <span class="closebtn" @click="isPast = undefined">x</span>
       <strong class="block">Error!</strong> Can't select past date and time.
     </div>
 
-    <div v-if="isInput == true" class="alert  text-sm">
+    <div v-if="isInput == true" class="alert text-sm">
       <span class="closebtn" @click="isInput = undefined">x</span>
       <strong class="block">Error!</strong> Please input information.
     </div>
@@ -770,8 +773,8 @@ const calTime = (hour, minute, addTime) => {
           <strong class="block">Success!</strong> Edit data success.
         </div>
 
-        <div v-if="editFileSuccess == false" class="alert success text-sm">
-          <span class="closebtn" @click="editSuccess = undefined">x</span>
+        <div v-if="editFileSuccess == false" class="alert text-sm">
+          <span class="closebtn" @click="editFileSuccess = undefined">x</span>
           <strong class="block">Error!</strong> can not edit with this file.
         </div>
 
