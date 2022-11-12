@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import sit.int221.at3.entities.ConfirmUser;
+import sit.int221.at3.entities.Event;
 import sit.int221.at3.entities.User;
 import sit.int221.at3.repositories.ConfirmUserRepository;
 import sit.int221.at3.repositories.UserRepository;
