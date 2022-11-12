@@ -49,19 +49,19 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter{
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
-                .authorizeRequests()
-                .antMatchers(HttpMethod.GET,"/api/events/**").hasAnyRole("admin","student","lecturer")
-                .antMatchers(HttpMethod.POST,"/api/events/**").hasAnyRole("admin","student")
-                .antMatchers(HttpMethod.PUT,"/api/events/**").hasAnyRole("admin","student")
-                .antMatchers(HttpMethod.DELETE,"/api/events/**").hasAnyRole("admin","student")
-                .antMatchers("/api/userList/**").hasRole("admin")
-                .antMatchers("/api/guests/**").permitAll()
-                .antMatchers("/api/files/**").permitAll()
-                .antMatchers("/api/users/signin","/api/users/signup","/api/users/refresh").permitAll()
-                .anyRequest().authenticated()
-                .and().exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).
-                and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).
-                and().addFilterBefore(customJwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+        .authorizeRequests()
+        .antMatchers(HttpMethod.GET,"/api/events/**").hasAnyRole("admin","student","lecturer")
+        .antMatchers(HttpMethod.POST,"/api/events/**").hasAnyRole("admin","student")
+        .antMatchers(HttpMethod.PUT,"/api/events/**").hasAnyRole("admin","student")
+        .antMatchers(HttpMethod.DELETE,"/api/events/**").hasAnyRole("admin","student")
+        .antMatchers("/api/userList/**").hasRole("admin")
+        .antMatchers("/api/guests/**").permitAll()
+        .antMatchers("/api/files/**").permitAll()
+        .antMatchers("/api/users/signin","/api/users/signup","/api/users/refresh","/api/users/confirm","/api/users/reset_token","/api/users/reset_password","/api/users/verify").permitAll()
+        .anyRequest().authenticated()
+        .and().exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).
+        and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).
+        and().addFilterBefore(customJwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }
 }
 

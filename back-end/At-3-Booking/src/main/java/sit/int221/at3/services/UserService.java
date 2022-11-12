@@ -4,6 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -12,25 +13,32 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import sit.int221.at3.dtos.user.UserDto;
 import sit.int221.at3.dtos.user.UserModifyDto;
+import sit.int221.at3.entities.ConfirmUser;
 import sit.int221.at3.entities.Role;
 import sit.int221.at3.entities.User;
 import sit.int221.at3.repositories.UserRepository;
 import sit.int221.at3.utils.ListMapper;
 
+import javax.mail.MessagingException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class UserService implements UserDetailsService {
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    ModelMapper modelMapper;
+    private ConfirmUserService confirmUserService;
 
     @Autowired
-    ListMapper listMapper;
+    private ModelMapper modelMapper;
+
+    @Autowired
+    private ListMapper listMapper;
 
     public List<UserDto> getUserAll(String params) {
         // use List event sorted by datetime parameter by descendant order
@@ -47,7 +55,6 @@ public class UserService implements UserDetailsService {
     }
 
     public User saveUser(UserModifyDto newUser) {
-
         // set default role when null
         if (newUser.getRole() == null) {
             newUser.setRole(Role.student);
@@ -61,17 +68,44 @@ public class UserService implements UserDetailsService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "name or email must unique");
         }
 
-        // insert in repository
+        // create user
+        User createdUser = userRepository.saveAndFlush(user);
+
+        // generate token
+        confirmUserService.generateVerifyToken(user);
+
+        // create user
+        return createdUser;
+    }
+
+    public User signupUser(UserModifyDto newUser){
+        // create user and confirm
+        User user = saveUser(newUser);
+
+        // set role to guest
+        user.setRole(Role.guest);
+
+        // find token
+        ConfirmUser confirmUser = confirmUserService.findByUser(user);
+
+        // send to confirm
+        confirmUserService.sendMailForConfirm(user.getEmail(), confirmUser.getToken());
+
         return userRepository.saveAndFlush(user);
     }
 
-    public void deleteUser(Integer id) {
+    public void deleteUser(Integer id, Authentication authentication) {
         // check id if not found then throw exception.
-        userRepository.findById(id).orElseThrow(
+        User user = userRepository.findById(id).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, id + " does not exist please find new id if exist."));
 
-        // and delete id.
-        userRepository.deleteById(id);
+        // cannot delete yourself
+        if(authentication.getName().equals(user.getEmail())){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,"admin cannot delete yourself");
+        }
+
+        // delete confirm user and user
+        confirmUserService.deleteUserConfirm(user);
     }
 
     // update PUT
@@ -126,7 +160,6 @@ public class UserService implements UserDetailsService {
         // keep in roles and user details
         roles = Arrays.asList(new SimpleGrantedAuthority(String.valueOf(user.getRole())));
         return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), roles);
-
     }
 
     private boolean checkIsNotUnique(User user, UserModifyDto updateUser) {
