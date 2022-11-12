@@ -135,7 +135,7 @@ public class EventService {
         return listMapper.mapList(event,EventDto.class,modelMapper);
     }
 
-    public Event save(EventCreateDto newEvent) throws MessagingException {
+    public Event save(EventCreateDto newEvent) {
         // find category id if new event are created
         Category category = categoryRepository.findById(newEvent.getEventCategoryId()).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, newEvent.getEventCategoryId() + " is not exist please find new id if exist.")
@@ -166,7 +166,11 @@ public class EventService {
                 "<b>When: </b>" + eventTime + "<br>" +
                 "<b>Event notes: </b>" + (newEvent.getEventNotes() == null ? "" : newEvent.getEventNotes());
 
-        emailService.sendSimpleEmail(to, subject, htmlBody);
+        try {
+            emailService.sendSimpleEmail(to, subject, htmlBody);
+        } catch (MessagingException messagingException) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"this email not found");
+        }
 
         return eventRepository.saveAndFlush(event);
     }

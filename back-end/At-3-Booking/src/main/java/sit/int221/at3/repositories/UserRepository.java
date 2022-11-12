@@ -10,4 +10,5 @@ import sit.int221.at3.entities.User;
 import java.util.List;
 
 public interface UserRepository extends JpaRepository<User, Integer> {
+    public User findByEmail(String email);
 }

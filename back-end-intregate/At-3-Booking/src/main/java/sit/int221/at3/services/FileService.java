@@ -70,6 +70,7 @@ public class FileService {
 
             // update file name in database
             eventRepository.saveAndFlush(event);
+
             // Create directory
             Files.createDirectories(idPath);
 
