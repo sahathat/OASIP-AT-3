@@ -1,6 +1,5 @@
 package sit.int221.at3.controllers;
 
-import org.hibernate.event.spi.EvictEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
@@ -22,9 +21,6 @@ public class FileController {
     private final FileService fileService;
 
     @Autowired
-    private EventRepository eventRepository;
-
-    @Autowired
     public FileController(FileService fileService) {
         this.fileService = fileService;
     }
@@ -37,7 +33,7 @@ public class FileController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "File not found");
         }
         response.setHeader("Content-Disposition", String.format("inline; filename=\"" + fileName + "\""));
-        return ResponseEntity.ok().contentType(MediaType.MULTIPART_FORM_DATA).body(file);
+        return ResponseEntity.ok().contentType(MediaType.APPLICATION_OCTET_STREAM).body(file);
     }
 
     @PostMapping("events/{id}")
