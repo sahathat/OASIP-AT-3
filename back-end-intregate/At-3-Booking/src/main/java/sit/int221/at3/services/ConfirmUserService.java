@@ -5,7 +5,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import sit.int221.at3.entities.ConfirmUser;
-import sit.int221.at3.entities.Event;
 import sit.int221.at3.entities.User;
 import sit.int221.at3.repositories.ConfirmUserRepository;
 import sit.int221.at3.repositories.UserRepository;
@@ -79,8 +78,24 @@ public class ConfirmUserService {
         // email sending verify
         String to = email;
         String link = "http://localhost:8443/api/users/confirm?token=" + token;
-        String subject = "[OASIP] Confirm you sign up with email";
-        String htmlBody = "<h2>Congratulation: verify email</h2>" +
+        String subject = "[OASIP] Confirm your email";
+        String htmlBody = "<h2>Congratulation: verify email for sign up</h2>" +
+                "<p>please click <a href=" + link + ">This link</a></p>";
+
+        // send the email
+        try {
+            emailService.sendSimpleEmail(to,subject,htmlBody);
+        } catch (MessagingException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"this email not found");
+        };
+    }
+
+    public void sendMailForResetPassword(String email,String token) {
+        // email sending verify
+        String to = email;
+        String link = "http://localhost:8443/api/users/confirm_reset_password?token=" + token;
+        String subject = "[OASIP] Confirm your email";
+        String htmlBody = "<h2>Congratulation: verify email for reset password</h2>" +
                 "<p>please click <a href=" + link + ">This link</a></p>";
 
         // send the email
