@@ -10,13 +10,14 @@ import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.ModelAndView;
 import sit.int221.at3.dtos.user.JwtResponse;
 import sit.int221.at3.dtos.user.UserLoginDto;
 import sit.int221.at3.dtos.user.UserModifyDto;
 import sit.int221.at3.entities.ConfirmUser;
-import sit.int221.at3.entities.Event;
 import sit.int221.at3.entities.User;
 import sit.int221.at3.repositories.UserRepository;
 import sit.int221.at3.services.ConfirmUserService;
@@ -25,10 +26,10 @@ import sit.int221.at3.utils.JwtUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.net.URI;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 @RestController
 public class JwtRequestController {
@@ -101,40 +102,34 @@ public class JwtRequestController {
         return userDetailsService.signupUser(user);
     }
 
-    @RequestMapping(value = "/api/users/reset_token", method = RequestMethod.POST)
-    public String resetToken(@RequestBody UserModifyDto userModifyDto) {
+    @RequestMapping(value = "/api/users/get_token", method = RequestMethod.POST)
+    public String getToken(@RequestBody UserModifyDto userModifyDto) {
         try {
             // find user by email
             User user = userRepository.findByEmail(userModifyDto.getEmail());
             ConfirmUser confirmUser = confirmUserService.findByUser(user);
 
-            // update token when token is expire
-            String updateToken = confirmUserService.updateToken(confirmUser);
-
-            // get user
-            return updateToken;
+            // get user token
+            return confirmUser.getToken();
         } catch (NullPointerException ex) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "this email does not exist");
         }
     }
 
     @RequestMapping(value = "/api/users/confirm", method = RequestMethod.GET)
-    public String changeRoleWhenConfirm(@RequestParam("token") String token) {
+    public ResponseEntity<Void> changeRoleWhenConfirm(@RequestParam("token") String token) {
         try {
             // get token if found
             ConfirmUser confirmUser = confirmUserService.findByToken(token);
             User user = confirmUser.getUser();
-
-            // if token is not expire
-            if(confirmUser.getExpireDate().isAfter(ZonedDateTime.now())) {
-                // change role when email has been confirmed
-                user.setRole(confirmUser.getRole());
-                // and save role
-                userRepository.saveAndFlush(user);
-            } else {
-                throw new ResponseStatusException(HttpStatus.FORBIDDEN,"this token is expired");
-            }
-            return "email has been confirm";
+            // change role when email has been confirmed
+            user.setRole(confirmUser.getRole());
+            // and save role
+            userRepository.saveAndFlush(user);
+            // redirect to /login page
+            return ResponseEntity.status(HttpStatus.FOUND)
+                    .location(URI.create("https://intproj21.sit.kmutt.ac.th/at3/login"))
+                    .build();
         } catch (NullPointerException ex) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,"token is invalid");
         }
@@ -146,8 +141,25 @@ public class JwtRequestController {
             // find user by email
             User user = userRepository.findByEmail(userModifyDto.getEmail());
             ConfirmUser confirmUser = confirmUserService.findByUser(user);
-            confirmUserService.sendMailForConfirm(user.getEmail(), confirmUser.getToken());
+            confirmUserService.sendMailForResetPassword(user.getEmail(), confirmUser.getToken());
             return "Your email has been sent";
+        } catch (NullPointerException ex) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "this email does not exist");
+        }
+    }
+
+    @RequestMapping(value = "/api/users/confirm_reset_password", method = RequestMethod.GET)
+    public ResponseEntity<Void> resetPasswordWhenConfirm(@RequestParam("token") String token) {
+        try {
+            ConfirmUser confirmUser = confirmUserService.findByToken(token);
+
+            // update token when token is expire
+            confirmUserService.updateToken(confirmUser);
+
+            // redirect to /reset_password page
+            return ResponseEntity.status(HttpStatus.FOUND)
+                    .location(URI.create("https://intproj21.sit.kmutt.ac.th/at3/reset_password"))
+                    .build();
         } catch (NullPointerException ex) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "this email does not exist");
         }
