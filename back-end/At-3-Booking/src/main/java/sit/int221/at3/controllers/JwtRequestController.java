@@ -18,7 +18,6 @@ import sit.int221.at3.dtos.user.JwtResponse;
 import sit.int221.at3.dtos.user.UserLoginDto;
 import sit.int221.at3.dtos.user.UserModifyDto;
 import sit.int221.at3.entities.ConfirmUser;
-import sit.int221.at3.entities.Event;
 import sit.int221.at3.entities.User;
 import sit.int221.at3.repositories.UserRepository;
 import sit.int221.at3.services.ConfirmUserService;
@@ -27,10 +26,10 @@ import sit.int221.at3.utils.JwtUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.net.URI;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 @RestController
 public class JwtRequestController {
@@ -118,7 +117,7 @@ public class JwtRequestController {
     }
 
     @RequestMapping(value = "/api/users/confirm", method = RequestMethod.GET)
-    public ModelAndView changeRoleWhenConfirm(@RequestParam("token") String token, ModelMap model) {
+    public ResponseEntity<Void> changeRoleWhenConfirm(@RequestParam("token") String token) {
         try {
             // get token if found
             ConfirmUser confirmUser = confirmUserService.findByToken(token);
@@ -128,7 +127,9 @@ public class JwtRequestController {
             // and save role
             userRepository.saveAndFlush(user);
             // redirect to /login page
-            return new ModelAndView("redirect:/login", model);
+            return ResponseEntity.status(HttpStatus.FOUND)
+                    .location(URI.create("https://intproj21.sit.kmutt.ac.th/at3/login"))
+                    .build();
         } catch (NullPointerException ex) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,"token is invalid");
         }
@@ -148,7 +149,7 @@ public class JwtRequestController {
     }
 
     @RequestMapping(value = "/api/users/confirm_reset_password", method = RequestMethod.GET)
-    public ModelAndView resetPasswordWhenConfirm(@RequestParam("token") String token ,ModelMap model) {
+    public ResponseEntity<Void> resetPasswordWhenConfirm(@RequestParam("token") String token) {
         try {
             ConfirmUser confirmUser = confirmUserService.findByToken(token);
 
@@ -156,7 +157,9 @@ public class JwtRequestController {
             confirmUserService.updateToken(confirmUser);
 
             // redirect to /reset_password page
-            return new ModelAndView("redirect:/reset_password", model);
+            return ResponseEntity.status(HttpStatus.FOUND)
+                    .location(URI.create("https://intproj21.sit.kmutt.ac.th/at3/reset_password"))
+                    .build();
         } catch (NullPointerException ex) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "this email does not exist");
         }
