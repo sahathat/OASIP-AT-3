@@ -19,11 +19,8 @@ import sit.int221.at3.entities.User;
 import sit.int221.at3.repositories.UserRepository;
 import sit.int221.at3.utils.ListMapper;
 
-import javax.mail.MessagingException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -85,13 +82,16 @@ public class UserService implements UserDetailsService {
         // set role to guest
         user.setRole(Role.guest);
 
+        // save user before send email
+        user = userRepository.saveAndFlush(user);
+
         // find token
         ConfirmUser confirmUser = confirmUserService.findByUser(user);
 
         // send to confirm
         confirmUserService.sendMailForConfirm(user.getEmail(), confirmUser.getToken());
 
-        return userRepository.saveAndFlush(user);
+        return user;
     }
 
     public void deleteUser(Integer id, Authentication authentication) {
