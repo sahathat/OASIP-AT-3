@@ -128,7 +128,7 @@ public class JwtRequestController {
             userRepository.saveAndFlush(user);
             // redirect to /login page
             return ResponseEntity.status(HttpStatus.FOUND)
-                    .location(URI.create("https://intproj21.sit.kmutt.ac.th/at3/login"))
+                    .location(URI.create("http://localhost:3000/login"))
                     .build();
         } catch (NullPointerException ex) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,"token is invalid");
@@ -158,7 +158,7 @@ public class JwtRequestController {
 
             // redirect to /reset_password page
             return ResponseEntity.status(HttpStatus.FOUND)
-                    .location(URI.create("https://intproj21.sit.kmutt.ac.th/at3/reset_password"))
+                    .location(URI.create("http://localhost:3000/reset_password"))
                     .build();
         } catch (NullPointerException ex) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "this email does not exist");
