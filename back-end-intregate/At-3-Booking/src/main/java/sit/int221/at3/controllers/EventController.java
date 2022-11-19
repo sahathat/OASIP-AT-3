@@ -28,9 +28,9 @@ public class EventController {
     @Autowired
     private EventService eventService;
 
-    private final List<SimpleGrantedAuthority> student = Arrays.asList(new SimpleGrantedAuthority(String.valueOf("ROLE_"+Role.student)));
+    private final List<SimpleGrantedAuthority> student = List.of(new SimpleGrantedAuthority(String.valueOf("ROLE_"+Role.student)));
 
-    private final List<SimpleGrantedAuthority> lecturer = Arrays.asList(new SimpleGrantedAuthority(String.valueOf("ROLE_"+Role.lecturer)));
+    private final List<SimpleGrantedAuthority> lecturer = List.of(new SimpleGrantedAuthority(String.valueOf("ROLE_"+Role.lecturer)));
 
     // /api/events [GET]
     @GetMapping("")
