@@ -11,22 +11,27 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import sit.int221.at3.dtos.lecturerMapping.ShowLecturerDto;
 import sit.int221.at3.dtos.user.UserDto;
 import sit.int221.at3.dtos.user.UserModifyDto;
-import sit.int221.at3.entities.ConfirmUser;
-import sit.int221.at3.entities.Role;
-import sit.int221.at3.entities.User;
+import sit.int221.at3.entities.*;
+import sit.int221.at3.repositories.LecturerMappingRepository;
 import sit.int221.at3.repositories.UserRepository;
 import sit.int221.at3.utils.ListMapper;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService implements UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private LecturerMappingRepository lecturerMappingRepository;
 
     @Autowired
     private ConfirmUserService confirmUserService;
@@ -49,6 +54,29 @@ public class UserService implements UserDetailsService {
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, id + " is not exist please find new id if exist.")
         );
         return modelMapper.map(users, UserDto.class);
+    }
+
+    public List<ShowLecturerDto> getLecturerByCategoryOwner(Integer categoryId){
+        try {
+            // get email by category owner id
+            List<LecturerMapping> lecturerWithSubject = lecturerMappingRepository.getLecturerMappingByCategory(categoryId);
+
+            // initial value
+            List<User> users = new ArrayList<>();
+
+            // add user with email lecturer mapping
+            lecturerWithSubject.forEach(l -> {
+                users.add(userRepository.findByEmail(l.getEmail()));
+            });
+
+            // sort user by name
+            List<User> finalUsers = new ArrayList<>(users).stream()
+                    .sorted(Comparator.comparing(User::getName)
+                            .reversed()).collect(Collectors.toList());
+            return listMapper.mapList(finalUsers, ShowLecturerDto.class, modelMapper);
+        } catch (NullPointerException ex) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "this category id does not exist");
+        }
     }
 
     public User saveUser(UserModifyDto newUser) {
@@ -158,7 +186,7 @@ public class UserService implements UserDetailsService {
         User user = userRepository.findById(id[0]).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "this email not found. please created"));
 
         // keep in roles and user details
-        roles = Arrays.asList(new SimpleGrantedAuthority(String.valueOf(user.getRole())));
+        roles = List.of(new SimpleGrantedAuthority(String.valueOf(user.getRole())));
         return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), roles);
     }
 
