@@ -49,9 +49,9 @@ public class EventService {
     @Autowired
     private FileService fileService;
 
-    private final List<SimpleGrantedAuthority> student = Arrays.asList(new SimpleGrantedAuthority(String.valueOf("ROLE_"+ Role.student)));
+    private final List<SimpleGrantedAuthority> student = List.of(new SimpleGrantedAuthority(String.valueOf("ROLE_"+ Role.student)));
 
-    private final List<SimpleGrantedAuthority> lecturer = Arrays.asList(new SimpleGrantedAuthority(String.valueOf("ROLE_"+ Role.lecturer)));
+    private final List<SimpleGrantedAuthority> lecturer = List.of(new SimpleGrantedAuthority(String.valueOf("ROLE_"+ Role.lecturer)));
 
     public List<EventDto> getEventAll(String params, Authentication authentication) {
         // use List event sorted by datetime parameter by descendant order
@@ -64,7 +64,7 @@ public class EventService {
 
             // call lecturer mapping for filter lecturer email by authentication email
             List<LecturerMapping> lecturerMappingList = lecturerMappingRepository.findAll().stream().filter(
-                    lm -> authentication.getName().equals(lm.getUser().getEmail())).toList();
+                    lm -> authentication.getName().equals(lm.getEmail())).toList();
 
             // clear all item on categories
             categoryList.clear();
@@ -104,10 +104,10 @@ public class EventService {
             List<LecturerMapping> lecturerMapping = lecturerMappingRepository
                     .getLecturerMappingByCategory(event.getEventCategory().getId())
                     .stream().filter(lm ->
-                            authentication.getName().equals(lm.getUser().getEmail())).toList();
+                            authentication.getName().equals(lm.getEmail())).toList();
 
             // check if user email not equal owner clinic email sent error 403
-            if (lecturerMapping.isEmpty() || !authentication.getName().equals(lecturerMapping.get(0).getUser().getEmail())) {
+            if (lecturerMapping.isEmpty() || !authentication.getName().equals(lecturerMapping.get(0).getEmail())) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN, authentication.getName() + " can see event in owner categories/clinics only");
             }
         }

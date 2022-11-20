@@ -20,7 +20,6 @@ import sit.int221.at3.repositories.EventRepository;
 import sit.int221.at3.repositories.LecturerMappingRepository;
 import sit.int221.at3.utils.ListMapper;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -40,9 +39,9 @@ public class CategoryService {
     @Autowired
     private ListMapper listMapper;
 
-    private List<SimpleGrantedAuthority> lecturer = Arrays.asList(new SimpleGrantedAuthority(String.valueOf("ROLE_"+ Role.lecturer)));
+    private final List<SimpleGrantedAuthority> lecturer = List.of(new SimpleGrantedAuthority(String.valueOf("ROLE_" + Role.lecturer)));
 
-    private List<SimpleGrantedAuthority> student = Arrays.asList(new SimpleGrantedAuthority(String.valueOf("ROLE_"+ Role.student)));
+    private final List<SimpleGrantedAuthority> student = List.of(new SimpleGrantedAuthority(String.valueOf("ROLE_" + Role.student)));
 
     public List<CategoryDto> getCategoryAll(String param, Authentication authentication){
         List<Category> categoryList = categoryRepository.findAll(Sort.by(param).descending());
@@ -50,7 +49,7 @@ public class CategoryService {
         if (lecturer.equals(authentication.getAuthorities())) {
             // call lecturer mapping for filter lecturer email by authentication email
             List<LecturerMapping> lecturerMappingList = lecturerMappingRepository.findAll().stream().filter(
-                    lm -> authentication.getName().equals(lm.getUser().getEmail())).toList();
+                    lm -> authentication.getName().equals(lm.getEmail())).toList();
 
             // clear all item on categories
             categoryList.clear();
@@ -166,10 +165,10 @@ public class CategoryService {
             List<LecturerMapping> lecturerMapping = lecturerMappingRepository
                     .getLecturerMappingByCategory(id)
                     .stream().filter(lm ->
-                            authentication.getName().equals(lm.getUser().getEmail())).toList();
+                            authentication.getName().equals(lm.getEmail())).toList();
 
             // check if user email not equal owner clinic email sent error 403
-            if (lecturerMapping.isEmpty() || !authentication.getName().equals(lecturerMapping.get(0).getUser().getEmail())) {
+            if (lecturerMapping.isEmpty() || !authentication.getName().equals(lecturerMapping.get(0).getEmail())) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN, authentication.getName() + errormassage);
             }
         }

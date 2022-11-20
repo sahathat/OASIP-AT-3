@@ -11,22 +11,27 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import sit.int221.at3.dtos.lecturerMapping.ShowLecturerDto;
 import sit.int221.at3.dtos.user.UserDto;
 import sit.int221.at3.dtos.user.UserModifyDto;
-import sit.int221.at3.entities.ConfirmUser;
-import sit.int221.at3.entities.Role;
-import sit.int221.at3.entities.User;
+import sit.int221.at3.entities.*;
+import sit.int221.at3.repositories.LecturerMappingRepository;
 import sit.int221.at3.repositories.UserRepository;
 import sit.int221.at3.utils.ListMapper;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService implements UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private LecturerMappingRepository lecturerMappingRepository;
 
     @Autowired
     private ConfirmUserService confirmUserService;
@@ -49,6 +54,30 @@ public class UserService implements UserDetailsService {
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, id + " is not exist please find new id if exist.")
         );
         return modelMapper.map(users, UserDto.class);
+    }
+
+    public List<ShowLecturerDto> getLecturerByCategoryOwner(Integer categoryId){
+        // get email by category owner id
+        List<LecturerMapping> lecturerWithSubject = lecturerMappingRepository.getLecturerMappingByCategory(categoryId);
+
+        // check if category owner not found
+        if (lecturerWithSubject.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "this category id does not exist");
+        }
+
+        // initial value
+        List<User> users = new ArrayList<>();
+
+        // add user with email lecturer mapping
+        lecturerWithSubject.forEach(l -> {
+            users.add(userRepository.findByEmail(l.getEmail()));
+        });
+
+        // sort user by name ascending order
+        List<User> finalUsers = new ArrayList<>(users).stream()
+                .sorted(Comparator.comparing(User::getName)).collect(Collectors.toList());
+        return listMapper.mapList(finalUsers, ShowLecturerDto.class, modelMapper);
+
     }
 
     public User saveUser(UserModifyDto newUser) {
@@ -102,6 +131,24 @@ public class UserService implements UserDetailsService {
         // cannot delete yourself
         if(authentication.getName().equals(user.getEmail())){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN,"admin cannot delete yourself");
+        }
+
+        // case lecturer have 1 own category
+        if(user.getRole() == Role.lecturer){
+            List<LecturerMapping> mapping = lecturerMappingRepository.getLecturerMappingByEmail(user.getEmail());
+
+            // check all category if it has 1 owner
+            mapping.forEach(lm -> {
+                List<LecturerMapping> mappingListByCategory = lecturerMappingRepository.getLecturerMappingByCategory(lm.getCategory().getId());
+                if (mappingListByCategory.size() <= 1) {
+                    throw new ResponseStatusException(HttpStatus.FORBIDDEN, "lecturer at least 1 category owner can not delete");
+                }
+            });
+
+            // delete all this email in mapping
+            mapping.forEach(ml -> {
+                lecturerMappingRepository.deleteById(ml.getMappingId());
+            });
         }
 
         // delete confirm user and user
@@ -158,7 +205,7 @@ public class UserService implements UserDetailsService {
         User user = userRepository.findById(id[0]).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "this email not found. please created"));
 
         // keep in roles and user details
-        roles = Arrays.asList(new SimpleGrantedAuthority(String.valueOf(user.getRole())));
+        roles = List.of(new SimpleGrantedAuthority(String.valueOf(user.getRole())));
         return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), roles);
     }
 

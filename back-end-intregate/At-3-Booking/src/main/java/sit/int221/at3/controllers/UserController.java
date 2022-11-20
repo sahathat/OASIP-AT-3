@@ -19,7 +19,7 @@ import java.util.List;
 @RequestMapping("/api/userList")
 public class UserController {
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @GetMapping()
     public List<UserDto> getUserAll(
