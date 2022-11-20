@@ -77,7 +77,7 @@ public class ConfirmUserService {
     public void sendMailForConfirm(String email,String token) {
         // email sending verify
         String to = email;
-        String link = "https://intproj21.sit.kmutt.ac.th/at3/api/users/confirm?token=" + token;
+        String link = "http://localhost:3000/api/users/confirm?token=" + token;
         String subject = "[OASIP] Confirm your email";
         String htmlBody = "<h2>Congratulation: verify email for sign up</h2>" +
                 "<p>please click <a href=" + link + ">This link</a></p>";
@@ -93,7 +93,7 @@ public class ConfirmUserService {
     public void sendMailForResetPassword(String email,String token) {
         // email sending verify
         String to = email;
-        String link = "https://intproj21.sit.kmutt.ac.th/at3/api/users/confirm_reset_password?token=" + token;
+        String link = "http://localhost:3000/api/users/confirm_reset_password?token=" + token;
         String subject = "[OASIP] Confirm your email";
         String htmlBody = "<h2>Congratulation: verify email for reset password</h2>" +
                 "<p>please click <a href=" + link + ">This link</a></p>";
