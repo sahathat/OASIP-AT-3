@@ -57,26 +57,27 @@ public class UserService implements UserDetailsService {
     }
 
     public List<ShowLecturerDto> getLecturerByCategoryOwner(Integer categoryId){
-        try {
-            // get email by category owner id
-            List<LecturerMapping> lecturerWithSubject = lecturerMappingRepository.getLecturerMappingByCategory(categoryId);
+        // get email by category owner id
+        List<LecturerMapping> lecturerWithSubject = lecturerMappingRepository.getLecturerMappingByCategory(categoryId);
 
-            // initial value
-            List<User> users = new ArrayList<>();
-
-            // add user with email lecturer mapping
-            lecturerWithSubject.forEach(l -> {
-                users.add(userRepository.findByEmail(l.getEmail()));
-            });
-
-            // sort user by name
-            List<User> finalUsers = new ArrayList<>(users).stream()
-                    .sorted(Comparator.comparing(User::getName)
-                            .reversed()).collect(Collectors.toList());
-            return listMapper.mapList(finalUsers, ShowLecturerDto.class, modelMapper);
-        } catch (NullPointerException ex) {
+        // check if category owner not found
+        if (lecturerWithSubject.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "this category id does not exist");
         }
+
+        // initial value
+        List<User> users = new ArrayList<>();
+
+        // add user with email lecturer mapping
+        lecturerWithSubject.forEach(l -> {
+            users.add(userRepository.findByEmail(l.getEmail()));
+        });
+
+        // sort user by name ascending order
+        List<User> finalUsers = new ArrayList<>(users).stream()
+                .sorted(Comparator.comparing(User::getName)).collect(Collectors.toList());
+        return listMapper.mapList(finalUsers, ShowLecturerDto.class, modelMapper);
+
     }
 
     public User saveUser(UserModifyDto newUser) {
@@ -130,6 +131,24 @@ public class UserService implements UserDetailsService {
         // cannot delete yourself
         if(authentication.getName().equals(user.getEmail())){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN,"admin cannot delete yourself");
+        }
+
+        // case lecturer have 1 own category
+        if(user.getRole() == Role.lecturer){
+            List<LecturerMapping> mapping = lecturerMappingRepository.getLecturerMappingByEmail(user.getEmail());
+
+            // check all category if it has 1 owner
+            mapping.forEach(lm -> {
+                List<LecturerMapping> mappingListByCategory = lecturerMappingRepository.getLecturerMappingByCategory(lm.getCategory().getId());
+                if (mappingListByCategory.size() <= 1) {
+                    throw new ResponseStatusException(HttpStatus.FORBIDDEN, "lecturer at least 1 category owner can not delete");
+                }
+            });
+
+            // delete all this email in mapping
+            mapping.forEach(ml -> {
+                lecturerMappingRepository.deleteById(ml.getMappingId());
+            });
         }
 
         // delete confirm user and user
