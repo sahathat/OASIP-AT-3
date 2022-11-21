@@ -193,7 +193,7 @@ const checkMatchTODB = async () => {
                 <p class="fs-6">Are you sure to sign in ?</p>
               </div>
               <div class="modal-footer" style="padding-bottom: 5px;padding-top: 5px;">
-                <button class="btn btn-primary btn-sm" type="button" @click="checkMatchTODB()">Yes</button>
+                <button class="btn btn-primary btn-sm" type="button" @click="checkMatchTODB()" data-bs-dismiss="modal" data-bs-target="#">Yes</button>
                 <button class="btn btn-danger btn-sm" type="button" data-bs-dismiss="modal" data-bs-target="#">Cancel</button>
               </div>
           </div>

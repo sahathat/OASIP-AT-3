@@ -356,8 +356,8 @@ const editSuccess=ref(undefined)
 
 const submitt = async () => {
     edit()
-    goUserList()
-    getUser()
+    await getUser()
+    await getDetail()
 };
 
 
@@ -383,222 +383,151 @@ const calTime = (hour, minute, addTime) => {
 </script>
 
 <template>
-  <div
-    class="showUp w-3/5 p-5 pb-7 mx-auto mt-10 bg-white rounded-md shadow-xl"
-  >
-    <!-- no data -->
-    <div v-if="isNotNull == false">
-      <h2 class="text-center mb-1 font-bold text-xl">No data</h2>
-      <div class="w-fit m-auto">
-        <button @click="goUserList" class="custom-btn back block">Go Back</button>
+<body>
+    <div class="container py-4 py-xl-5">
+        <div class="row mb-5">
+            <div class="col-md-8 col-xl-6 text-center mx-auto">
+                <h2>User Information<br></h2>
+            </div>
+        </div>
+        
+        <!-- no have data -->
+        <div v-if="isNotNull == false" class="row row-cols-md-2 row-cols-xl-3 justify-content-center" style="margin-top: -40px;">
+            <div class="col-lg-6">
+                <section class="py-4 py-xl-5">
+                    <div class="container">
+                        <div class="bg-light rounded border-0 border-light d-flex flex-column justify-content-between flex-lg-row p-4 p-md-5">
+                            <div class="pb-2 pb-lg-1">
+                                <h2 class="fw-bold mb-2">No data of<br> User id : {{id}}</h2>
+                                <p class="mb-0"></p>
+                            </div>
+                            <div class="align-items-center my-2">
+                              <a class="btn btn-primary fs-5 m-auto py-2 px-4" role="button" @click="goUserList"> Back </a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <!-- have data -->
+        <div v-else-if="isNotNull == true" class="row row-cols-md-2 row-cols-xl-3 justify-content-center" style="margin-top: -40px;">
+            <div class="col-md-7 col-lg-7">
+                <div class="card"><img class="card-img-top w-100 d-block fit-cover" style="height: 200px;" src="../assets/maewzomUser.jpg" width="454" height="200">
+                    <div class="card-body flex-fill p-4">
+                        <p class="text-end text-primary card-text mb-0">ID : {{id}}</p>
+                        <h4 class="card-title" style="margin-top: 15px;">Username : {{ name }}</h4>
+                        <div class="flex-fill" style="margin-top: 5px;">
+                          <strong>E-mail :</strong>
+                          <span style="margin-left: 10px;">{{ email }}</span>
+                        </div>
+
+                        <div class="flex-fill" style="margin-top: 5px;">
+                          <strong>Role:</strong>
+                          <span style="margin-left: 10px;">{{ role }}</span>
+                        </div>
+                        
+                        <div style="padding-top: 0px;margin-top: 25px;">
+                          <strong>Create On :&nbsp;</strong>
+                          <span style="margin-left: 15px;">Date : {{ formatDate(createdOn) }} , Time : {{ formatTime(createdOn) }}</span>
+                        </div>
+                        <div style="padding-top: 0px;margin-top: 10px;">
+                          <strong>Update on :</strong>
+                          <span style="margin-left: 15px;">Date : {{ formatDate(updatedOn) }} , Time : {{ formatTime(updatedOn) }}</span>
+                        </div>
+
+                        <div class="d-sm-flex d-md-flex d-lg-flex flex-fill justify-content-center justify-content-sm-end justify-content-lg-center" style="margin-top: 20px;margin-bottom: 0px;">
+                          <button @click="editInfo" class="btn btn-warning" type="button" style="margin-right: 10px;" data-bs-target="#editUser" data-bs-toggle="modal">Edit</button>
+                          <button class="btn btn-danger" type="button" style="margin-right: 10px;"  data-bs-target="#confirmToRemove" data-bs-toggle="modal">Remove</button>
+                          <button class="btn btn-secondary" type="button" @click="goUserList">Back</button></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- to edit user profile -->
+    <div class="modal fade" role="dialog" tabindex="-1" id="editUser">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header" style="background: #f0ac72;">
+                        <h4 class="modal-title">Edit User Information:&nbsp;</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container position-relative" style="padding-left: 0px;padding-right: 0px;">
+                            <div class="row text-start d-flex justify-content-center align-items-center" style="margin-left: 0px;padding-right: 0px;margin-right: 0px;">
+                                <div class="col-lg-12">
+                                    <div>
+                                      <!-- edit username -->
+                                        <div style="margin-top: 10px;margin-bottom: 10px;">
+                                          <label class="form-label fw-semibold">Username :&nbsp;</label>
+                                          <input v-model="editName" type="text" placeholder="name" name="name" class="form-control">
+                                        </div>
+
+                                        <!-- edit email -->
+                                        <div style="margin-top: 10px;margin-bottom: 10px;">
+                                          <label class="form-label fw-semibold">Email :&nbsp;</label>
+                                          <input v-model="editEmail" type="text" placeholder="email" name="email" class="form-control">
+                                        </div>
+
+                                        <!-- edit role -->
+                                        <div style="margin-top: 10px;margin-bottom: 10px;">
+                                          <label class="form-label fw-semibold">Role :&nbsp;</label>
+                                          <select v-model="editRole" class="form-control">
+                                                <optgroup label="Select role">
+                                                    <option v-for="(eachRole, index) in roles" :key="index" :value="eachRole"> {{ eachRole }} </option>
+                                                </optgroup>
+                                            </select></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button class="btn btn-light" type="button" data-bs-dismiss="modal">Cancel</button>
+                      <button class="btn btn-primary" type="button" style="background: #20c997;" data-bs-target="#confirmToEdit" data-bs-toggle="modal">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <!-- for confirm to remove event  -->
+    <div class="modal fade" role="dialog" tabindex="-1" id="confirmToRemove">
+      <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+          <div class="modal-content">
+              <div class="modal-header text-bg-warning" style="padding-top: 10px;padding-bottom: 10px;padding-left: 20px;padding-right: 20px;">
+                <h4 class="modal-title fs-3">Are you sure ?</h4><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <p class="fs-6">Are you sure to remove this user?</p>
+              </div>
+              <div class="modal-footer" style="padding-bottom: 5px;padding-top: 5px;">
+                <button class="btn btn-primary btn-sm" type="button" @click="removeUser" data-bs-dismiss="modal" data-bs-target="#">Yes</button>
+                <button class="btn btn-danger btn-sm" type="button" data-bs-dismiss="modal" data-bs-target="#">Cancel</button>
+              </div>
+          </div>
       </div>
     </div>
 
-    <!-- have data -->
-    <div
-      v-else-if="isNotNull == true"
-      class="p-4 border-double border-4 border-neutral-300 max-w-screen-lg"
-    >
-      <div class="mx-2 w-full">
-        <h1 class="text-center mb-1 font-bold text-2xl">User Information</h1>
-        <h3 class="text-center">----------------</h3>
-      </div>
-
-      <div class="flex mx-auto my-4 w-full">
-        <div class="px-2 w-4/5 inline-flex my-5 mx-auto">
-        <!-- Name -->
-          <div class="pr-2 font-semibold flex m-auto text-gray-400"> Username :</div>
-          <div
-            v-if="isEdit == false"
-            class="overflow-hidden overflow-x-scroll border-2 rounded-md p-1.5 pt-2.5 font-normal bg-white flex w-2/5"
-          >
-            {{ name }}
+    <!-- for confirm to edit event  -->
+    <div class="modal fade" role="dialog" tabindex="-1" id="confirmToEdit">
+      <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+          <div class="modal-content">
+              <div class="modal-header text-bg-warning" style="padding-top: 10px;padding-bottom: 10px;padding-left: 20px;padding-right: 20px;">
+                <h4 class="modal-title fs-3">Are you sure ?</h4><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <p class="fs-6">Are you sure to edit this user?</p>
+              </div>
+              <div class="modal-footer" style="padding-bottom: 5px;padding-top: 5px;">
+                <button class="btn btn-primary btn-sm" type="button" @click="submitt" data-bs-dismiss="modal" data-bs-target="#">Yes</button>
+                <button class="btn btn-danger btn-sm" type="button" data-bs-dismiss="modal" data-bs-target="#">Cancel</button>
+              </div>
           </div>
-          <div
-            v-if="isEdit == true"
-            class="edit-color showUp border-2 rounded-md p-1.5 pt-2.5 font-normal bg-white flex w-2/5 h-12"
-          >
-            <input type="text" class="w-full h-full" v-model="editName" />
-          </div>
-
-          <!-- role -->
-          <div class="pr-2 font-semibold flex m-auto text-gray-400"> Role :</div>
-          <div
-            v-if="isEdit == false"
-            class="overflow-hidden overflow-x-scroll border-2 rounded-md p-1.5 pt-2.5 justify-center font-normal m-auto -ml-2 bg-amber-400 flex w-1/4 h-12"
-          >
-            {{ role }}
-          </div>
-          <div
-            v-if="isEdit == true"
-            class="edit-color showUp border-2 rounded-md p-1.5 text-center font-normal bg-white inline-block w-1/4 h-12"
-          >
-            <select v-model="editRole" class="p-0.5 w-9/10 h-8 w-full text-center">
-                  <option value disabled selected>Select Role</option>
-                  <option
-                    v-for="(eachRole, index) in roles"
-                    :key="index"
-                    :value="eachRole"
-                  >
-                    {{ eachRole }}
-                  </option>
-            </select>
-          </div>
-        </div>
-      </div>
-          
-      
-      <!-- E-mail -->
-        <div class="w-4/5 inline-flex">
-          <div class="pr-2 font-semibold flex my-auto ml-28 mr-4 w-1/5 text-gray-400">
-            E-mail :
-          </div>
-          <div
-            v-if="isEdit == false"
-            class="overflow-hidden overflow-x-scroll border-2 rounded-md p-1.5 pt-2.5 font-normal bg-white flex w-full h-12 "
-          >
-            {{ email }}
-          </div>
-          <div
-            v-if="isEdit == true"
-            class="edit-color showUp overflow-hidden overflow-x-scroll border-2 rounded-md p-1.5 pt-2.5 font-normal bg-white flex w-full h-12 "
-          >
-            <input type="text" class="w-full h-full" v-model="editEmail" />
-          </div>
-        </div>
-
-        <div class="text-center mt-5"><p> --------------------------------------------------------------- </p></div>
-
-      <!-- created on -->
-      <div class="inline-block">
-      <div class="flex mt-5 mb-3 w-full">
-        <div class="pr-2 flex text-sm my-auto ml-24 mr-4 text-gray-400">
-          <div class="p-3 inline-block m-auto text-gray-400">
-            Created on :
-          </div>
-          <div
-            class="border-2 text-black rounded-md p-1.5 font-normal bg-white inline-block text-center w-60 h-10"
-          >
-            <!-- {{ createdOn }} -->
-            Date : {{ formatDate(createdOn) }} , Time : {{ formatTime(createdOn) }}
-          </div>
-        </div>
-      </div>
-
-      <!-- updated on -->
-      <div 
-        class="flex my-3 w-full"
-        v-if="updatedOn !== createdOn"
-        >
-        <div class="pr-2 text-sm flex my-auto ml-24 mr-4 text-gray-400">
-          <div class="p-3 inline-block m-auto text-gray-400">
-            Updated on :
-          </div>
-          <div
-            class="border-2 text-black rounded-md p-1.5 font-normal bg-white inline-block text-center w-60 h-10"
-          >
-            Date : {{ formatDate(updatedOn) }} , Time : {{ formatTime(updatedOn) }}
-          </div>
-        </div>
-      </div>
-      </div>
-
-
-       <!-- button not edit mode -->
-        <div v-if="isEdit == false" class="showUp m-auto w-fit">
-          <button @click="editInfo" class="m-4 custom-btn edit">Edit</button>
-          <a  href="#remove" class="m-4 custom-btn remove">
-            Remove
-          </a>
-          <button @click="goUserList"  class="m-4 custom-btn back">Go Back</button>
-        </div>
-       <!-- button edit mode -->
-        <div v-if="isEdit == true" class="showUp m-auto w-fit">
-          <button @click="cancel" class="m-4 custom-btn remove">
-            Cancel
-          </button>
-          <a href="#submit" class="m-4 custom-btn edit">Submit</a>
-        </div>
       </div>
     </div>
-
-
-  <!-- for alert -->
-  <div class="alert-area">
-    <div v-if="isPast == true" class="alert warning text-sm">
-      <span class="closebtn" @click="isPast = undefined">x</span>
-      <strong class="block">Error!</strong> Can't select past date and time.
-    </div>
-
-    <div v-if="isInput == true" class="alert  text-sm">
-      <span class="closebtn" @click="isInput = undefined">x</span>
-      <strong class="block">Error!</strong> Please input information.
-    </div>
-    
-    <div v-if="
-          getStatus == false ||
-          userList.length == 0
-        " class="alert warning text-sm">
-          <strong class="block">Warning!</strong> A system error has occurred,please try again.
-     </div>
-
-       <div v-if="isOverlap== true" class="alert warning text-sm">
-          <span class="closebtn" @click="isOverlap = undefined">x</span>
-          <strong class="block">Warning!</strong> {{ betweenDateWarning }}
-       </div>
-
-       <div v-if="editSuccess == true" class="alert success text-sm">
-          <span class="closebtn" @click="editSuccess = false">x</span>
-          <strong class="block">Success!</strong> Edit data success.
-        </div>
-
-  </div>
-
-         <!-- for submit  -->
-  <div id="submit" class="overlay">
-    <div class="popup2 h-96">
-      <h2 class="mb-5 text-xl font-bold bg-white mx-auto w-fit">
-        Are you sure ?
-      </h2>
-
-      <div class="option flex m-auto w-full mt-10">
-        <a
-          @click="submitt"
-          href="#"
-          class="w-full text-center p-2 px-2 bg-gray-200 hover:bg-green-500 font-bold hover:text-white"
-          >Yes</a
-        >
-        <a
-          href="#"
-          class="w-full text-center p-2 px-2 bg-gray-200 hover:bg-rose-500 font-bold hover:text-white"
-          >No</a
-        >
-      </div>
-    </div>
-  </div>
-
-  <!-- for remove  -->
-  <div id="remove" class="overlay">
-    <div class="popup2 h-96">
-      <h2 class="mb-5 text-xl font-bold bg-white mx-auto w-fit">
-        Are you sure(remove) ?
-      </h2>
-
-      <div class="option flex m-auto w-full mt-10">
-        <a
-          @click="removeUser"
-          href="#"
-          class="w-full text-center p-2 px-2 bg-gray-200 hover:bg-green-500 font-bold hover:text-white"
-          >Yes</a
-        >
-        <a
-          href="#"
-          class="w-full text-center p-2 px-2 bg-gray-200 hover:bg-rose-500 font-bold hover:text-white"
-          >No</a
-        >
-      </div>
-    </div>
-  </div>
+</body>
 </template>
 
 <style scoped>

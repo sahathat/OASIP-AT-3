@@ -561,7 +561,28 @@ const calTime = (hour, minute, addTime) => {
                 <h2>Reservation Detail</h2>
             </div>
         </div>
-        <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 justify-content-center" style="margin-top: -40px;">
+
+        <!-- no have data -->
+        <div v-if="isNotNull == false" class="row row-cols-md-2 row-cols-xl-3 justify-content-center" style="margin-top: -40px;">
+            <div class="col-lg-6">
+              <section class="py-4 py-xl-5">
+                  <div class="container">
+                    <div class="bg-light rounded border-0 border-light d-flex flex-column justify-content-between flex-lg-row p-4 p-md-5">
+                      <div class="pb-2 pb-lg-1">
+                        <h2 class="fw-bold mb-2">No data of<br> Reservation id : {{id}}</h2>
+                        <p class="mb-0"></p>
+                      </div>
+                      <div class="align-items-center my-2">
+                        <a class="btn btn-primary fs-5 m-auto py-2 px-4" role="button" @click="goReservationList"> Back </a>
+                      </div>
+                    </div>
+                  </div>
+              </section>
+            </div>
+        </div>
+
+        <!-- have data -->
+        <div v-else-if="isNotNull == true" class="row row-cols-1 row-cols-md-2 row-cols-xl-3 justify-content-center" style="margin-top: -40px;">
             <div class="col-md-7 col-lg-8 col-xl-5">
                 <div class="card"><img class="card-img-top w-100 d-block fit-cover" style="height: 200px;" src="../assets/maewzom.png">
 
@@ -689,7 +710,7 @@ const calTime = (hour, minute, addTime) => {
                 <p class="fs-6">Are you sure to remove this reservation?</p>
               </div>
               <div class="modal-footer" style="padding-bottom: 5px;padding-top: 5px;">
-                <button class="btn btn-primary btn-sm" type="button" @click="removeInfo">Yes</button>
+                <button class="btn btn-primary btn-sm" type="button" @click="removeInfo" data-bs-dismiss="modal" data-bs-target="#">Yes</button>
                 <button class="btn btn-danger btn-sm" type="button" data-bs-dismiss="modal" data-bs-target="#">Cancel</button>
               </div>
           </div>
@@ -707,7 +728,7 @@ const calTime = (hour, minute, addTime) => {
                 <p class="fs-6">Are you sure to edit this reservation?</p>
               </div>
               <div class="modal-footer" style="padding-bottom: 5px;padding-top: 5px;">
-                <button class="btn btn-primary btn-sm" type="button" @click="submitt">Yes</button>
+                <button class="btn btn-primary btn-sm" type="button" @click="submitt" data-bs-dismiss="modal" data-bs-target="#">Yes</button>
                 <button class="btn btn-danger btn-sm" type="button" data-bs-dismiss="modal" data-bs-target="#">Cancel</button>
               </div>
           </div>
@@ -715,64 +736,6 @@ const calTime = (hour, minute, addTime) => {
     </div>
 
 <!-- ----------------------------------------------------- -->
-  
-
-       <!-- Attachment File -->
-       <div class="px-2 font-semibold w-fit text-gray-400" v-if="eventFile!==undefined && isEdit == false">
-              Attachment File :
-              <div class="text-black block px-3 py-2 placeholder-gray-300 border resize-none rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300">
-                <div class="grid grid-cols-6 gap-4 content-center "> 
-                  <span class="col-span-5 self-center text-sm"> {{ eventFile }} </span>
-                  <a :href="fileUrl" :download="id"><box-icon name='cloud-download' size='md' border='circle' animation='tada-hover' class="" ></box-icon></a>
-                  <!-- <a :href="fileUrl" :download="fileName"><box-icon name='cloud-download' size='md' border='circle' animation='tada-hover' class="" ></box-icon></a> -->
-                </div>
-              </div>
-        </div>
-
-        <div class="w-2/5 block" v-if="isEdit == true">
-            <label for="addFile" class="font-semibold w-fit text-gray-400"
-              >Add file
-              <span
-                class="text-gray-300 text-sm"
-                >The file size cannot be larger than 10 MB.
-              </span>
-            </label>
-
-            <div 
-              class="text-black block px-3 py-2 placeholder-gray-300 border resize-none rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300"
-              v-if="editFileName!==undefined">
-                <div class="grid grid-cols-6 gap-4 content-center "> 
-                  <span class="col-span-4 self-center text-sm"> {{ editFileName }} </span>
-                  <button @click="openChangeFile"> Change file </button>
-                  <button @click="deleteFile"> Delete file </button>
-                </div>
-            </div>
-            <!-- <input type="file" name="file"> -->
-            <input v-if="changeFile==true || editFileName==undefined"
-                name="file"
-                type="file" 
-                ref="pond" 
-                @change="editFileChanged($event)" 
-                label-idle="Drop files here or <span class='filepond--label-action'>Browse</span>" 
-                class="my-2">
-          </div>
-
-       <!-- button not edit mode -->
-        <div v-if="isEdit == false && userRole!=='lecturer'" class="showUp m-auto w-fit">
-          <button @click="editInfo" class="m-4 custom-btn edit">Edit</button>
-          <a  href="#remove" class="m-4 custom-btn remove">
-            Remove
-          </a>
-          <button @click="goReservation"  class="m-4 custom-btn back">Go Back</button>
-        </div>
-       <!-- button edit mode -->
-        <div v-if="isEdit == true" class="showUp m-auto w-fit">
-          <button @click="cancel" class="m-4 custom-btn remove">
-            Cancel
-          </button>
-          <a href="#submit" class="m-4 custom-btn edit">Submit</a>
-        </div>
-
 
   <!-- for alert -->
   <div class="alert-area">

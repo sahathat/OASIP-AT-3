@@ -140,55 +140,31 @@ setInterval(async () => {
             <a v-if="haveKey==false || userRole=='guest'" class="btn btn-primary ms-md-2" role="button" href="#" @click="goLogin"> Sign in </a>
 
             <!-- sign out -->
-            <a v-if="haveKey==true && userRole!=='guest'" class="btn btn-danger ms-md-2 ml-2 w-25" role="button" href="#signout">Sign out</a>
+            <a v-if="haveKey==true && userRole!=='guest'" class="btn btn-danger ms-md-2 ml-2 w-25" role="button" data-bs-target="#signout" data-bs-toggle="modal">Sign out</a>
         </div>
     </nav>
     
     <div class="flex object-cover ">
         <router-view></router-view> 
     </div>
- 
- <!-- ------------------------------------------- -->
-            <!-- for confirm signout  -->
-            <div id="signout" class="overlay">
-                <div class="popup2 h-96">
-                    <h2 class="mb-5 text-xl font-bold bg-white mx-auto w-fit">
-                    Are you sure (Sign out) ?
-                    </h2>
-
-                    <div class="option flex m-auto w-full mt-10">
-                        <a
-                            @click="signOut"
-                            href="#"
-                            class="w-full text-center p-2 px-2 bg-gray-200 hover:bg-green-500 font-bold hover:text-white"
-                            >Yes
-                        </a>
-                        <a
-                            href="#"
-                            class="w-full text-center p-2 px-2 bg-gray-200 hover:bg-rose-500 font-bold hover:text-white"
-                            >No
-                        </a>
-                    </div>
-                </div>
-            </div>  
-
-            <div class="modal fade" role="dialog" tabindex="-1" id="modal-1">
-                <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header text-bg-warning" style="padding-top: 10px;padding-bottom: 10px;padding-left: 20px;padding-right: 20px;">
-                            <h4 class="modal-title fs-3">Are you sure?</h4>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <p class="fs-6">Are you sure to sign out ?</p>
-                        </div>
-                        <div class="modal-footer" style="padding-bottom: 5px;padding-top: 5px;">
-                            <a href="#"><button class="btn btn-danger btn-sm" type="button" data-bs-dismiss="modal" data-bs-target="#modal-1" data-bs-toggle="modal">Cancel</button></a>
-                            <button @click="signOut" class="btn btn-primary btn-sm" type="button" data-bs-target="#modal-1" data-bs-toggle="modal">Yes</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            
+    <!-- for confirm to sign out -->
+    <div class="modal fade" role="dialog" tabindex="-1" id="signout">
+      <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+          <div class="modal-content">
+              <div class="modal-header text-bg-warning" style="padding-top: 10px;padding-bottom: 10px;padding-left: 20px;padding-right: 20px;">
+                <h4 class="modal-title fs-3">Are you sure ?</h4><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <p class="fs-6">Are you sure to sign out ?</p>
+              </div>
+              <div class="modal-footer" style="padding-bottom: 5px;padding-top: 5px;">
+                <button class="btn btn-primary btn-sm" type="button" @click="signOut()" data-bs-dismiss="modal" data-bs-target="#">Yes</button>
+                <button class="btn btn-danger btn-sm" type="button" data-bs-dismiss="modal" data-bs-target="#">Cancel</button>
+              </div>
+          </div>
+      </div>
+    </div>
  </body>
 </template>
 

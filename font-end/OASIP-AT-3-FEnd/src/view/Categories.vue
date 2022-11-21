@@ -252,9 +252,27 @@ const submitt = async () => {
 <template>
 <body>
   <h1 class="text-center" style="margin-top: 30px;margin-bottom: 30px;">Category Detail</h1>
+    <!-- no have data -->
+    <div v-if="isNotNull == false" class="row row-cols-md-2 row-cols-xl-3 justify-content-center" style="margin-top: -40px;">
+      <div class="col-lg-6">
+        <section class="py-4 py-xl-5">
+          <div class="container">
+            <div class="bg-light rounded border-0 border-light d-flex flex-column justify-content-between flex-lg-row p-4 p-md-5">
+                <div class="pb-2 pb-lg-1">
+                    <h2 class="fw-bold mb-2">No data of<br> Category id : {{id}}</h2>
+                    <p class="mb-0"></p>
+                </div>
+              <div class="align-items-center my-2">
+                <a class="btn btn-primary fs-5 m-auto py-2 px-4" role="button" @click="goCategoriesList"> Back </a>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
 
-    <!-- show category detail  -->
-    <div class="w-50 card-group justify-content-center align-items-center align-content-center align-self-center my-auto mx-auto" style="margin-left: 100px;margin-right: 100px;margin-bottom: 20px;margin-top: 20px;">
+    <!-- have data : show category detail  -->
+    <div v-else-if="isNotNull == true" class="w-50 card-group justify-content-center align-items-center align-content-center align-self-center my-auto mx-auto" style="margin-left: 100px;margin-right: 100px;margin-bottom: 20px;margin-top: 20px;">
         <div class="card">
             <img class="card-img-top w-100 d-block" width="554" height="100" src="../assets/consult.png">
             <div class="card-body text-center" style="background: #b0f2ff;">
@@ -328,7 +346,7 @@ const submitt = async () => {
                 <p class="fs-6">Are you sure to edit category details ?</p>
               </div>
               <div class="modal-footer" style="padding-bottom: 5px;padding-top: 5px;">
-                <button class="btn btn-primary btn-sm" type="button" @click="submitt()">Yes</button>
+                <button class="btn btn-primary btn-sm" type="button" @click="submitt()" data-bs-dismiss="modal" data-bs-target="#">Yes</button>
                 <button class="btn btn-danger btn-sm" type="button" data-bs-dismiss="modal" data-bs-target="#">Cancel</button>
               </div>
           </div>

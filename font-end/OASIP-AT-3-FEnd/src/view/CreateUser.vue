@@ -14,7 +14,7 @@ const role = ref("");
 const password = ref("");
 const confirmPassword = ref("");
 
-const cornfirmPasswordLength = 14 ;
+const  confirmPasswordLength = 14 ;
 const passwordLength = 14 ;
 
 const nameLength = 100;
@@ -44,7 +44,7 @@ const signupLink = 'http://localhost:8443/api/users/signup';
 
 
 const userList = ref([]);
-const roles = ['lecturer','student']
+const roles = ['student','lecturer']
 
 const addSuccess = ref(undefined);
 const getStatus = ref(undefined);
@@ -147,7 +147,6 @@ const submitt = async () => {
       validateRoleisNotNull.value = false;
     }
   }
-   goSignin()
   console.log(addSuccess.value)
   console.log(isStatus.value)
 };
@@ -232,257 +231,134 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <div class="showUp container mx-auto">
-    <div
-      class="max-w-screen-md p-5 pb-7 mx-auto mt-10 bg-gray-200 rounded-md shadow-xl"
-    >
-      <div class="text-center">
-        <h1 class="my-3 text-3xl font-semibold text-gray-700"> Sign up</h1>
-        <p class="text-gray-400">
-          Fill up the form below to create your account.
-        </p>
-      </div>
+<body>
+  <section class="position-relative py-4 py-xl-5" style="margin-top: -20px;">
+        <div class="container">
+            <div class="row mb-5">
+                <div class="col-md-8 col-xl-6 text-center mx-auto">
+                    <h2>Sign up</h2>
+                    <p class="w-lg-50">Fill up the form below to create your account.<br></p>
+                </div>
+            </div>
+            <div class="row d-flex justify-content-center" style="margin-top: -45px;">
+                <div class="col-md-8 col-lg-8 col-xl-6 col-xxl-6">
+                    <div class="card mb-5">
+                        <div class="card-body d-flex flex-column align-items-center" style="padding-top: 30px;padding-bottom: 30px;">
+                            <form class="text-start" style="width: 300px;">
 
-            <div>
-        <!-- name -->
-        <div class="my-3 inline-flex px-4 w-full">
-          <div class="inline-block m-auto">
-            <div class="px-3 w-full">
-              <label for="name" class="font-medium m-auto text-sm text-gray-600"
-                >Full Name</label
-              >
-              <span
-                class="text-gray-300 font-medium ml-1 text-sm"
-                :style="[name.length > nameLength ? 'color:red' : '']"
-              >
-                {{ name.length }}/{{ nameLength }} charecters
-              </span>
-            </div>
-            <div>
-              <input
-                v-model="name"
-                type="text"
-                name="name"
-                placeholder="Somchai Jaidee (AT-3)"
-                required
-                :style="[
-                  validateNameisNotNull == false ? 'border-color:red' : '',
-                ]"
-                class="w-80 px-3 py-2 mx-2 placeholder-gray-300 border border-gray-400 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300"
-              />
-            </div>
-          </div>
+                              <!-- name input -->
+                                <div class="mb-3">
+                                  <label class="form-label fw-semibold" style="margin-bottom: -5px;">Full Name :</label>
+                                  <small class="float-end align-self-end"> {{ name.length }}/{{ nameLength }} charecters </small>
+                                  <input v-model="name" class="form-control" type="text" name="name" placeholder="Somchai Jaidee (AT-3)" required="">
+                                </div>
 
-          <!-- role -->
-          <div class="inline-block my-auto mr-9">
-            <div class="px-3 w-full">
-              <label for="category" class="text-sm font-medium text-gray-600"
-                > Role </label
-              >
+                              <!-- email input -->
+                                <div class="mb-3">
+                                  <label class="form-label fw-semibold" style="padding-bottom: 0px;margin-bottom: 0px;">Email :</label>
+                                  <small class="float-end align-self-end"> {{ email.length }}/{{ emailLength }} charecters </small>
+                                  <input v-model="email" class="form-control" type="email" name="email" placeholder="somchai.jai@mail.kmutt.ac.th" required="">
+                                </div>
+
+                                <!-- role input -->
+                                <div class="mb-3">
+                                  <label class="form-label fw-semibold" style="margin-bottom: 0px;">Role :</label>
+                                  <select v-model="role" class="form-select" required="">
+                                        <optgroup label="Select your role">
+                                            <option v-for="(role,index) in roles" :key="index" :value="role"> {{ role }} </option>
+                                        </optgroup>
+                                    </select></div>
+
+                                <!-- password input -->
+                                <div class="mb-3">
+                                  <label class="form-label fw-semibold">Password :</label>
+                                  <small class="float-end align-self-end">{{ password.length }}/{{ passwordLength }} charecters</small>
+                                  
+                                  <!-- hide password -->
+                                  <div v-if="!showPassword" class="d-lg-flex align-items-lg-center">
+                                    <input v-model="password" class="form-control" type="password" placeholder="enter password" style="margin-right: 5px;">
+                                    <svg @click="toggleShow" class="bi bi-eye-slash-fill d-lg-flex justify-content-lg-end" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" style="font-size: 21px;">
+                                        <path d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7.029 7.029 0 0 0 2.79-.588zM5.21 3.088A7.028 7.028 0 0 1 8 2.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474L5.21 3.089z"></path>
+                                        <path d="M5.525 7.646a2.5 2.5 0 0 0 2.829 2.829l-2.83-2.829zm4.95.708-2.829-2.83a2.5 2.5 0 0 1 2.829 2.829zm3.171 6-12-12 .708-.708 12 12-.708.708z"></path>
+                                    </svg>
+                                  </div>
+
+                                  <!-- show password -->
+                                  <div v-else-if="showPassword" class="d-lg-flex align-items-lg-center">
+                                    <input v-model="password" class="form-control" type="text" name="password" placeholder="enter password" style="margin-right: 5px;">
+                                    <svg @click="toggleShow" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-eye-fill d-lg-flex justify-content-lg-end" style="font-size: 21px;">
+                                            <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"></path>
+                                            <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"></path>
+                                    </svg>
+                                  </div>
+                                </div>
+
+                                <!-- confirm password input -->
+                                <div class="mb-3">
+                                  <label class="form-label fw-semibold">Confirm Password :</label>
+                                  <small class="float-end align-self-end">{{ confirmPassword.length }}/{{ confirmPasswordLength }} charecters</small>
+                                    <!-- hide password -->
+                                  <div v-if="!showConfirmPassword" class="d-lg-flex align-items-lg-center">
+                                    <input v-model="confirmPassword" class="form-control" type="password" placeholder="enter password" style="margin-right: 5px;">
+                                    <svg @click="toggleShowConfirm" class="bi bi-eye-slash-fill d-lg-flex justify-content-lg-end" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" style="font-size: 21px;">
+                                        <path d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7.029 7.029 0 0 0 2.79-.588zM5.21 3.088A7.028 7.028 0 0 1 8 2.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474L5.21 3.089z"></path>
+                                        <path d="M5.525 7.646a2.5 2.5 0 0 0 2.829 2.829l-2.83-2.829zm4.95.708-2.829-2.83a2.5 2.5 0 0 1 2.829 2.829zm3.171 6-12-12 .708-.708 12 12-.708.708z"></path>
+                                    </svg>
+                                  </div>
+
+                                  <!-- show password -->
+                                  <div v-else-if="showConfirmPassword" class="d-lg-flex align-items-lg-center">
+                                    <input v-model="confirmPassword" class="form-control" type="text" name="password" placeholder="enter password" style="margin-right: 5px;">
+                                    <svg @click="toggleShowConfirm" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-eye-fill d-lg-flex justify-content-lg-end" style="font-size: 21px;">
+                                            <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"></path>
+                                            <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"></path>
+                                    </svg>
+                                  </div>
+                                </div>
+
+                                <div class="mb-3">
+                                  <button class="btn btn-primary d-block w-100" type="button" style="margin-bottom: 15px;margin-top: 25px;" data-bs-target="#confirm" data-bs-toggle="modal" @click="checkUnique">Submit</button>
+                                  <button class="btn btn-light d-block w-100" type="button" @click="cancel">Cancel</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div>
-              <select
-                id="role"
-                :style="[
-                  validateRoleisNotNull == false ? 'border-color:red' : '',
-                ]"
-                class="text-ellipsis overflow-hidden cursor-pointer w-64 font-medium px-3 py-2 placeholder-gray-300 border border-gray-400 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300"
-                v-model="role"
-              >
-                <option value disabled selected> Select your category </option>
-                <option
-                  v-for="(role,index) in roles"
-                  :key="index"
-                  :value="role"
-                >
-                  {{ role }}
-                </option>
-              </select>
-            </div>
-          </div>
         </div>
 
-        <!-- email -->
-        <div class="my-3 inline-flex px-4 w-full">
-          <div class="inline-block ml-9">
-            <div class="px-3 w-full">
-              <label for="email" class="font-medium text-sm text-gray-600"
-                >Email Address</label
-              >
-              <span
-                class="text-gray-300 font-medium ml-1 text-sm"
-                :style="[email.length > emailLength ? 'color:red' : '']"
-              >
-                {{ email.length }}/{{ emailLength }} charecters
-              </span>
+        <!-- confirm -->
+        <div class="modal fade" role="dialog" tabindex="-1" id="confirm">
+            <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header text-bg-warning">
+                        <h4 class="modal-title fs-3">Are you sure ?</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure to create new user ?</p>
+                    </div>
+                    <div class="modal-footer">
+                      <button class="btn btn-primary" type="button" @click="submitt" data-bs-dismiss="modal" data-bs-target="#" >Yes</button>
+                      <button class="btn btn-danger" type="button" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
             </div>
-            <div>
-              <input
-                v-model="email"
-                type="email"
-                name="email"
-                placeholder="somchai.jai@mail.kmutt.ac.th"
-                required
-                :style="[
-                  validateEmailisNotNull == false ? 'border-color:red' : '',
-                ]"
-                class="w-80 px-3 py-2 mx-2 placeholder-gray-300 border border-gray-400 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300"
-              />
-            </div>
-          </div>
-          </div>
-        
-        <!-- Password -->
-        <div class="mx-7 my-3 inline-flex px-4 w-full">
-          <div class="inline-block w-2/5 m-auto mx-2">
-            <div class="px-3 w-full">
-              <label for="name" class="font-medium m-auto text-sm text-gray-600"
-                >Password</label
-              >
-              <span
-                class="text-gray-300 font-medium ml-1 text-sm"
-                :style="[password.length > passwordLength ? 'color:red' : '']"
-              >
-                {{ password.length }}/{{ passwordLength }} charecters
-              </span>
-            </div>
-            <!-- open password -->
-            <div>
-              <input
-               v-if="showPassword"
-                v-model="password"
-                type="text"
-                name="password"
-                required
-                :style="[
-                  isPasswordEmpty == false ? 'border-color:red' : '',
-                ]"
-                class="w-4/5 px-3 py-2 mx-2 placeholder-gray-300 border border-gray-400 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300"
-              />
-
-            <!-- close password -->
-              <input
-               v-if="!showPassword"
-                v-model="password"
-                type="password"
-                name="password"
-                required
-                :style="[
-                  isPasswordEmpty == false ? 'border-color:red' : '',
-                ]"
-                class="w-4/5 px-3 py-2 mx-2 placeholder-gray-300 border border-gray-400 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300"
-              />
-
-              <!-- button to show/hide password -->
-               <button
-                    class="w-8 h-8 flex-1 px-2 py-2 ml-1 text-gray-600 border border-gray-300 rounded-md focus:ring-gray-500 focus:border-gray-900 sm:text-sm focus:outline-none"
-                    @click="toggleShow">
-                    <span class="icon is-small is-right">
-                        <i class="fas" 
-                            :class="{
-                                'fa-eye-slash': !showPassword,
-                                'fa-eye': showPassword,
-                        }"></i>
-                    </span>
-                </button>
-            </div>
-          </div>
-
-          <!-- Confirm Password -->
-          <div class="inline-block w-2/5">
-            <div class="px-3 w-full">
-              <label for="name" class="font-medium m-auto text-sm text-gray-600">
-                Confirm Password
-              </label>
-              <span
-                class="text-gray-300 font-medium ml-1 text-sm"
-                :style="[confirmPassword.length > cornfirmPasswordLength ? 'color:red' : '']"
-              >
-                {{ confirmPassword.length }}/{{ cornfirmPasswordLength }} charecters
-              </span>
-            </div>
-            <div>
-              <input
-                v-if="!showConfirmPassword"
-                v-model="confirmPassword"
-                type="password"
-                name="name"
-                required
-                class="w-4/5 px-3 py-2 mx-2 placeholder-gray-300 border border-gray-400 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300"
-              />
-
-              <input
-                v-if="showConfirmPassword"
-                v-model="confirmPassword"
-                type="text"
-                name="name"
-                required
-                class="w-4/5 px-3 py-2 mx-2 placeholder-gray-300 border border-gray-400 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300"
-              />
-            <button
-                    class="w-8 h-8 flex-1 px-2 py-2 ml-1 text-gray-600 border border-gray-300 rounded-md focus:ring-gray-500 focus:border-gray-900 sm:text-sm focus:outline-none"
-                    @click="toggleShowConfirm">
-                    <span class="icon is-small is-right">
-                        <i class="fas" 
-                            :class="{
-                                'fa-eye-slash': !showConfirmPassword,
-                                'fa-eye': showConfirmPassword,
-                        }"></i>
-                    </span>
-                </button>
-            </div>
-          </div>
         </div>
-        </div>
+    </section>
 
-          <!-- submit button -->
-          <div class="inline-flex m-auto p-5 w-60">
-            <a
-              @click="checkUnique"
-              href="#submit"
-              class="font-bold text-gray-900 hover:text-white border border-gray-800 hover:border-green-400 hover:scale-110 focus:ring-1 focus:outline-none focus:ring-gray-300 rounded-lg text-sm text-center dark:border-gray-600 dark:text-gray-400 dark:hover:text-white dark:hover:bg-green-400 dark:focus:ring-gray-800 ml-10 p-5"
-            >
-              Submit !
-            </a>
-          </div>
+  <!-- -------------------------------------------------------------------------------------------------------------------------------- -->
 
-          <!-- cancel button -->
-          <div class="inline-flex -ml-20 p-5 w-60">
-            <button
-              @click="cancel()"
-              class="font-bold text-gray-900 hover:text-white border border-gray-800 hover:border-red-400 hover:scale-110 focus:ring-1 focus:outline-none focus:ring-gray-300 rounded-lg text-sm text-center dark:border-gray-600 dark:text-gray-400 dark:hover:text-white dark:hover:bg-red-400 dark:focus:ring-gray-800 p-5"
-            >
-              Cancel
-            </button>
-          </div>
-
-      </div>
- 
-      <!-- for submit  -->
-      <div id="submit" class="overlay">
-        <div class="popup2 h-96">
-          <h2 class="mb-5 text-xl font-bold bg-white mx-auto w-fit">
-            Are you sure ?
-          </h2>
-
-          <div class="option flex m-auto w-full mt-10">
-            <a
-              @click="submitt"
-              href="#"
-              class="w-full text-center p-2 px-2 bg-gray-200 hover:bg-green-500 font-bold hover:text-white"
-              >Yes</a
-            >
-            <a
-              href="#"
-              class="w-full text-center p-2 px-2 bg-gray-200 hover:bg-rose-500 font-bold hover:text-white"
-              >No</a
-            >
-          </div>
-        </div>
-
-      <!-- for alert -->
-      <!-- warning alert-->
+      <!-- for alert -->  
       <div class="alert-area">
+    
+        <!-- add success alert-->
+        <div v-if="addSuccess == true" class="alert success text-sm">
+          <!-- <span class="closebtn" @click="goUserList">x</span> -->
+          <strong class="block">Success!</strong> create new account success.
+        </div>
+        
+        <!-- warning alert-->
         <!-- <div v-if="validateNameisNotNull == false" class="alert text-sm"> -->
           <!-- <span class="closebtn" @click="validateNameisNotNull = true">x</span> -->
         <div v-if="name == ''" class="alert warning text-sm">
@@ -543,23 +419,16 @@ onBeforeMount(async () => {
           <strong class="block">Warning!</strong> The password must have between 8 and 14 characters.
         </div>
 
-        <!-- add success alert-->
-        <div v-else-if="status == 201" class="alert success text-sm">
-          <span class="closebtn" @click="goUserList">x</span>
-          <strong class="block">Success!</strong> create new account success.
-        </div>
+        
 
         <!-- add error alert-->
         <div v-if="status !== 201 && status !== 0" class="alert text-sm">
-          <span class="closebtn" @click="cancel">x</span>
+          <!-- <span class="closebtn" @click="cancel">x</span> -->
           <strong class="block">Error!</strong> Cannot create new user.
         </div>
-
-
       </div>
-    </div>
-  </div>
 
+</body>
 </template>
 
 <style scoped>

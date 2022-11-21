@@ -238,7 +238,9 @@ let clock = () => {
 setInterval(clock, 1000);
 
 // submit
+const toSubmit = ref(false)
 const submitt = () => {
+  toSubmit.value = true
   validateEmailisNotNull.value = undefined;
   validateNameisNotNull.value = undefined;
   validateCategoryisNotNull.value = undefined;
@@ -550,272 +552,115 @@ onUpdated(async () => {
 </script>
 
 <template>
-  <div class="showUp container mx-auto">
-    <div
-      class="max-w-screen-md p-5 pb-7 mx-auto mt-4 bg-gray-200 rounded-md shadow-xl"
-    >
-      <div class="text-center">
-        <h1 class="my-3 text-3xl font-semibold text-gray-700">Booking</h1>
-        <p class="text-gray-400">
-          Fill up the form below to send a online appointment.
-        </p>
-      </div>
-      <div>
-        <!-- name -->
-        <div class="my-3 inline-flex px-4 w-full">
-          <div class="inline-block m-auto">
-            <div class="px-3 w-full">
-              <label for="name" class="font-medium m-auto text-sm text-gray-600"
-                >Full Name</label
-              >
-              <span
-                class="text-gray-300 font-medium ml-1 text-sm"
-                :style="[name.length > nameLength ? 'color:red' : '']"
-              >
-                {{ name.length }}/{{ nameLength }} charecters
-              </span>
+<body>
+  <section class="position-relative py-4 py-xl-5" style="margin-top: 30px;">
+        <div class="container">
+            <div class="row mb-5">
+                <div class="col-md-8 col-xl-6 text-center mx-auto">
+                    <h2>Booking</h2>
+                    <p class="w-lg-50">Fill up the form below to send a online appointment.<br></p>
+                </div>
             </div>
-            <div>
-              <input
-                v-model="name"
-                type="text"
-                name="name"
-                placeholder="Somchai Jaidee (AT-3)"
-                required
-                :style="[
-                  validateNameisNotNull == false ? 'border-color:red' : '',
-                ]"
-                class="w-80 px-3 py-2 mx-2 placeholder-gray-300 border border-gray-400 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300"
-              />
-            </div>
-          </div>
+            <div class="row d-flex justify-content-center" style="margin-top: -45px;">
+                <div class="col-md-8 col-lg-8 col-xl-6 col-xxl-6">
+                    <div class="card mb-5">
+                        <div class="card-body d-flex flex-column align-items-center" style="padding-top: 30px;padding-bottom: 30px;">
+                            <form class="text-start" style="width: 300px;">
 
-          <!-- email -->
-          <div class="mx-4 inline-block m-auto">
-            <div class="px-3 w-full">
-              <label for="email" class="font-medium text-sm text-gray-600"
-                >Email Address</label
-              >
-              <span
-                class="text-gray-300 font-medium ml-1 text-sm"
-                :style="[eMail.length > emailLength ? 'color:red' : '']"
-              >
-                {{ eMail.length }}/{{ emailLength }} charecters
-              </span>
+                                <!-- name input -->
+                                <div class="mb-3">
+                                  <label class="form-label fw-semibold" for="name" style="margin-bottom: -5px;">Name :</label>
+                                  <small class="float-end align-self-end"> {{ name.length }}/{{ nameLength }} charecters </small>
+                                  <input v-model="name" class="form-control" type="text" name="name" placeholder="Somchai Jaidee (AT-3)" required>
+                                </div>
+
+                                <!-- email input -->
+                                <div class="mb-3">
+                                  <label class="form-label fw-semibold" style="padding-bottom: 0px;margin-bottom: 0px;">Email :</label>
+                                  <small class="float-end align-self-end"> {{ eMail.length }}/{{ emailLength }} charecters </small>
+
+                                  <input v-if="userRole=='guest'|| userRole=='admin'" v-model="eMail" class="form-control" type="email" name="email" placeholder="somchai.jai@mail.kmutt.ac.th" required="">
+                                  <input v-if="loginEmail!==null && (userRole =='student' || userRole =='lecturer')"  :disabled="true" v-model="eMail" class="form-control" type="email" name="email" placeholder="somchai.jai@mail.kmutt.ac.th" required="">
+                                </div>
+
+                                <!-- category input -->
+                                <div class="mb-3">
+                                  <label class="form-label fw-semibold" style="margin-bottom: 0px;">Category :</label>
+                                  <select v-model="category" class="form-select" required="">
+                                        <optgroup label="Select category">
+                                            <option  v-for="cat in categoryList" :key="cat.id" :value="cat.eventCategoryName">
+                                              {{ cat.eventCategoryName }}
+                                            </option>
+                                        </optgroup>
+                                    </select>
+                                </div>
+
+                                <!-- duration -->
+                                <div class="mb-3">
+                                  <label class="form-label fw-semibold" style="margin-bottom: 0px;">Duration :</label>
+                                  <input v-model="durationTime" class="form-control" type="email" name="email" placeholder="00" disabled="" >
+                                  <small class="fw-normal float-end d-lg-flex justify-content-lg-end">minutes</small>
+                                </div>
+
+                                <!-- startDate input -->
+                                <div class="mb-3">
+                                  <label class="form-label fw-semibold">Start Date:</label>
+                                  <input v-model="startDate" :min="minDate" class="form-control" type="date" required="">
+                                </div>
+
+                                <!-- startTime input -->
+                                <div class="mb-3">
+                                  <label class="form-label fw-semibold">Start Time:</label>
+                                  <input v-model="startTime" class="form-control" type="time" required="">
+                                </div>
+
+                                <!-- note input -->
+                                <div class="mb-3 mb-lg-0">
+                                  <label class="form-label fw-semibold" style="padding-bottom: 0px;margin-bottom: 0px;">Note :</label>
+                                  <small class="float-end align-self-end">{{ noteText.length }}/{{ noteLength }} charecters</small>
+                                </div>
+                                <textarea v-model="noteText" class="form-control form-control-md" style="margin-top: -14px;"></textarea>
+
+                                <!-- add file -->
+                                <div class="mb-3 mt-lg-3" style="margin-top: 15px;">
+                                  <label class="form-label fw-semibold" style="margin-bottom: 0px;">Add File :</label>
+                                  <input @change="fileChanged($event)" ref="pond" label-idle="Drop files here or <span class='filepond--label-action'>Browse</span>" class="form-control" type="file" name="file" placeholder="somchai.jai@mail.kmutt.ac.th">
+                                  <small class="float-end align-self-end" style="margin-bottom: 40px;">The file size cannot be larger than 10 MB.<br></small>
+                                </div>
+
+                                <!-- button -->
+                                <div class="mb-3">
+                                  <button class="btn btn-primary d-block w-100" type="button" style="margin-bottom: 15px;margin-top: 25px;" data-bs-target="#confirm" data-bs-toggle="modal">Submit</button>
+                                  <button class="btn btn-light d-block w-100" type="button">Cancel</button>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div>
-            <div v-if="loginEmail!==null && (userRole =='student' || userRole =='lecturer')">
-              <input
-                type="email"
-                name="email"
-                v-model="eMail"
-                required
-                :style="[
-                  validateEmailisNotNull == false ? 'border-color:red' : '',
-                ]"
-                class="w-80 px-3 py-2 mx-2 placeholder-gray-300 border border-gray-400 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300"
-                :disabled = true
-              >
-            </div>
-            <div v-else-if="userRole=='guest'|| userRole=='admin'">
-              <input
-                v-model="eMail"
-                type="email"
-                name="email"
-                placeholder="somchai.jai@mail.kmutt.ac.th"
-                required
-                :style="[
-                  validateEmailisNotNull == false ? 'border-color:red' : '',
-                ]"
-                class="w-80 px-3 py-2 mx-2 placeholder-gray-300 border border-gray-400 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300"
-                :disabled = false
-              />
-            </div>
-            </div>
-          </div>
         </div>
 
-        <!-- category -->
-        <div class="my-3 px-6 inline-block">
-          <div class="inline-block">
-            <div class="px-3 w-full">
-              <label for="category" class="text-sm font-medium text-gray-600"
-                >Category</label
-              >
-              <!-- show category detail -->
-              <a
-                href="#category-detail"
-                class="px-1.5 font-light mx-2 rounded-full text-xs bg-black text-white"
-                >?</a
-              >
-            </div>
-            <!-- select category -->
-            <div>
-              <select
-                id="category"
-                :style="[
-                  validateCategoryisNotNull == false ? 'border-color:red' : '',
-                ]"
-                class="text-ellipsis overflow-hidden cursor-pointer w-64 font-medium px-3 py-2 placeholder-gray-300 border border-gray-400 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300"
-                v-model="category"
-              >
-                <option value="" disable selected>select your category</option>
-                <option
-                  v-for="cat in categoryList"
-                  :key="cat.id"
-                  :value="cat.eventCategoryName"
-                >
-                  {{ cat.eventCategoryName }}
-                </option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        <!-- date & time -->
-        <div class="inline-block px-3 w-max">
-          <!-- start date -->
-          <div class="w-fit inline-block">
-            <div class="px-3 w-full m-auto">
-              <label for="date" class="font-medium mx-2 text-sm text-gray-600"
-                >Start date</label
-              >
-            </div>
-            <div class="px-3 w-full m-auto">
-              <input
-                id="date"
-                :min="minDate"
-                :style="[
-                  validateStartDateisNotNull == false ? 'border-color:red' : '',
-                ]"
-                class="px-3 py-2 placeholder-gray-300 border border-gray-400 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300"
-                type="date"
-                v-model="startDate"
-              />
-            </div>
-          </div>
-
-          <!-- start time -->
-          <div class="w-fit inline-block">
-            <div class="pr-2 w-full">
-              <div class="inline-block font-medium text-sm text-gray-600">
-                Start time
+        <!-- confirm  -->
+        <div class="modal fade" role="dialog" tabindex="-1" id="confirm">
+          <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header text-bg-warning" style="padding-top: 10px;padding-bottom: 10px;padding-left: 20px;padding-right: 20px;">
+                <h4 class="modal-title fs-3">Are you sure ?</h4><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
-              <div class="w-full">
-                <input
-                  :style="[
-                    validateStartTimeisNotNull == false
-                      ? 'border-color:red'
-                      : '',
-                  ]"
-                  class="px-3 py-2 placeholder-gray-300 border border-gray-400 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300"
-                  type="time"
-                  v-model="startTime"
-                />
+              <div class="modal-body">
+                <p class="fs-6">Are you sure to create new event ?</p>
+              </div>
+              <div class="modal-footer" style="padding-bottom: 5px;padding-top: 5px;">
+                <button class="btn btn-primary btn-sm" type="button" @click="submitt" data-bs-dismiss="modal" data-bs-target="#">Yes</button>
+                <button class="btn btn-danger btn-sm" type="button" data-bs-dismiss="modal" data-bs-target="#">Cancel</button>
               </div>
             </div>
           </div>
-
-          <!-- duration -->
-          <div class="w-fit inline-block">
-            <div class="pr-2 w-full">
-              <label
-                class="font-medium pr-2 focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300"
-                for="time"
-                >Duration
-              </label>
-            </div>
-            <div class="pr-3 w-full">
-              <input
-                disabled
-                class="w-14 px-3 py-2 placeholder-gray-300 border border-gray-400 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300"
-                type="text"
-                v-model="durationTime"
-                min="00:00"
-                max="03:00"
-              />
-              <span class="pl-1.5">Min.</span>
-            </div>
-          </div>
         </div>
+    </section>
 
-        <!-- note & button-->
-        <div class="inline-flex w-full px-4 mx-2">
-          <!-- note -->
-          <div class="w-3/5 block m-auto">
-            <label for="textA" class="font-medium text-sm text-gray-600"
-              >Your Message
-              <span
-                class="text-gray-300"
-                :style="[noteText.length > noteLength ? 'color:red' : '']"
-                >{{ noteText.length }}/{{ noteLength }} charecters
-              </span>
-            </label>
-            <textarea
-              :style="[noteText.length > noteLength ? 'border-color:red' : '']"
-              id="textA"
-              name="textA"
-              rows="4"
-              cols="50"
-              class="w-full block px-3 py-2 placeholder-gray-300 border border-gray-400 resize-none rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300"
-              v-model="noteText"
-            >
-            </textarea>
-          </div>
-
-          <!-- add file -->
-          <div class="w-3/5 block m-auto mx-6">
-            <label for="addFile" class="font-medium text-sm text-gray-600"
-              >Add file
-              <span
-                class="text-gray-300"
-                >The file size cannot be larger than 10 MB.
-              </span>
-            </label>
-            <!-- <input type="file" name="file"> -->
-            <input 
-                name="file"
-                type="file" 
-                ref="pond" 
-                @change="fileChanged($event)" 
-                label-idle="Drop files here or <span class='filepond--label-action'>Browse</span>" >
-          </div>
-        </div>
-
-          <!-- booking button -->
-          <div class="w-full py-5 my-4" align="right">
-            <a
-              href="#submit"
-              class="font-bold text-gray-900 hover:text-white border border-gray-800 hover:bg-gray-900 focus:ring-4 focus:outline-none focus:ring-gray-300 rounded-lg text-sm text-center dark:border-gray-600 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-800 p-5"
-            >
-              Submit !
-            </a>
-          </div>
-        </div>
-
-      <!-- for submit  -->
-      <div id="submit" class="overlay">
-        <div class="popup2 h-96">
-          <h2 class="mb-5 text-xl font-bold bg-white mx-auto w-fit">
-            Are you sure ?
-          </h2>
-
-          <div class="option flex m-auto w-full mt-10">
-            <a
-              @click="submitt"
-              href="#"
-              class="w-full text-center p-2 px-2 bg-gray-200 hover:bg-green-500 font-bold hover:text-white"
-              >Yes</a
-            >
-            <a
-              href="#"
-              class="w-full text-center p-2 px-2 bg-gray-200 hover:bg-rose-500 font-bold hover:text-white"
-              >No</a
-            >
-          </div>
-        </div>
-      </div>
-
+  <!-- -------------------------------------------------------------------------------------------------------------------------------- -->
       <!-- for alert -->
       <div class="alert-area">
         <div v-if="validateNameisNotNull == false" class="alert text-sm">
@@ -904,40 +749,7 @@ onUpdated(async () => {
           please try again.
         </div>
       </div>
-    </div>
-  </div>
-
-  <!-- for show category detail  -->
-  <div id="category-detail" class="overlay">
-    <div class="popup h-96 overflow-auto">
-      <h2 class="text-xl font-semibold text-gray-100 p-6">Category detail :</h2>
-      <a class="close" href="#">&times;</a>
-
-      <div v-if="categoryList.length == 0" class="w-fit m-auto my-32 text-lg">
-        No category details
-      </div>
-
-      <div v-else v-for="(cat,index) in categoryList" :key="index">
-        <ul>
-          <li class="text-left">
-            <br />
-            <span class="block font-semibold text-base"
-              >&emsp;{{ cat.eventCategoryName }}</span
-            >
-            <span class="block"
-              >&emsp;&emsp;-->
-              <span v-if="cat.eventCategoryDescription == null">
-                Not specified
-              </span>
-              <span v-else>
-                {{ cat.eventCategoryDescription }}
-              </span>
-            </span>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </div>
+</body>
 </template>
 
 <style scoped>
