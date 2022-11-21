@@ -21,17 +21,18 @@ const signOut = () => {
     localStorage.removeItem('token')
     localStorage.removeItem('email')
     localStorage.removeItem('role')
-    haveToken.value = null
+    localStorage.removeItem('name')
+    haveKey.value = null
     console.log(localStorage.getItem('key'))
     goHome()
 }
 
-const haveToken = ref(null)
-const isHaveToken = () => {
-    const token = localStorage.getItem('key')
-    if(token==null || token==undefined) haveToken.value = false
-    else if(token!==null && token!==undefined) haveToken.value = true
-    return haveToken.value
+const haveKey = ref(null)
+const isHaveKey = () => {
+    const key = localStorage.getItem('key')
+    if(key==null || key==undefined) haveKey.value = false
+    else if(key!==null && key!==undefined) haveKey.value = true
+    return haveKey.value
 }
 
 const userRole = ref('guest')
@@ -50,21 +51,21 @@ const checkRole = () => {
     return userRole.value
 }
 
-const userEmail = ref('')
+const userName = ref('')
 const getUserEmail = () => {
-    const email = localStorage.getItem('email')
-    userEmail.value = email
+    const name = localStorage.getItem('name')
+    userName.value = name
 }
 
 //show navbar2
 onBeforeMount(async () => {
-    isHaveToken()
+    isHaveKey()
     checkRole()
     getUserEmail()
 })
 
 setInterval(async () => {
-    isHaveToken()
+    isHaveKey()
     checkRole()
     getUserEmail()
 }, 1000);
@@ -75,135 +76,79 @@ setInterval(async () => {
 <!--   
   <router-link :to="{ name:'Home'}" class="font-bold">home</router-link>
   <router-view></router-view> -->
- 
-  <div class=" lg:pt-2 md:w-screen h-screen" id="bg_color">
-    <nav class="bg-transparent drop-shadow-md md:rounded-lg md:mx-auto w-full">
-                <div class="max-w-screen-xl mx-auto px-4 ">
-                    <div class="md:flex justify-between drop-shadow-lg">
-                        <div class="md:flex space-x-2 w-2/5">
-                            <!-- logo -->
-                            <div>
-                                <a href="#" class="flex md:items-center py-5 px-0.5 text-gray-700 hover:text-gray-900"
-                                    @click="goHome">
-                                    <img src="./assets/icon.png" alt="LOGO" :style="logoSize" />
-                                    <span class="font-bold text-xl text-white ml-5">
-                                        <BaseDate :isTime='true' />
-                                        
-                                        <br>
-                                        <span class=" font-medium">
-                                          <BaseDate :isDate="true" />
-                                        </span>
-                                    </span>
- 
-                                </a>
-                            </div>
-                        </div>
-                        
-
-                        <!-- secondary nav -->
-                        <div v-show="haveToken==true && userRole!=='guest'" class="w-full lg:flex items-center py-3 mx-auto" >
-                            <ul>
-
-                                <li>
-                                    <button type="button" class="inline-block px-2 py-2  bg-transparent text-white 
-                            font-medium text-lg leading-tight  rounded  
-                            hover:bg-gray-900 hover:shadow-lg focus:bg-blue-500 focus:shadow-lg 
-                            focus:outline-none focus:ring-0 active:bg-gray-900 active:shadow-lg 
-                            transition duration-150 ease-in-out " @click="goHome">Home</button>
-                                </li>
-
-                                <!-- admin & student can see -->
-                                <li v-if="userRole=='admin' || userRole=='student'">
-                                    <button type="button" class="inline-block px-4 py-2 bg-transparent text-white 
-                            font-medium text-lg leading-tight  rounded 
-                             hover:bg-gray-900 hover:shadow-lg focus:bg-blue-500
-                            focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-600
-                            active:shadow-lg transition duration-150 ease-in-out" @click="goBooking">Booking</button>
-                                </li>
-
-                                <!-- everyone can see -->
-                                <li>
-                            <button type="button" class="inline-block px-2 py-2  bg-transparent text-white 
-                            font-medium text-lg leading-tight  rounded  
-                            hover:bg-gray-900 hover:shadow-lg focus:bg-blue-500 focus:shadow-lg 
-                            focus:outline-none focus:ring-0 active:bg-gray-900 active:shadow-lg 
-                            transition duration-150 ease-in-out " @click="goReservationList">Reservation</button>
-                                </li>
-
-                                <!-- admin & lecture can see -->
-                                <li v-if="userRole=='admin' || userRole=='lecturer'">
-                            <button type="button" class="inline-block px-2 py-2  bg-transparent text-white 
-                            font-medium text-lg leading-tight  rounded 
-                            hover:bg-gray-900 hover:shadow-lg focus:bg-blue-500 focus:shadow-lg 
-                            focus:outline-none focus:ring-0 active:bg-gray-900 active:shadow-lg 
-                            transition duration-150 ease-in-out " @click="goCategoriesList">Categories</button>
-                                </li>
-
-                                <!-- admin can see -->
-                                <li  v-if="userRole=='admin'">
-                            <button type="button" class="inline-block px-2 py-2  bg-transparent text-white 
-                            font-medium text-lg leading-tight  rounded 
-                            hover:bg-gray-900 hover:shadow-lg focus:bg-blue-500 focus:shadow-lg 
-                            focus:outline-none focus:ring-0 active:bg-gray-900 active:shadow-lg 
-                            transition duration-150 ease-in-out " @click="goUserList">Users</button>
-                                </li>
-
-                                <!-- everyone can see -->
-                                <li>
-                            <button type="button" class="inline-block px-2 py-2  bg-transparent text-white 
-                            font-medium text-lg leading-tight  rounded 
-                            hover:bg-gray-900 hover:shadow-lg focus:bg-blue-500 focus:shadow-lg 
-                            focus:outline-none focus:ring-0 active:bg-gray-900 active:shadow-lg 
-                            transition duration-150 ease-in-out " @click="goContactUs">Contact us</button>
-                                </li>
-                            </ul>
-                        </div>
-
-                        <!-- third nav -->
-                        <div v-if="haveToken==false || userRole=='guest'" class="lg:flex justify-end space-x-1 w-4/5">
-                            <div class="lg:flex items-center space-x-1 w-1/5" >
-                                <button type="button" class="hover:underline bg-white text-gray-800 font-bold rounded-full 
-                                py-4 px-8 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 hover:bg-green-300
-                                duration-300 ease-in-out" @click="goCreateUser"> Sign up </button>
-                            </div>
-                            <div class="lg:flex items-center space-x-1 w-1/5" >
-                                <button type="button" class="hover:underline bg-white text-gray-800 font-bold rounded-full 
-                                py-4 px-8 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 hover:bg-amber-400
-                                duration-300 ease-in-out" @click="goLogin"> Sign in </button>
-                            </div>
-                        </div>
-
-                        <!-- user account -->
-                        <div v-if="haveToken==true && userRole!=='guest'" class="lg:flex justify-end items-center w-1/6" >
-                            <p class="inline-block px-2 py-2 mx-4 bg-transparent text-white 
-                            font-medium text-lg leading-tight  rounded 
-                            hover:bg-orange-600 hover:shadow-lg focus:bg-blue-500 focus:shadow-lg 
-                            focus:outline-none focus:ring-0 active:bg-amber-600 active:shadow-lg 
-                            transition duration-150 ease-in-out "> 
-                                {{ userEmail }}
-                            </p>
-
-                        </div>
-
-                        <!-- sign out button -->
-                        <div v-if="haveToken==true && userRole!=='guest'" class="lg:flex justify-end items-center w-1/6" >
-                                <a  
-                                class="hover:underline bg-white text-gray-800 font-bold rounded-full 
-                                text-center w-full h-1/2 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 hover:bg-amber-400
-                                duration-300 ease-in-out signout"
-                                href="#signout"> 
-                                    Sign Out 
-                                </a>
-
-                        </div>
-                    </div>
-                </div>
-            </nav>
+<body>
+  <nav class="navbar navbar-dark navbar-expand-md bg-dark py-1">
+        <!-- logo -->
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" @click="goHome">
+                <img src="./assets/icon.png" width="60" height="55">
+            </a>
+            <span class="w-100 text-white" style="margin-right: 5px;margin-left: 5px;padding-right: 10px;padding-left: 10px;">
+                <BaseDate :isTime='true' />
+                <br>
+                <BaseDate :isDate="true" />
+            </span>
+            <!-- toggle navigation -->
+            <button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-5">
+                <span class="visually-hidden"></span>
+                <span class="navbar-toggler-icon"></span>
+            </button>
             
-            <div class="flex object-cover ">
-                <router-view></router-view> 
-            </div>
+            <!-- menu -->
+            <div v-show="haveKey==true && userRole!=='guest'" class="collapse navbar-collapse w-75" id="navcol-5" style="margin-top: 0px; margin-right: 60px; padding-right: 30px; padding-left: 30px; margin-left: 60px;">
+                <ul class="navbar-nav ms-auto">
+                    <!-- menu: home -->
+                    <li v-if="userRole=='admin' || userRole=='student' || userRole=='lectuere'" class="nav-item">
+                        <a class="nav-link" @click="goHome">Home</a>
+                    </li>
 
+                    <!-- menu: booking -->
+                    <li v-if="userRole=='admin' || userRole=='student'" class="nav-item">
+                        <a class="nav-link" @click="goBooking">Booking</a>
+                    </li>
+
+                    <!-- menu: reservation -->
+                    <li v-if="userRole=='admin' || userRole=='student' || userRole=='lectuere'" class="nav-item">
+                        <a class="nav-link" @click="goReservationList">Reservation</a>
+                    </li>
+
+                    <!-- menu: categories -->
+                    <li v-if="userRole=='admin' || userRole=='lectuere'" class="nav-item">
+                        <a class="nav-link" @click="goCategoriesList">Categories</a>
+                    </li>
+
+                    <!-- menu: users -->
+                    <li v-if="userRole=='admin'" class="nav-item">
+                        <a class="nav-link" @click="goUserList">Users</a>
+                    </li>
+
+                    <!-- menu: contact -->
+                    <li v-if="userRole=='admin' || userRole=='student' || userRole=='lectuere'" class="nav-item">
+                        <a class="nav-link" @click="goContactUs">Contact</a>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- show username -->
+            <p v-if="haveKey==true && userRole!=='guest'" class="ms-auto w-75 text-white" style="margin-right: 5px;margin-left: 5px;padding-right: 10px;padding-left: 10px;margin-top: 10px;"> 
+                {{ userName }} 
+            </p>
+            
+            <!-- button -->
+            <!-- sign up / sign in -->
+            <a v-if="haveKey==false || userRole=='guest'" class="btn btn-primary ms-md-2 mr-3" role="button" href="#" @click="goCreateUser"> Sign up </a>
+            <a v-if="haveKey==false || userRole=='guest'" class="btn btn-primary ms-md-2" role="button" href="#" @click="goLogin"> Sign in </a>
+
+            <!-- sign out -->
+            <a v-if="haveKey==true && userRole!=='guest'" class="btn btn-danger ms-md-2 ml-2 w-25" role="button" href="#signout">Sign out</a>
+        </div>
+    </nav>
+    
+    <div class="flex object-cover ">
+        <router-view></router-view> 
+    </div>
+ 
+ <!-- ------------------------------------------- -->
             <!-- for confirm signout  -->
             <div id="signout" class="overlay">
                 <div class="popup2 h-96">
@@ -225,9 +170,26 @@ setInterval(async () => {
                         </a>
                     </div>
                 </div>
+            </div>  
+
+            <div class="modal fade" role="dialog" tabindex="-1" id="modal-1">
+                <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header text-bg-warning" style="padding-top: 10px;padding-bottom: 10px;padding-left: 20px;padding-right: 20px;">
+                            <h4 class="modal-title fs-3">Are you sure?</h4>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p class="fs-6">Are you sure to sign out ?</p>
+                        </div>
+                        <div class="modal-footer" style="padding-bottom: 5px;padding-top: 5px;">
+                            <a href="#"><button class="btn btn-danger btn-sm" type="button" data-bs-dismiss="modal" data-bs-target="#modal-1" data-bs-toggle="modal">Cancel</button></a>
+                            <button @click="signOut" class="btn btn-primary btn-sm" type="button" data-bs-target="#modal-1" data-bs-toggle="modal">Yes</button>
+                        </div>
+                    </div>
+                </div>
             </div>
-  </div>
- 
+ </body>
 </template>
 
 <style scoped>

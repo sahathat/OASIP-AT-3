@@ -12,6 +12,7 @@
     "boxicons": "^2.1.4",
     "filepond": "^4.30.4",
     "json-server": "^0.17.0",
+    "startbootstrap-bare": "^5.0.8",
     "vue": "^3.2.25",
     "vue-filepond": "^7.0.3",
     "vue-router": "^4.0.14"
@@ -19,6 +20,9 @@
   "devDependencies": {
     "@vitejs/plugin-vue": "^2.3.1",
     "autoprefixer": "^10.4.5",
+    "bootstrap": "^5.2.2",
+    "jquery": "^3.6.1",
+    "popper.js": "^1.16.1",
     "postcss": "^8.4.13",
     "tailwindcss": "^3.0.24",
     "vite": "^2.9.5"

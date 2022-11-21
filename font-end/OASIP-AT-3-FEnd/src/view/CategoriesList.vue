@@ -2,6 +2,7 @@
 import { ref, onBeforeMount, onUpdated } from "vue";
 import { useRoute,useRouter } from "vue-router";
 const categoryList = ref([]);
+const categoryOwnerList = ref([]);
 const categoryCheck = ref(false);
 
 const { params } = useRoute();
@@ -9,10 +10,12 @@ const myRouoter = useRouter();
 const goHome = () => myRouoter.push({ name: "Home" });
 
 const db = "http://localhost:5000/booking";
-const categoryLink = `${import.meta.env.BASE_URL}api/categories`;
-const refreshLink = `${import.meta.env.BASE_URL}api/users/refresh`;
-// const categoryLink = "http://localhost:8443/api/categories";
-// const refreshLink  = "http://localhost:8443/api/users/refresh";
+// const categoryLink = `${import.meta.env.BASE_URL}api/categories`;
+// const refreshLink = `${import.meta.env.BASE_URL}api/users/refresh`;
+// const categoryOwnerLink = `${import.meta.env.BASE_URL}api/mappings`;
+const categoryLink = "http://localhost:8443/api/categories";
+const refreshLink  = "http://localhost:8443/api/users/refresh";
+const categoryOwnerLink  = "http://localhost:8443/api/mappings";
 
 const userRole = ref('guest')
 const checkRole = () => {
@@ -63,6 +66,44 @@ const getCategory = async () => {
     }
 };
 
+//GET category owner
+// const getCategoryOwner = async () => {
+//   const key = localStorage.getItem('key')
+//   const res = await fetch(categoryOwnerLink, {
+//     method: "GET",
+//     headers: {
+//             "Authorization":'Bearer ' + key ,
+//             "Accept": 'application/json',
+//             "content-type": "application/json",
+//         }
+//   });
+//   if (res.status === 200) {
+//     categoryOwnerList.value = await res.json();
+//   } else if (res.status === 401 && localStorage.getItem('token')==='accessToken') {
+//     console.log('test...')
+//     const resForRefresh = await fetch(refreshLink, {
+//       headers: {
+//         Authorization: "Bearer " + key,
+//         isRefreshToken: true ,
+//       },
+//     })
+//       const jwt = await resForRefresh.json()
+//       console.log(jwt)
+//       if(resForRefresh.status === 200){
+//         // set localStorage
+//         localStorage.setItem('key',jwt.token)
+//         localStorage.setItem('token','refreshToken')
+//         getCategory()
+//         getCategoryOwner()
+//         console.log(categoryOwnerList.value)
+//       }
+//     }else if(res.status === 401 && localStorage.getItem('token')==='refreshToken'){
+//         localStorage.removeItem('key')
+//         localStorage.removeItem('token')
+//         goHome()
+//         // console.log('เข้า')
+//     }
+// };
 
 //router
 const myRouter = useRouter();
@@ -76,109 +117,54 @@ const goCategories= (input) =>
 
 onBeforeMount(async () => {
   await getCategory();
+  // await getCategoryOwner()
   checkRole()
+  console.log(categoryList.value)
 });
 onUpdated(async () => {
   await getCategory();
+  // await getCategoryOwner()
 });
 
 </script>
 
 <template>
-  <!-- for category table -->
-  <div
-    class="showUp bg-gray-200 md:inline-block mx-auto mt-10 p-4 rounded-r"
-    style="height: 510px; width: 70%"
-  >
-      <p v-if="(userRole=='admin' || userRole=='lecturer')" 
-         class="text-right mr-2 text-lg font-bold mb-3 text-gray-900"
-         >
-          The total of Clinic are 
-          <span class="text-xl text-red-500">{{ categoryList.length }}</span> 
-          categories
-    </p>
-    <div v-if="userRole!=='admin' && userRole!=='lecturer'">
-      <h1 class="drop-shadow-2xl mx-auto w-fit my-20 font-semibold">
-        Only admins and lecturers can view this page.
-      </h1>
+<body>
+    <!-- not have permissions -->
+    <div v-if="userRole!=='admin' && userRole!=='lecturer'" class="container py-4 py-xl-5" style="margin-bottom: 0px;">
+        <h1 class="text-center">Categories</h1>
+        <p class="fs-4 text-center">Only admins and lecturers can view this page.</p>
     </div>
 
-    <div v-else-if="categoryList.length === 0 && (userRole=='admin' || userRole=='lecturer')">
-      <h1 class="drop-shadow-2xl mx-auto w-fit my-20 font-semibold">
-        No category
-      </h1>
+    <!-- have permissions -->
+    <div v-if="userRole=='admin' || userRole=='lecturer'" class="container py-4 py-xl-5" style="margin-bottom: 0px;">
+        <h1 class="text-center">Categories</h1>
+        <p class="text-center">The total of Clinic are {{ categoryList.length }} categories</p>
     </div>
 
-    <div
-      v-if="categoryList.length !== 0 && (userRole=='admin' || userRole=='lecturer')"
-      class="drop-shadow-2xl bg-white overflow-y-auto mx-auto h-fit"
-      style="height: 90%; width: 100%"
-    >
-      <table class="table-fixed m-auto md:table-flexed w-full">
-        <thead
-          class="sticky top-0 text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
-        >
-          <tr>
-            <th scope="col" class="px-6 py-3">Clinic Name</th>
-            <th scope="col" class="px-3 py-3">Description</th>
-            <th scope="col" class="px-6 py-3">Duration</th>
-            <th scope="col" class="px-6 py-3">more detail</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            v-for="cat in categoryList"
-            :key="cat.id"
-            class="text-center border-y border-t-0 dark:border-gray-700"
-          >
-            <th
-              scope="row"
-              class="px-6 py-4 text-gray-900 font-bold whitespace-nowrap text-ellipsis overflow-hidden"
-            >
-              {{ cat.eventCategoryName }}
-            </th>
-            <td class="px-1 py-4">
-              <div class="block m-auto">
-                <span class="px-5 w-full block">
-                  {{ cat.eventCategoryDescription }}
-                </span>
-              </div>
-            </td>
-            <td class="px-6 py-4 text-ellipsis overflow-hidden">
-              {{ cat.eventCategoryDuration }}
-            </td>
-            <td  class="px-14 py-4">
-              <button
-                @click="goCategories(cat)"
-                class="text-black hover:text-white border border-gray-800 hover:bg-gray-900 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:border-gray-600 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-800"
-              >
-                Detail
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    <!-- have clinic -->
+    <div v-if="categoryList.length !== 0 && (userRole=='admin' || userRole=='lecturer')" class="container py-4 py-xl-5" style="margin-top: -64px;">
+        <div class="row gy-4 row-cols-1 row-cols-md-2 row-cols-xl-3" style="padding-left: 50px;padding-right: 50px;margin-top: 0px;">
+            <div v-for="cat in categoryList" :key="cat.id" class="col-lg-3">
+                <div>
+                  <img class="rounded img-fluid d-block w-100 fit-cover" style="height: 200px;" src="../assets/clinic/3.png">
+                    <div class="py-4">
+                        <h4> {{ cat.eventCategoryName }} </h4>
+                        <!-- owner -->
+                        <h6> Owner :  <span class="text-base"> {{ cat.eventCategoryDescription }} </span> </h6>
+                        
+                        <!-- description -->
+                        <h6> Description :  <span> {{ cat.eventCategoryDescription }} </span> </h6>
+                        
+                        <!-- duration -->
+                        <h6> Duration : <span> {{ cat.eventCategoryDuration }} Min. </span> </h6>
+                        <button class="btn btn-primary" @click="goCategories(cat)">More Detail</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-
-    <!-- for alert -->
-    <!-- <div class="alert-area">
-      <div v-if="noInputFilter == true" class="alert info text-sm">
-        <span class="closebtn" @click="noInputFilter = undefined">x</span>
-        <strong class="block">Info!</strong> Please input information to filter
-      </div>
-
-      <div
-        v-else-if="
-          getStatus == false ||
-          (categoryList.length == 0)
-        "
-        class="alert warning text-sm"
-      >
-        <strong class="block">Warning!</strong> A system error has occurred,
-        please try again.
-      </div>
-    </div> -->
-  </div>
+</body>
 </template>
 
 <style scoped>

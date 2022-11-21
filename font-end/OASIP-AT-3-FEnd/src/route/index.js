@@ -11,6 +11,7 @@ import UserInfo from '../view/User.vue'
 import UserList from '../view/UserList.vue'
 import CreateUser from '../view/CreateUser.vue'
 import Login from '../view/Login.vue'
+import ResetPassword from '../view/ResetPassword.vue'
 
 // import store from '../store/store'
 // import { IS_USER_AUTHENTICATION_GETTER } from '../store/storeconstants'
@@ -81,6 +82,12 @@ const routes=[
         path:'/login',
         name:'Login',
         component: Login,
+        meta: { auth:false }
+    },
+    {
+        path:'/resetPassword',
+        name:'ResetPassword',
+        component: ResetPassword,
         meta: { auth:false }
     },
     {

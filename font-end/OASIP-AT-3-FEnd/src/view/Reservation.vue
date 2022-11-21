@@ -6,13 +6,13 @@ import 'boxicons'
 const { params } = useRoute();
 
 const db = "http://localhost:5000/booking";
-const eventLink = `${import.meta.env.BASE_URL}api/events`;
-const refreshLink = `${import.meta.env.BASE_URL}api/users/refresh`;
-const fileLink = `${import.meta.env.BASE_URL}api/files/events`;
+// const eventLink = `${import.meta.env.BASE_URL}api/events`;
+// const refreshLink = `${import.meta.env.BASE_URL}api/users/refresh`;
+// const fileLink = `${import.meta.env.BASE_URL}api/files/events`;
 
-// const eventLink = "http://localhost:8443/api/events";
-// const refreshLink = "http://localhost:8443/api/users/refresh";
-// const fileLink = "http://localhost:8443/api/files/events";
+const eventLink = "http://localhost:8443/api/events";
+const refreshLink = "http://localhost:8443/api/users/refresh";
+const fileLink = "http://localhost:8443/api/files/events";
 
 const id = params.id;
 const name = ref("");
@@ -554,137 +554,168 @@ const calTime = (hour, minute, addTime) => {
 </script>
 
 <template>
-  <div
-    class="showUp w-5/6 p-5 pb-7 mx-auto bg-white rounded-md shadow-xl"
-  >
-    <!-- no data -->
-    <div v-if="isNotNull == false">
-      <h2 class="text-center mb-1 font-bold text-xl">No date</h2>
-      <div class="w-fit m-auto">
-        <button @click="goReservation" class="custom-btn back block">Go Back</button>
+<body>
+  <div class="container py-4 py-xl-5">
+        <div class="row mb-5">
+            <div class="col-md-8 col-xl-10 text-center mx-auto">
+                <h2>Reservation Detail</h2>
+            </div>
+        </div>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 justify-content-center" style="margin-top: -40px;">
+            <div class="col-md-7 col-lg-8 col-xl-5">
+                <div class="card"><img class="card-img-top w-100 d-block fit-cover" style="height: 200px;" src="../assets/maewzom.png">
+
+                    <!-- show details -->
+                    <div class="card-body flex-fill p-4">
+                        <p class="text-primary card-text mb-0 float-end">ID : {{ id }} </p>
+                        <h4 class="card-title" style="margin-top: 30px;">Name : {{ name }} </h4>
+                        <div>
+                          <strong>E-mail :</strong>
+                          <span style="margin-left: 10px;">{{ eMail }}</span>
+                        </div>
+                        <div class="flex-fill" style="margin-top: 5px;">
+                          <strong>Start Date :</strong><span style="margin-left: 10px;"> {{ startDate }} </span>
+                          <strong style="margin-left: 20px;">Start Time :</strong><span style="margin-left: 10px;"> {{ startTime }} </span>
+                        </div>
+                        <div style="margin-top: 5px;">
+                          <strong>Category :</strong><span style="margin-left: 10px;">{{ category }}</span>
+                          <strong style="margin-left: 9px;">Duration :</strong><span style="margin-left: 5px;"> {{ duration }} Min.</span>
+                        </div>
+                        <div v-if="(noteT !== null && noteT !== '')" style="margin-top: 5px; margin-right: 10px;"><strong>Note :</strong>
+                            <span style="margin-left: 10px;"> {{ noteT }}</span>
+                        </div>
+                        <div v-if="eventFile !== undefined" style="margin-top: 5px;">
+                          <strong>Attachment File :</strong>
+                          <span style="margin-left: 10px;"> {{ eventFile }} </span>
+                          <a :href="fileUrl" :download="id" style="margin-left: 15px;">
+                            <box-icon name='cloud-download' size='md' border='circle' animation='tada-hover' class="" ></box-icon>
+                          </a>  
+                        </div>
+                        <div class="d-sm-flex d-md-flex d-lg-flex flex-fill justify-content-center justify-content-sm-end justify-content-lg-center" style="margin-top: 20px;margin-bottom: 0px;">
+                          <button class="btn btn-warning" type="button" style="margin-right: 10px;" data-bs-target="#editEvent" data-bs-toggle="modal"  @click="editInfo">Edit</button>
+                          <button class="btn btn-danger" type="button" style="margin-right: 10px;" data-bs-target="#confirmToRemove" data-bs-toggle="modal">Remove</button>
+                          <button class="btn btn-secondary" type="button" @click="goReservation">Back</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- edit event -->
+    <div class="modal fade" role="dialog" tabindex="-1" id="editEvent">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="background: #f0ac72;">
+                    <h4 class="modal-title">Edit Reservation Detail :&nbsp;</h4><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="container position-relative" style="padding-left: 0px;padding-right: 0px;">
+                        <div class="row text-start d-flex justify-content-center align-items-center" style="margin-left: 0px;padding-right: 0px;margin-right: 0px;">
+                            <div class="col-md-6 col-lg-11 col-xl-4">
+                                <div class="d-flex flex-column justify-content-center align-items-center h-100" style="margin-bottom: 10px;">
+                                    <div class="d-flex d-sm-flex align-items-center p-3">
+                                        <div class="px-2">
+                                            <h6 class="mb-0">Name :&nbsp;</h6><input type="text" style="margin-top: 5px;" readonly="" v-model="name">
+                                        </div>
+                                        <div class="p-3" style="margin-top: -10px;">
+                                            <div class="px-2">
+                                                <h6 class="mb-0">Email :&nbsp;</h6><input type="text" style="margin-top: 5px;" readonly="" v-model="eMail">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center p-3" style="margin-top: -10px;margin-bottom: 10px;">
+                                        <div class="px-2">
+                                            <h6 class="mb-0">Category :&nbsp;</h6><input type="text" style="margin-top: 5px;" readonly="" v-model="category">
+                                        </div>
+                                        <div class="d-flex align-items-center p-3" style="margin-top: -10px;">
+                                            <div class="px-2">
+                                                <h6 class="mb-0">Duration :&nbsp;</h6><input type="number" style="margin-top: 5px;" readonly="" v-model="duration">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex flex-fill align-content-start p-3" style="padding-left: 0px;padding-right: 0px;margin-top: -10px;width: auto;">
+                                        <div class="px-2">
+                                            <h6 class="mb-0">Start Date :&nbsp;</h6><input type="date" v-model="editStartDate">
+                                        </div>
+                                        <div class="d-flex align-items-start p-3" style="padding-top: 0px;padding-left: 0px;margin-top: -15px;padding-right: 0px;padding-bottom: 0px;">
+                                            <h6 class="mb-0">Start Time :<input type="time" v-model="editStartTime">&nbsp;</h6>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center p-3" style="margin-top: -10px;">
+                                        <div class="px-2">
+                                            <h6 class="mb-0">Note :&nbsp;</h6><textarea style="padding-right: 0px;padding-left: 0px;width: 300px;height: 100px;margin-top: 5px;"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex flex-fill justify-content-center align-items-center m-auto p-3" style="margin-top: -10px;margin-bottom: 10px;">
+                                    <!-- have file -->
+                                    <div v-if="changeFile==false && editFileName!=undefined" class="flex-fill px-2">
+                                        <h6 class="mb-0">File :&nbsp;</h6>
+                                        <span> {{ eventFile }} </span>
+                                    </div>
+                                    <!-- not have file   -->
+                                    <div v-if="changeFile==true || editFileName==undefined" class="flex-fill px-2">
+                                        <h6 class="mb-0">Add File :&nbsp;</h6>
+                                        <input @change="editFileChanged($event)" class="flex-fill" type="file" style="margin-top: 5px;" readonly="">
+                                        <p>The file size cannot be larger than 10 MB.</p>
+                                    </div>
+                                    <div class="d-sm-flex">
+                                      <button class="btn btn-primary btn-sm" type="button" style="margin-right: 5px;" @click="openChangeFile">Change File</button>
+                                      <button class="btn btn-danger btn-sm" type="button" @click="deleteFile">Delete File</button>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                  <button class="btn btn-light" type="button" data-bs-dismiss="modal">Cancel</button>
+                  <button class="btn btn-dark" type="button" style="background: #20c997;" data-bs-target="#confirmToEdit" data-bs-toggle="modal">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- for confirm to remove event  -->
+    <div class="modal fade" role="dialog" tabindex="-1" id="confirmToRemove">
+      <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+          <div class="modal-content">
+              <div class="modal-header text-bg-warning" style="padding-top: 10px;padding-bottom: 10px;padding-left: 20px;padding-right: 20px;">
+                <h4 class="modal-title fs-3">Are you sure ?</h4><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <p class="fs-6">Are you sure to remove this reservation?</p>
+              </div>
+              <div class="modal-footer" style="padding-bottom: 5px;padding-top: 5px;">
+                <button class="btn btn-primary btn-sm" type="button" @click="removeInfo">Yes</button>
+                <button class="btn btn-danger btn-sm" type="button" data-bs-dismiss="modal" data-bs-target="#">Cancel</button>
+              </div>
+          </div>
       </div>
     </div>
 
-    <!-- have data -->
-    <div
-      v-else-if="isNotNull == true"
-      class="p-4 border-double border-4 border-neutral-300 max-w-screen-2xl"
-    >
-      <div class="mx-2 w-full">
-        <h1 class="text-center mb-1 font-bold text-2xl">Reservation</h1>
-        <h3 class="text-center">----------------</h3>
-      </div>
-      <div class="flex m-auto my-4 w-full">
-        <!-- Name -->
-        <div class="px-2 w-1/2 inline-flex">
-          <div class="pr-2 font-semibold flex m-auto text-gray-400">Name :</div>
-          <div
-            class="overflow-hidden overflow-x-scroll border-2 rounded-md p-1.5 pt-2.5 font-normal bg-white flex w-3/4 h-12"
-          >
-            {{ name }}
+    <!-- for confirm to edit event  -->
+    <div class="modal fade" role="dialog" tabindex="-1" id="confirmToEdit">
+      <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+          <div class="modal-content">
+              <div class="modal-header text-bg-warning" style="padding-top: 10px;padding-bottom: 10px;padding-left: 20px;padding-right: 20px;">
+                <h4 class="modal-title fs-3">Are you sure ?</h4><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <p class="fs-6">Are you sure to edit this reservation?</p>
+              </div>
+              <div class="modal-footer" style="padding-bottom: 5px;padding-top: 5px;">
+                <button class="btn btn-primary btn-sm" type="button" @click="submitt">Yes</button>
+                <button class="btn btn-danger btn-sm" type="button" data-bs-dismiss="modal" data-bs-target="#">Cancel</button>
+              </div>
           </div>
-        </div>
+      </div>
+    </div>
 
-        <!-- E-mail -->
-        <div class="px-2 w-1/2 inline-flex">
-          <div class="pr-2 font-semibold flex m-auto text-gray-400">
-            E-mail :
-          </div>
-          <div
-            class="overflow-hidden overflow-x-scroll border-2 rounded-md p-1.5 pt-2.5 font-normal bg-white flex w-3/4 h-12"
-          >
-            {{ eMail }}
-          </div>
-        </div>
-      </div>
-      <!-- start date ,time and duration -->
-      <div class="flex m-auto my-4 w-full">
-        <div class="px-2 w-2/5 inline-flex">
-          <div class="p-3 font-semibold inline-block m-auto text-gray-400">
-            Start date :
-          </div>
-          <div
-            v-if="isEdit == false"
-            class="border-2 rounded-md py-2 text-center font-normal bg-white inline-block w-2/4 h-10"
-          >
-            {{ startDate }}
-          </div>
-          <div
-            v-if="isEdit == true"
-            class="eidt-color showUp border-2 rounded-md p-1.5 font-normal bg-white inline-block w-fit h-10"
-          >
-            <input type="date" :min="date" v-model="editStartDate" />
-          </div>
-        </div>
-        <div class="px-2 w-2/5 inline-flex">
-          <div class="p-3 font-semibold inline-block m-auto w-fit  text-gray-400">
-            Start time :
-          </div>
-          <div
-            v-if="isEdit == false"
-            class="border-2 rounded-md py-2 text-center font-normal bg-white inline-block w-2/4 h-10"
-          >
-            {{ startTime }}
-          </div>
-          <div
-            v-if="isEdit == true"
-            class="eidt-color showUp border-2 rounded-md p-1.5 font-normal bg-white inline-block text-center w-24 h-10"
-          >
-            <input type="time" v-model="editStartTime" />
-          </div>
-        </div>
-        <div class="px-2 w-2/5 inline-flex">
-          <div class="p-3 font-semibold inline-block m-auto text-gray-400">
-            Duration :
-          </div>
-          <div
-            class="border-2 rounded-md py-2 text-center font-normal bg-white inline-block w-1/4 h-10"
-          >
-            {{ duration }}
-          </div>
-          <span class="p-3">minutes</span>
-        </div>
-      </div>
-      <!-- category -->
-      <div class="px-2 font-semibold block w-fit">
-        <div class="px-1 w-fit inline-flex">
-          <div class="pr-2 font-semibold inline-block m-auto text-gray-400">
-            Category :
-          </div>
-          <div
-            class="text-ellipsis overflow-hidden border-2 text-black rounded-md py-1.5 px-4 font-normal bg-white inline-block mx-2 w-fit"
-          >
-            {{ category }}
-          </div>
-        </div>
-      </div>
-      <!-- note -->
-      <div class="ml-2 flex my-4 w-full">
-        <div
-          v-if="(noteT !== null && noteT !== '') || isEdit == true"
-          class="inline-block"
-        >
-          <div class="px-2 font-semibold w-fit text-gray-400">Note :</div>
-          <div class="ml-2 mr-6 w-fit">
-            <textarea
-              readonly
-              v-if="isEdit == false"
-              rows="4"
-              cols="35"
-              class=" text-black block px-3 py-2 placeholder-gray-300 border resize-none rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300"
-              v-model="noteT"
-            >
-            </textarea>
-            <textarea
-              rows="4"
-              cols="35"
-              v-if="isEdit == true"
-              class="eidt-color showUp text-black block px-3 py-2 placeholder-gray-300 border resize-none rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300"
-              v-model="editNote"
-            >
-            </textarea>
-          </div>
-        </div>
+<!-- ----------------------------------------------------- -->
+  
 
        <!-- Attachment File -->
        <div class="px-2 font-semibold w-fit text-gray-400" v-if="eventFile!==undefined && isEdit == false">
@@ -725,7 +756,6 @@ const calTime = (hour, minute, addTime) => {
                 label-idle="Drop files here or <span class='filepond--label-action'>Browse</span>" 
                 class="my-2">
           </div>
-      </div>
 
        <!-- button not edit mode -->
         <div v-if="isEdit == false && userRole!=='lecturer'" class="showUp m-auto w-fit">
@@ -742,8 +772,7 @@ const calTime = (hour, minute, addTime) => {
           </button>
           <a href="#submit" class="m-4 custom-btn edit">Submit</a>
         </div>
-      </div>
-    </div>
+
 
   <!-- for alert -->
   <div class="alert-area">
@@ -825,6 +854,7 @@ const calTime = (hour, minute, addTime) => {
       </div>
     </div>
   </div>
+</body>
 </template>
 
 <style scoped>

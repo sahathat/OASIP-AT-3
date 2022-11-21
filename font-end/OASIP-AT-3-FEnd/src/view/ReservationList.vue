@@ -10,12 +10,12 @@ const myRouoter = useRouter();
 const goHome = () => myRouoter.push({ name: "Home" });
 
 const db = "http://localhost:5000/booking";
-const eventLink = `${import.meta.env.BASE_URL}api/events`;
-const categoryLink = `${import.meta.env.BASE_URL}api/categories`;
-const refreshLink = `${import.meta.env.BASE_URL}api/users/refresh`;
-// const eventLink = "http://localhost:8443/api/events";
-// const categoryLink = "http://localhost:8443/api/categories";
-// const refreshLink = "http://localhost:8443/api/users/refresh";
+// const eventLink = `${import.meta.env.BASE_URL}api/events`;
+// const categoryLink = `${import.meta.env.BASE_URL}api/categories`;
+// const refreshLink = `${import.meta.env.BASE_URL}api/users/refresh`;
+const eventLink = "http://localhost:8443/api/events";
+const categoryLink = "http://localhost:8443/api/categories";
+const refreshLink = "http://localhost:8443/api/users/refresh";
 
 //GET event
 const getEvent = async () => {
@@ -345,161 +345,84 @@ const reset = () => {
 </script>
 
 <template>
-  <!-- for filter -->
-  <div
-    class="showUp md:inline-block mt-16 bg-gray-200 p-4 ml-20 w-1/3 rounded-l"
-    style="height: 475px; width: 25%"
-  >
-    <div class="border-gray-500 border-4 border-double w-full">
-      <h1 class="my-8 text-xl font-semibold text-gray-600 w-fit m-auto">
-        Filter Booking
-      </h1>
+<body>
+  <h1 class="text-center" style="margin-top: 30px;">Reservation List</h1>
+    <div class="row" style="margin-top: 15px;margin-bottom: 15px;">
+        <div class="col align-items-end">
+            <nav class="navbar navbar-light navbar-expand-md flex-fill align-items-center" style="background: #e0e4f8;padding-left: 0px;padding-right: 0px;">
+                <div class="container-fluid">
+                  <button data-bs-toggle="collapse" class="navbar-toggler text-dark" data-bs-target="#navcol-1">
+                    <span class="visually-hidden"></span>
+                    <span class="navbar-toggler-icon"></span>
+                  </button>
 
-      <!-- start date -->
-      <div class="w-full block my-2">
-        <div class="px-3 w-full m-auto block">
-          <label for="date" class="font-medium text-sm text-gray-600"
-            >Start date :</label
-          >
+                  <!-- filter menu -->
+                    <div class="collapse navbar-collapse fw-semibold" id="navcol-1" style="margin-left: 30px;margin-right: 30px;"><strong class="flex-fill" style="margin-left: 0px;">Filter Booking :&nbsp;</strong>
+                        <ul class="navbar-nav justify-content-center align-items-center" style="width: 600px;padding-left: 0px;">
+                            <!-- status -->
+                            <li class="nav-item m-auto">
+                              <a class="nav-link active fw-semibold link-dark m-auto" href="#" style="width: auto;padding-bottom: 0px;padding-top: 0px;padding-left: 0px;padding-right: 0px;">Status</a>
+                              <select v-model="fStatus">
+                                    <optgroup label="Select Status">
+                                        <option value="" selected="">All</option>
+                                        <option value="upcoming">Upcoming</option>
+                                        <option value="past">Past</option>
+                                    </optgroup>
+                              </select>
+                            </li>
+                            
+                            <!-- category -->
+                            <li class="nav-item m-auto">
+                              <a class="nav-link active fw-semibold link-dark m-auto" href="#" style="width: auto;padding-bottom: 0px;padding-top: 0px;padding-left: 0px;padding-right: 0px;">Category</a>
+                              <select v-model="fCategory">
+                                    <optgroup label="Select Category">
+                                        <option value="" selected="">All</option>
+                                        <option v-for="cat in categoryList" :key="cat.id" :value="cat.eventCategoryName">
+                                            {{ cat.eventCategoryName }}
+                                        </option>
+                                    </optgroup>
+                              </select>
+                            </li>
+                            <li class="nav-item m-auto" style="width: auto;">
+                              <a class="nav-link fw-semibold link-dark m-auto" href="#" style="width: auto;padding-bottom: 0px;padding-top: 0px;padding-left: 0px;padding-right: 0px;">Start date&nbsp;</a>
+                              <input class="form-control-sm" type="date" v-model="fStartDate"></li>
+                        </ul>
+                    </div>
+                    <button class="btn btn-light" type="reset" style="margin-right: 10px;" @click="reset">Reset</button>
+                    <button class="btn btn-dark" type="button" style="margin-right: 20px;" @click="search">Search</button>
+                </div>
+            </nav>
         </div>
-
-        <div class="px-3 w-5/6 block">
-          <input
-            id="date"
-            class="w-full drop-shadow-md px-3 py-2 placeholder-gray-300 border border-gray-400 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300"
-            type="date"
-            v-model="fStartDate"
-          />
-        </div>
-      </div>
-
-      <!-- status -->
-      <div class="block w-full my-3">
-        <div class="px-3 my-1 w-fit block">
-          <label for="category" class="font-medium text-sm text-gray-600"
-            >Status :</label
-          >
-        </div>
-        <div class="px-1.5 w-5/6 block">
-          <select
-            id="category"
-            class="w-full text-ellipsis overflow-hidden drop-shadow-md cursor-pointer px-3 py-2 mx-2 placeholder-gray-300 border border-gray-400 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300"
-            v-model="fStatus"
-          >
-            <option value="" disable selected>All</option>
-            <option value="upcoming">Upcoming</option>
-            <option value="past">Past</option>
-          </select>
-        </div>
-      </div>
-
-      <!-- category -->
-      <div class="block w-full my-3">
-        <div class="px-3 my-1 w-fit block">
-          <label for="category" class="font-medium text-sm text-gray-600"
-            >Category :</label
-          >
-        </div>
-        <div class="px-1.5 w-5/6 block">
-          <select
-            id="category"
-            class="w-full text-ellipsis overflow-hidden drop-shadow-md cursor-pointer px-3 py-2 mx-2 placeholder-gray-300 border border-gray-400 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300"
-            v-model="fCategory"
-          >
-            <option value="" disable selected>All</option>
-            <option
-              v-for="cat in categoryList"
-              :key="cat.id"
-              :value="cat.eventCategoryName"
-            >
-              {{ cat.eventCategoryName }}
-            </option>
-          </select>
-        </div>
-      </div>
-
-      <!-- search button -->
-      <div class="flex my-3 p-5 w-full">
-        <div class="inline-flex w-1/2 m-auto">
-          <button @click="reset" class="custom-btn reset">Reset</button>
-        </div>
-
-        <div class="inline-flex w-1/2 m-auto">
-          <button @click="search" class="custom-btn search">Search</button>
-        </div>
-      </div>
     </div>
-  </div>
-  <!-- for booking table -->
-  <div
-    class="showUp bg-gray-200 md:inline-block mr-28 mt-16 p-4 rounded-r"
-    style="height: 475px; width: 65%"
-  >
-    <div v-if="filterReservationList.length === 0">
-      <h1 class="drop-shadow-2xl mx-auto w-fit my-20 font-semibold">
-        No event
-      </h1>
+    <div v-if="filterReservationList.length !== 0" class="table-responsive text-center" style="margin-top: 30px;padding-left: 40px;padding-right: 40px;">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>NAME</th>
+                    <th>START DATE</th>
+                    <th>DURATION</th>
+                    <th>CATEGORY</th>
+                    <th>MORE DETAIL</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="Booking in filterReservationList"
+                    :key="Booking.id"
+                    class="text-center border-y border-t-0 dark:border-gray-700"
+                >
+                    <td> {{ Booking.bookingName }} </td>
+                    <td> <h6>{{ Booking.eventStartTime.substring(11, 16) }} </h6> {{ Booking.eventStartTime.substring(0, 10) }}</td>
+                    <td> {{ Booking.eventDuration }} Min. </td>
+                    <td> {{ Booking.categoryName }} </td>
+                    <td><button class="btn btn-primary" type="button" @click="goReservation(Booking)"> Detail</button>&nbsp;</td>
+                </tr>
+                <tr></tr>
+            </tbody>
+        </table>
     </div>
 
-    <div
-      v-if="filterReservationList.length !== 0"
-      class="drop-shadow-2xl bg-white overflow-y-auto mx-auto h-fit"
-      style="height: 440px; width: 100%"
-    >
-      <table class="table-fixed m-auto md:table-flexed w-full">
-        <thead
-          class="sticky top-0 text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
-        >
-          <tr>
-            <th scope="col" class="px-6 py-3">Name</th>
-            <th scope="col" class="px-3 py-3">Start date</th>
-            <th scope="col" class="px-6 py-3">Duration</th>
-            <th scope="col" class="px-6 py-3">Category</th>
-            <th scope="col" class="px-6 py-3">more detail</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            v-for="Booking in filterReservationList"
-            :key="Booking.id"
-            class="text-center border-y border-t-0 dark:border-gray-700"
-          >
-            <th
-              scope="row"
-              class="px-6 py-4 text-gray-900 font-semibold whitespace-nowrap text-ellipsis overflow-hidden"
-            >
-              {{ Booking.bookingName }}
-            </th>
-            <td class="px-1 py-4">
-              <div class="block m-auto">
-                <span class="px-5 w-full block font-semibold">
-                  {{ Booking.eventStartTime.substring(11, 16) }}
-                </span>
-                <span class="px-5 w-full block font-normal">
-                  {{ Booking.eventStartTime.substring(0, 10) }}
-                </span>
-              </div>
-            </td>
-            <td class="px-6 py-4">
-              <span class="font-semibold">{{ Booking.eventDuration }}</span>
-              <span>Min.</span>
-            </td>
-            <td class="px-6 py-4 text-ellipsis overflow-hidden">
-              {{ Booking.categoryName }}
-            </td>
-            <td class="px-14 py-4">
-              <button
-                @click="goReservation(Booking)"
-                class="text-black hover:text-white border border-gray-800 hover:bg-gray-900 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:border-gray-600 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-800"
-              >
-                Detail
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
+    <!-- ------------------------------------------------------------------------------------------------------ -->
+    
     <!-- for alert -->
     <div class="alert-area">
       <div v-if="noInputFilter == true" class="alert info text-sm">
@@ -517,7 +440,7 @@ const reset = () => {
         please try again.
       </div>
     </div>
-  </div>
+</body>
 </template>
 
 <style scoped>

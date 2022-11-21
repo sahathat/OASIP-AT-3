@@ -4,10 +4,10 @@ import { useRoute,useRouter } from "vue-router";
 
 const userList = ref([]);
 const db = "http://localhost:5000/booking";
-const userLink = `${import.meta.env.BASE_URL}api/userList`;
-const refreshLink =  `${import.meta.env.BASE_URL}api/users/refresh`;
-// const userLink = "http://localhost:8443/api/userList";
-// const refreshLink = "http://localhost:8443/api/users/refresh";
+// const userLink = `${import.meta.env.BASE_URL}api/userList`;
+// const refreshLink =  `${import.meta.env.BASE_URL}api/users/refresh`;
+const userLink = "http://localhost:8443/api/userList";
+const refreshLink = "http://localhost:8443/api/users/refresh";
 
 const { params } = useRoute();
 const myRouoter = useRouter();
@@ -90,87 +90,46 @@ onUpdated(async () => {
 </script>
 
 <template>
-  <!-- for user table -->
-  <div
-    class="showUp bg-gray-200 md:inline-block mx-auto mt-5 p-4 rounded-r"
-    style="height: 540px; width: 80%"
-  >
-    <div class="my-auto" v-if="userRole=='admin'">
-      <p class="text-right text-lg font-bold text-gray-900">
-          The total of users are <span class="text-xl text-red-500">{{ userList.length }}</span> users
-        <button class="items-center">
-          <img src="../assets/add-user.png" 
-              @click="goCreateUser"
-              class="w-10">
-        </button>
-      </p>
+<body>
+  <div v-if="userRole=='admin'">
+    <div class="row" style="margin-top: 15px;margin-bottom: 15px;">
+        <div class="col-lg-12 col-xxl-12 justify-content-center align-items-center">
+            <div class="container py-4 py-xl-5" style="margin-bottom: 0px;">
+                <h1 class="text-center">User List</h1>
+                <p class="text-center">The total of users are {{ userList.length }} users</p>
+            </div>
+        </div>
     </div>
-    <div v-if="userRole!=='admin'">
-      <h1 class="drop-shadow-2xl mx-auto w-fit my-20 font-semibold">
-        Only admins can view this page.
-      </h1>
+    <div class="table-responsive text-center flex-fill" style="padding-left: 40px;padding-right: 40px;margin-top: -15px;">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>MORE DETAIL</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="user in userList" :key="user.id">
+                    <td>{{ user.name.substring(0,30) }}<br>
+                        {{ user.name.substring(30,60) }}
+                    </td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.role }}</td>
+                    <td><button class="btn btn-primary" type="button" @click="goUserInfo(user)">Detail</button>&nbsp;</td>
+                </tr>
+                <tr></tr>
+            </tbody>
+        </table>
     </div>
-
-    <div v-if="userList.length === 0 && userRole=='admin'">
-      <h1 class="drop-shadow-2xl mx-auto w-fit my-20 font-semibold">
-        No user
-      </h1>
+    <div class="row">
+        <div class="col" style="margin-right: 50px;">
+          <i class="fas fa-user-plus text-start float-end m-auto" style="font-size: 60px;margin-top: -20px;margin-right: 30px;" @click="goCreateUser"></i>
+        </div>
     </div>
-    
-
-    <div
-      v-if="userList.length !== 0 && userRole=='admin'"
-      class="drop-shadow-2xl bg-white overflow-y-auto mx-auto h-fit"
-      style="height: 90%; width: 100%"
-    >
-      <table class="table-fixed m-auto md:table-flexed w-full">
-        <thead
-          class="sticky top-0 text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
-        >
-          <tr>
-            <th scope="col" class="px-6 py-3">Username</th>
-            <th scope="col" class="px-3 py-3 w-2/5">E-mail</th>
-            <th scope="col" class="px-6 py-3">Role</th>
-            <th scope="col" class="px-6 py-3">more detail</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            v-for="user in userList"
-            :key="user.id"
-            class="text-center border-y border-t-0 dark:border-gray-700"
-          >
-            <th
-              scope="row"
-              class="px-6 py-4 text-gray-900 font-bold whitespace-nowrap text-ellipsis overflow-hidden"
-            >
-              {{ user.name.substring(0,20) }}
-              {{ user.name.substring(21,40) }}
-            </th>
-            <td class="px-1 py-4">
-              <div class="block m-auto">
-                <span class="px-5 w-full block">
-                  {{ user.email }}
-                </span>
-              </div>
-            </td>
-            <td class="px-6 py-4 text-ellipsis overflow-hidden">
-              {{ user.role }}
-            </td>
-            <td class="px-14 py-4">
-              <button
-                @click="goUserInfo(user)"
-                class="text-black hover:text-white border border-gray-800 hover:bg-gray-900 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:border-gray-600 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-800"
-              >
-                Detail
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    
   </div>
+</body>
 </template>
 
 <style scoped>

@@ -250,119 +250,91 @@ const submitt = async () => {
 </script>
 
 <template>
-  <div
-    class="showUp w-3/5 p-5 pb-7 mx-auto mt-10 bg-white rounded-md shadow-xl"
-  >
-    <!-- no data -->
-    <div v-if="isNotNull == false">
-      <h2 class="text-center my-5 font-bold text-xl">No categories data</h2>
-      <div class="w-fit m-auto">
-        <button @click="goCategoriesList" class="custom-btn back block">Go Back</button>
-      </div>
-    </div>
+<body>
+  <h1 class="text-center" style="margin-top: 30px;margin-bottom: 30px;">Category Detail</h1>
 
-    <!-- have data -->
-    <div
-      v-else-if="isNotNull == true"
-      class="p-4 border-double border-4 border-neutral-300 max-w-screen-lg"
-    >
-      <div class="mx-2 w-full">
-        <h1 class="text-center mb-1 font-bold text-2xl">Category Detail</h1>
-        <h3 class="text-center">----------------</h3>
-      </div>
-      <div class="mt-6 flex m-auto w-full">
-        <!-- Name -->
-        <div class=" px-2 w-2/5 inline-flex">
-          <div class="pr-2 font-semibold flex m-auto text-gray-400">Name :</div>
-          <div
-            v-if="isEdit == false"
-            class="border-2 rounded-md p-1.5 font-normal bg-white inline-block w-3/5 h-10"
-          >
-            {{ name }}
-          </div>
-          <div
-            v-if="isEdit == true"
-            class="text-center edit-color showUp border-2 rounded-md p-1.5 font-normal bg-white inline-block w-fit h-10"
-          >
-            <input type="text" v-model="editCategoryName" />
-          </div>
-        </div>
-
-        <!-- Duration - -->
-        <div class="px-2 w-3/5 inline-flex">
-          <div class="font-semibold flex my-auto mx-5 text-gray-400">
-            Duration  :
-          </div>
-          <div
-            v-if="isEdit == false"
-            class="text-center border-2 rounded-md p-1.5 font-normal bg-white inline-block w-2/5 h-10"
-          >
-            {{ duration  }}
-          </div>
-          <div
-            v-if="isEdit == true"
-            class="edit-color showUp border-2 rounded-md p-1.5 font-normal bg-white inline-block w-2/5 h-10"
-          >
-            <input type="number" :min="0" class="text-center" v-model="editCategoryDuration" />
-          </div>
-          <span class=" p-3">minutes</span>
-        </div>
-      </div>
-
-      <!-- name charecters when edit name -->
-      <div
-          v-if="isEdit == true"
-          class="text-gray-300 ml-12 text-right text-xs w-1/3"
-          :style="[editCategoryName.length > 100 ? 'color:red' : '']"
-          > 
-          {{editCategoryName.length}} / 100 charecters
-        </div>
-
-      <!-- description -->
-      <div class="ml-8 flex my-4 w-full">
-          <div class="px-2 mb-2 font-semibold w-fit text-gray-400"> Description : </div>
-          <div class="ml-3">
-            <textarea
-              readonly
-              v-if="isEdit == false"
-              rows="4"
-              cols="50"
-              class="border-2 text-black block px-3 py-2 placeholder-gray-300 resize-none rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300"
-              v-model="description"
-            >
-            </textarea>
-            <textarea
-              rows="4"
-              cols="50"
-              v-if="isEdit == true"
-              class="edit-color showUp border-2 text-black block px-3 py-2 placeholder-gray-300 resize-none rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300"
-              v-model="editCategoryDescription"
-            >
-                
-            </textarea>
-            <div
-              v-if="isEdit == true"
-              class="text-gray-300 text-xs p-1 text-right"
-              :style="[editCategoryDescription.length > 500 ? 'color:red' : '']"
-              > 
-              {{editCategoryDescription.length}} / 500 charecters
+    <!-- show category detail  -->
+    <div class="w-50 card-group justify-content-center align-items-center align-content-center align-self-center my-auto mx-auto" style="margin-left: 100px;margin-right: 100px;margin-bottom: 20px;margin-top: 20px;">
+        <div class="card">
+            <img class="card-img-top w-100 d-block" width="554" height="100" src="../assets/consult.png">
+            <div class="card-body text-center" style="background: #b0f2ff;">
+                <h4 class="text-center card-title"> {{ name }} </h4>
+                <p class="card-text">Owner :</p>
+                <p class="card-text">Description : {{ description }}</p>
+                <p class="card-text">Duration : {{ duration }} minutes </p>
+                <button class="btn btn-light btn-sm float-end" type="button" style="margin-left: 10px;" @click="goCategoriesList()">Back</button>
+                <button class="btn btn-primary btn-sm float-end" type="button" data-bs-target="#editDetail" data-bs-toggle="modal" @click="editInfo">Edit</button>
             </div>
         </div>
-       <!-- button not edit mode -->
-        <div v-if="isEdit == false" class="showUp m-auto w-fit">
-          <button v-if="userRole=='admin'" @click="editInfo" class="m-4 custom-btn edit">Edit</button>
-          <button @click="goCategoriesList"  class="m-4 custom-btn back">Go Back</button>
+    </div>
+
+    <!-- edit details -->
+    <div class="modal fade" role="dialog" tabindex="-1" id="editDetail">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="background: #f0ac72;">
+                    <h4 class="modal-title">Edit Category Detail :&nbsp;</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="container position-relative">
+                        <div class="row text-start d-flex justify-content-center align-items-center" style="margin-left: 0px;padding-right: 0px;margin-right: 0px;">
+                            <div class="col-md-6 col-lg-11 col-xl-4">
+                                <div class="d-flex flex-column justify-content-center align-items-center h-100">
+                                    <div class="d-flex align-items-center p-3">
+                                        <div class="px-2">
+                                            <h6 class="mb-0">Clinic Name :&nbsp;</h6>
+                                            <input v-model="editCategoryName" type="text" style="margin-top: 5px;">
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center p-3" style="margin-top: -10px;">
+                                        <div class="px-2">
+                                            <h6 class="mb-0">Lecturer Owner :&nbsp;</h6>
+                                            <input type="text" style="margin-top: 5px;">
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center p-3" style="margin-top: -10px;">
+                                        <div class="px-2">
+                                            <h6 class="mb-0">Duration :&nbsp;</h6>
+                                            <input type="number" style="margin-top: 5px;" v-model="editCategoryDuration">
+                                            <span class="float-end"> minutes </span>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center p-3" style="margin-top: -10px;">
+                                        <div class="px-2">
+                                            <h6 class="mb-0">Description :&nbsp;</h6>
+                                            <textarea style="padding-right: 0px;padding-left: 0px;width: 200px;height: 100px;margin-top: 5px;" v-model="editCategoryDescription"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer"><button class="btn btn-light" type="button" data-bs-dismiss="modal">Close</button>
+                <button class="btn btn-primary" type="button" style="background: #20c997;" data-bs-target="#submit" data-bs-toggle="modal">Save</button></div>
+            </div>
         </div>
-       <!-- button edit mode -->
-        <div v-if="isEdit == true" class="showUp m-auto w-fit">
-          <button @click="cancel"  class="m-4 custom-btn remove">
-            Cancel
-          </button>
-          <a href="#submit" class="m-4 custom-btn edit" > Submit </a>
-        </div>
+    </div>
+
+    <!-- for submit  -->
+    <div class="modal fade" role="dialog" tabindex="-1" id="submit">
+      <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+          <div class="modal-content">
+              <div class="modal-header text-bg-warning" style="padding-top: 10px;padding-bottom: 10px;padding-left: 20px;padding-right: 20px;">
+                <h4 class="modal-title fs-3">Are you sure ?</h4><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <p class="fs-6">Are you sure to edit category details ?</p>
+              </div>
+              <div class="modal-footer" style="padding-bottom: 5px;padding-top: 5px;">
+                <button class="btn btn-primary btn-sm" type="button" @click="submitt()">Yes</button>
+                <button class="btn btn-danger btn-sm" type="button" data-bs-dismiss="modal" data-bs-target="#">Cancel</button>
+              </div>
+          </div>
       </div>
     </div>
-  </div>
+<!-- -------------------------------------------------------------------------------------------------  -->
 
   <!-- for alert -->
   <div class="alert-area">
@@ -385,30 +357,7 @@ const submitt = async () => {
         <strong class="block">Error!</strong> Edit data unsuccess.
     </div>
   </div>
-
-  <!-- for submit  -->
-  <div id="submit" class="overlay">
-    <div class="popup2 h-96">
-      <h2 class="mb-5 text-xl font-bold bg-white mx-auto w-fit">
-        Are you sure ?
-      </h2>
-
-      <div class="option flex m-auto w-full mt-10">
-        <a
-          @click="submitt"
-          href="#"
-          class="w-full text-center p-2 px-2 bg-gray-200 hover:bg-green-500 font-bold hover:text-white"
-          >Yes</a
-        >
-        <a
-          href="#"
-          class="w-full text-center p-2 px-2 bg-gray-200 hover:bg-rose-500 font-bold hover:text-white"
-          >No</a
-        >
-      </div>
-    </div>
-  </div>
-
+</body>
 </template>
 
 <style scoped>

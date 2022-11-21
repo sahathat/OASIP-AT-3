@@ -28,49 +28,31 @@ setInterval(async () => {
 </script>
 
 <template>
-  <div class="w-3/4 m-auto mt-12 p-10 flex text-gray-100">
-    <!--Left Col-->
-    <div class="showUp w-1/2 inline-block my-9 mx-20">
-      <div class="uppercase tracking-loose w-fit">
-        <p>Would you like to make a reservation?</p>
-      </div>
-      <div class="text-5xl font-bold leading-tight w-fit">
-        <span>Online Appointment</span><br />
-        <span>Scheduling System</span>
-      </div>
-      <div class="leading-normal text-2xl mb-8 w-fit">
-        <p>Booking appointment by yourself!</p>
-      </div>
-      <div class="w-fit">
-        <button
-          class="hover:underline bg-white text-gray-800 font-bold rounded-full py-4 px-8 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out"
-          @click="goLogin"
-        >
-          Start
-        </button>
-      </div>
-      <div v-if="userRole=='guest'" class="w-fit mt-2">
-        <button
-          class="hover:underline bg-white text-gray-800 font-bold rounded-full py-4 px-8 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out"
-          @click="goBooking"
-        >
-          Start as guest
-        </button>
-      </div>
-    </div>
+  <body style="height: 647px;" class="mh-100 mw-100">
+    <section class="position-relative py-4 py-xl-5">
+        <div class="container">
+            <div class="rounded border-0 d-flex flex-column justify-content-center align-items-center p-4 py-5" style="background: linear-gradient(rgba(0,123,255,0.2), rgba(0,123,255,0.2)), center / cover;height: 500px;">
+                <p class="fw-bold text-primary mb-2">Would you like to make a reservation?<br></p>
+                <div class="row">
+                    <div class="col-md-10 col-lg-12 col-xl-8 text-center d-flex d-sm-flex d-md-flex justify-content-center align-items-center mx-auto justify-content-md-start align-items-md-center justify-content-xl-center">
+                        <div>
+                            <h1 class="text-uppercase fw-bold mb-3"><strong>ONLINE &nbsp; APPOINTMENT</strong><br><strong>SCHEDULING SYSTEM</strong><br></h1>
+                            <p class="mb-4">Booking appointment by yourself!<br></p>
 
-    <!--Right Col-->
-    <div class="showUp w-1/3 inline-block h-fit mt-20">
-      <!-- ขึ้นลง -->
-      <div class="w-62 m-auto">
-        <img class="z-50 animate-bounce" src="../assets/test3.png" />
-      </div>
-
-      <!-- เข้มจาง -->
-      <!-- <img class="w-full md:w-3/5 z-50 animate-pulse " src="../assets/test2.png" /> -->
-      <!-- https://tailwindcss.com/docs/animation -->
-    </div>
-  </div>
+                            <!-- button -->
+                            <button v-if="checkRole=='guest'" class="btn btn-primary fs-5 me-2 py-2 px-4" type="button" @click="goLogin">Start</button>
+                            <button v-if="checkRole!=='guest'" class="btn btn-primary fs-5 me-2 py-2 px-4" type="button" @click="goBooking">Start</button>
+                            <button v-if="checkRole=='guest'" class="btn btn-light fs-5 py-2 px-4 ml-2" type="button" @click="goBooking">
+                              Start as Guest
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- <img class="ms-auto" src="../assets/test3.png" width="200" height="205" style="margin-left: 600px; margin-top: -80px;"> -->
+            </div>
+        </div>
+    </section>
+  </body>
 </template>
 
 <style scoped>

@@ -8,6 +8,7 @@ const myRouoter = useRouter();
 const goHome = () => myRouoter.push({ name: "Home" });
 const goBooking = () => myRouoter.push({ name: "Booking" });
 const goSignup = () => myRouoter.push({ name: "CreateUser" });
+const goResetPassword = () => myRouoter.push({ name: "ResetPassword" });
 
 const email = ref("");
 const password = ref("");
@@ -15,8 +16,8 @@ const statusMessage = ref("");
 const status = ref(0)
 
 const db = "http://localhost:5000/booking";
-// const signinLink = 'http://localhost:8443/api/users/signin';
-const signinLink = `${import.meta.env.BASE_URL}api/users/signin`;
+const signinLink = 'http://localhost:8443/api/users/signin';
+// const signinLink = `${import.meta.env.BASE_URL}api/users/signin`;
 
 // validate email
 const isEmailEmpty = ref(undefined);
@@ -39,6 +40,7 @@ const toggleShow = () => {
 const cancel = () => {
   email.value = "" ;
   password.value = "" ;
+  showPassword.value = false;
   goHome()
 };
 
@@ -71,6 +73,7 @@ const checkMatchTODB = async () => {
     // set localStorage
     localStorage.setItem('key',jwt.token)
     localStorage.setItem('token','accessToken')
+    localStorage.setItem('name',jwt.name)
     localStorage.setItem('email',jwt.email)
     localStorage.setItem('role',jwt.role)
 
@@ -89,157 +92,113 @@ const checkMatchTODB = async () => {
 </script>
 
 <template>
-  <div class="showUp container mx-auto">
-    <div
-      class="max-w-screen-sm p-5 pb-7 mt-10 bg-gray-200 rounded-md shadow-xl mx-auto justify-items-center"
-    >
-      <div class="text-center">
-        <h1 class="my-3 text-3xl font-semibold text-gray-700"> Sign in</h1>
-        <p class="text-gray-400">
-          Fill up the form below to login your account.
-        </p>
-      </div>
+  <body>
+    <section class="position-relative py-4 py-xl-5">
+        <div class="container">
+            <div class="row mb-5" style="margin-bottom: 15px;">
+                <div class="col-md-8 col-xl-6 text-center mx-auto">
+                    <h2>Sign in</h2>
+                    <p class="w-lg-50">Fill up the form below to login your account.</p>
+                </div>
+            </div>
+            <div class="row d-flex justify-content-center" style="margin-top: -45px;">
+                <div class="col-md-6 col-lg-8 col-xl-6">
+                    <div class="card mb-5" style="padding-bottom: 17px; padding-top: 17px; background: #eef0f2;">
+                        <div class="card-body d-flex flex-column align-items-center" style="margin-bottom: 0px;padding-bottom: 0px;padding-top: 0px;padding-right: 50px;padding-left: 50px;">
+                            <div class="bs-icon-xl bs-icon-circle bs-icon-semi-white bs-icon my-4"><svg xmlns="http://www.w3.org/2000/svg" width="3em" height="3em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-person text-dark">
+                                    <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z"></path>
+                                </svg></div>
+                            
+                            <!-- form log in -->
+                            <div class="w-75 text-center" style="margin-bottom: 30px;">
+                                <!-- email input -->
+                                <div class="mb-3">
+                                  <input v-model="email" class="form-control" type="email" name="email" placeholder="Email" 
+                                          required :style="[ isEmailEmpty == false ? 'border:red' : '',]">
+                                  <!-- <span v-if="email == ''">
+                                    enter your email !!
+                                  </span> -->
+                                </div>
 
-    <div>
-        <!-- email -->
-        <div class="justify-center mx-auto mt-10 my-3 inline-flex px-4 w-full">
-          <div class="inline-block">
-            <div class="px-3 w-full">
-              <label for="email" class="font-medium text-sm text-gray-600"
-                >Email Address</label
-              >
-              <span v-if="email == ''"
-                class="text-red-500 font-medium ml-1 text-sm" 
-              > enter your email !!
-              </span>
-            </div>
-            <div>
-              <input
-                v-model="email"
-                type="email"
-                name="email"
-                placeholder="somchai.jai@mail.kmutt.ac.th"
-                required
-                :style="[
-                  isEmailEmpty == false ? 'border-color:red' : '',
-                ]"
-                class="w-80 px-3 py-2 mx-2 placeholder-gray-300 border border-gray-400 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300"
-              />
-            </div>
-          </div>
-          </div>
-        
-        <!-- Password -->
-        <div class="justify-center ml-4 my-3 inline-flex px-4 w-full">
-          <div class="inline-block m-auto mx-2">
-            <div class="px-3 w-full">
-              <label for="name" class="font-medium m-auto text-sm text-gray-600"
-                >Password</label
-              >
-              <span v-if="password == ''"
-                class="text-red-500 font-medium ml-1 text-sm" 
-              >
-                enter your password !!
-              </span>
-            </div>
-            <div>
-            <!-- open password -->
-              <input
-               v-if="showPassword"
-                v-model="password"
-                type="text"
-                name="password"
-                required
-                :style="[
-                  isPasswordEmpty == false ? 'border-color:red' : '',
-                ]"
-                class="w-80 px-3 py-2 mx-2 placeholder-gray-300 border border-gray-400 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300"
-              />
+                                <!-- password input -->
+                                <div class="d-lg-flex align-items-lg-center mb-3">
 
-            <!-- close password -->
-              <input
-               v-if="!showPassword"
-                v-model="password"
-                type="password"
-                name="password"
-                required
-                :style="[
-                  isPasswordEmpty == false ? 'border-color:red' : '',
-                ]"
-                class="w-80 px-3 py-2 mx-2 placeholder-gray-300 border border-gray-400 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300"
-              />
+                                  <!-- show pw -->
+                                  <input v-if="showPassword"
+                                         v-model="password"
+                                         class="form-control" type="text" name="password" placeholder="Password" style="margin-right: -27px;" 
+                                         required :style="[ isPasswordEmpty == false ? 'border:red' : '',]" >
+                                  
+                                  <!-- hide pw -->
+                                  <input v-if="!showPassword"
+                                         v-model="password"
+                                         class="form-control" type="password" name="password" placeholder="Password" style="margin-right: -27px;" 
+                                         required :style="[ isPasswordEmpty == false ? 'border:red' : '',]" >
 
-              <!-- button to show/hide password -->
-               <button
-                    class="w-8 h-8 flex-1 px-2 py-2 ml-1 text-gray-600 border border-gray-300 rounded-md focus:ring-gray-500 focus:border-gray-900 sm:text-sm focus:outline-none"
-                    @click="toggleShow">
-                    <span class="icon is-small is-right">
-                        <i class="fas" 
-                            :class="{
-                                'fa-eye-slash': !showPassword,
-                                'fa-eye': showPassword,
-                        }"></i>
-                    </span>
-                </button>
+                                  <!-- to show pw button -->
+                                  <span v-if="!showPassword" @click="toggleShow">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-eye-slash-fill text-dark">
+                                        <path d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7.029 7.029 0 0 0 2.79-.588zM5.21 3.088A7.028 7.028 0 0 1 8 2.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474L5.21 3.089z"></path>
+                                        <path d="M5.525 7.646a2.5 2.5 0 0 0 2.829 2.829l-2.83-2.829zm4.95.708-2.829-2.83a2.5 2.5 0 0 1 2.829 2.829zm3.171 6-12-12 .708-.708 12 12-.708.708z"></path>
+                                    </svg>
+                                  </span>
+                                  
+                                  <!-- to hide pw button -->
+                                  <span v-if="showPassword" @click="toggleShow">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-eye-fill text-dark">
+                                        <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"></path>
+                                        <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"></path>
+                                    </svg>
+                                  </span>
+                                </div>
+                                <!-- <span v-if="password == ''" > enter your password !! </span> -->
+
+                                <!-- forgot pw link -->
+                                <div class="mb-3">
+                                    <a><p class="fs-6 fw-lighter text-muted font-italic" @click="goResetPassword"> Forgot your password? </p></a>
+                                    
+                                    <!-- submit button -->
+                                    <button class="btn btn-dark d-block w-100" style="margin-bottom: 16px;padding-top: 10px;padding-bottom: 10px;" data-bs-target="#submit" data-bs-toggle="modal">
+                                      Login
+                                    </button>
+
+                                    <!-- login with ms -->
+                                    <button class="btn btn-primary d-block w-100" style="margin-bottom: 16px;padding-top: 10px;padding-bottom: 10px;">
+                                        Login with Microsoft
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- back button -->
+                    <button @click="cancel()" class="btn btn-danger float-right d-lg-flex justify-content-end align-items-end align-content-end align-self-end me-auto" 
+                            type="button" style="margin-top: -20px">
+                      Back
+                    </button>
+                </div>
             </div>
-          </div>
         </div>
+    </section>
+
+  <!-- --------------------------- -->
+    <!-- for submit  -->
+    <div class="modal fade" role="dialog" tabindex="-1" id="submit">
+      <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+          <div class="modal-content">
+              <div class="modal-header text-bg-warning" style="padding-top: 10px;padding-bottom: 10px;padding-left: 20px;padding-right: 20px;">
+                <h4 class="modal-title fs-3">Are you sure ?</h4><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <p class="fs-6">Are you sure to sign in ?</p>
+              </div>
+              <div class="modal-footer" style="padding-bottom: 5px;padding-top: 5px;">
+                <button class="btn btn-primary btn-sm" type="button" @click="checkMatchTODB()">Yes</button>
+                <button class="btn btn-danger btn-sm" type="button" data-bs-dismiss="modal" data-bs-target="#">Cancel</button>
+              </div>
+          </div>
+      </div>
     </div>
-
-         
-          <!-- submit button -->
-          <div class="justify-center w-full mx-auto">
-          <div class="mx-auto ml-16 w-2/5 justify-center inline-flex p-5">
-            <a
-              href="#submit"
-              class="font-bold text-gray-900 hover:text-white border border-gray-800 hover:border-green-400 hover:scale-110 focus:ring-1 focus:outline-none focus:ring-gray-300 rounded-lg text-sm text-center dark:border-gray-600 dark:text-gray-400 dark:hover:text-white dark:hover:bg-green-400 dark:focus:ring-gray-800 p-5"
-            >
-              Submit !
-            </a>
-          </div>
-
-          <!-- cancel button -->
-          <div class="inline-flex p-5 -ml-16 w-1/5 justify-center">
-            <button
-              @click="cancel()"
-              class="font-bold text-gray-900 hover:text-white border border-gray-800 hover:border-red-400 hover:scale-110 focus:ring-1 focus:outline-none focus:ring-gray-300 rounded-lg text-sm text-center dark:border-gray-600 dark:text-gray-400 dark:hover:text-white dark:hover:bg-red-400 dark:focus:ring-gray-800 p-5"
-            >
-              Cancel
-            </button>
-          </div>
-
-          <div class="inline-flex p-5 mx-auto w-2/5 justify-start text-sm">
-            <button 
-              @click="goSignup()" 
-              class="hover:text-blue-600 underline"
-              >
-              Create a new account ?
-            </button>
-          </div>
-        </div>
-      </div>
- 
-      <!-- for submit  -->
-      <div id="submit" class="overlay">
-        <div class="popup2 h-96">
-          <h2 class="mb-5 text-xl font-bold bg-white mx-auto w-fit">
-            Are you sure ?
-          </h2>
-
-          <div class="option flex m-auto w-full mt-10">
-            <a
-              @click="checkMatchTODB"
-              href="#"
-              class="w-full text-center p-2 px-2 bg-gray-200 hover:bg-green-500 font-bold hover:text-white"
-              >Yes</a
-            >
-            <a
-              href="#"
-              class="w-full text-center p-2 px-2 bg-gray-200 hover:bg-rose-500 font-bold hover:text-white"
-              >No</a
-            >
-          </div>
-        </div>
 
       <!-- for alert -->
       <!-- warning alert-->
@@ -267,15 +226,7 @@ const checkMatchTODB = async () => {
         </div>
 
         </div>
-      </div>
-        <footer 
-        v-if="status !== 0"
-        class="border-4 bg-amber-500 max-w-screen-md p-5 pb-7 mt-5 rounded-md shadow-xl mx-auto">
-            {{ statusMessage }}
-            <!-- hgfdsafgh -->
-        </footer>
-    </div>
-
+  </body>
 </template>
 
 <style scoped>
