@@ -733,9 +733,9 @@ onUpdated(async () => {
           <strong class="block">Warning!</strong> {{ betweenDateWarning }} 
         </div>
 
-        <div v-if="isStatus == false" class="alert warning text-sm">
+        <div v-if="isStatus == false" class="alert error text-sm">
           <span class="closebtn" @click="isStatus = true">x</span>
-          <strong class="block">Warning!</strong> Can't create booking.
+          <strong class="block">Sorry!</strong> Can't create booking.
         </div>
 
         <div

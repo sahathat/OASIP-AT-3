@@ -77,25 +77,29 @@ setInterval(async () => {
   <router-link :to="{ name:'Home'}" class="font-bold">home</router-link>
   <router-view></router-view> -->
 <body>
-  <nav class="navbar navbar-dark navbar-expand-md bg-dark py-1">
-        <!-- logo -->
-        <div class="container">
-            <a class="navbar-brand d-flex align-items-center" @click="goHome">
-                <img src="./assets/icon.png" width="60" height="55">
-            </a>
-            <span class="w-100 text-white" style="margin-right: 5px;margin-left: 5px;padding-right: 10px;padding-left: 10px;">
-                <BaseDate :isTime='true' />
-                <br>
-                <BaseDate :isDate="true" />
-            </span>
-            <!-- toggle navigation -->
-            <button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-5">
-                <span class="visually-hidden"></span>
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            
-            <!-- menu -->
-            <div v-show="haveKey==true && userRole!=='guest'" class="collapse navbar-collapse w-75" id="navcol-5" style="margin-top: 0px; margin-right: 60px; padding-right: 30px; padding-left: 30px; margin-left: 60px;">
+    <nav class="navbar nav-pills nav-fill navbar-dark navbar-expand-md bg-dark flex-fill justify-content-center align-items-center align-content-center py-3">
+        <div class="container-fluid">
+
+          <!-- icon -->
+          <a class="navbar-brand d-flex align-items-center mx-10" href="#" style="margin-left: 60px; margin-right: 30px;padding-right: 30px;padding-left: 30px;">
+            <img src="./assets/icon.png" width="48" height="43" @click="goHome">
+            <span class="w-100 text-white" style="font-size:15px; margin-right: 5px;margin-left: 5px;padding-right: 10px;padding-left: 10px;">
+              <BaseDate :isTime='true' />
+              <br>
+              <BaseDate :isDate="true" /></span>
+          </a>
+
+          <!-- toggle -->
+          <button v-show="haveKey==true && userRole!=='guest'" data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-5">
+            <span class="visually-hidden">Toggle navigation</span>
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <!-- username -->
+          <span v-if="haveKey==true && userRole!=='guest'" class="ms-auto text-white">{{ userName }} </span>
+
+          <!-- menu -->
+          <div v-show="haveKey==true && userRole!=='guest'" class="ms-auto collapse navbar-collapse text-center justify-content-end align-items-end" id="navcol-5">
                 <ul class="navbar-nav ms-auto">
                     <!-- menu: home -->
                     <li v-if="userRole=='admin' || userRole=='student' || userRole=='lectuere'" class="nav-item">
@@ -127,23 +131,18 @@ setInterval(async () => {
                         <a class="nav-link" @click="goContactUs">Contact</a>
                     </li>
                 </ul>
-            </div>
-            
-            <!-- show username -->
-            <p v-if="haveKey==true && userRole!=='guest'" class="ms-auto w-75 text-white" style="margin-right: 5px;margin-left: 5px;padding-right: 10px;padding-left: 10px;margin-top: 10px;"> 
-                {{ userName }} 
-            </p>
-            
-            <!-- button -->
-            <!-- sign up / sign in -->
-            <a v-if="haveKey==false || userRole=='guest'" class="btn btn-primary ms-md-2 mr-3" role="button" href="#" @click="goCreateUser"> Sign up </a>
-            <a v-if="haveKey==false || userRole=='guest'" class="btn btn-primary ms-md-2" role="button" href="#" @click="goLogin"> Sign in </a>
 
-            <!-- sign out -->
-            <a v-if="haveKey==true && userRole!=='guest'" class="btn btn-danger ms-md-2 ml-2 w-25" role="button" data-bs-target="#signout" data-bs-toggle="modal">Sign out</a>
+                
+                <!-- have token -->
+                <a v-if="haveKey==true && userRole!=='guest'" class="btn btn-danger btn-sm ms-md-2" role="button" data-bs-target="#signout" data-bs-toggle="modal">Sign out</a>
+            </div>
+            <!-- not have token -->
+            <div style="margin-top: 0px;margin-right: 60px;padding-right: 30px;padding-left: 30px;margin-left: 20px;">
+              <a v-if="haveKey==false || userRole=='guest'" @click="goCreateUser" class="btn btn-warning btn-sm ms-md-2" role="button" href="#" style="margin-left: 15px;">Sign up</a>
+              <a v-if="haveKey==false || userRole=='guest'" @click="goLogin" class="btn btn-primary btn-sm ms-md-2" role="button" href="#">Sign in</a>
+            </div>
         </div>
     </nav>
-    
     <div class="flex object-cover ">
         <router-view></router-view> 
     </div>
@@ -173,7 +172,6 @@ setInterval(async () => {
 ul li {
       list-style: none;
       margin: 0 auto;
-      border-left: 2px solid #000000;
       display: inline-block;
       padding: 0 10px;
       position: relative;
@@ -181,20 +179,15 @@ ul li {
       text-align: center;
       font-family: arvo;
     }
-#bg_color {
-	background: linear-gradient(-45deg, #525252, #1b1b1b,#525252,#1b1b1b, #525252,#1b1b1b);
-	background-size: 400% 400%;
-	animation: gradient 30s ease infinite;
-	height: 100vh;
-}
+
 /* signout */
-.signout {
+/* .signout {
   background: #fff;
   color: #000;
   line-height: 3em;
   padding: 3;
   border: none;
-}
+} */
 .signout:before,
 .signout:after {
   content: "";

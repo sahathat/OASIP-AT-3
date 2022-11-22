@@ -631,71 +631,71 @@ const calTime = (hour, minute, addTime) => {
                     <h4 class="modal-title">Edit Reservation Detail :&nbsp;</h4><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="container position-relative" style="padding-left: 0px;padding-right: 0px;">
-                        <div class="row text-start d-flex justify-content-center align-items-center" style="margin-left: 0px;padding-right: 0px;margin-right: 0px;">
-                            <div class="col-md-6 col-lg-11 col-xl-4">
-                                <div class="d-flex flex-column justify-content-center align-items-center h-100" style="margin-bottom: 10px;">
-                                    <div class="d-flex d-sm-flex align-items-center p-3">
-                                        <div class="px-2">
-                                            <h6 class="mb-0">Name :&nbsp;</h6><input type="text" style="margin-top: 5px;" readonly="" v-model="name">
-                                        </div>
-                                        <div class="p-3" style="margin-top: -10px;">
-                                            <div class="px-2">
-                                                <h6 class="mb-0">Email :&nbsp;</h6><input type="text" style="margin-top: 5px;" readonly="" v-model="eMail">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex align-items-center p-3" style="margin-top: -10px;margin-bottom: 10px;">
-                                        <div class="px-2">
-                                            <h6 class="mb-0">Category :&nbsp;</h6><input type="text" style="margin-top: 5px;" readonly="" v-model="category">
-                                        </div>
-                                        <div class="d-flex align-items-center p-3" style="margin-top: -10px;">
-                                            <div class="px-2">
-                                                <h6 class="mb-0">Duration :&nbsp;</h6><input type="number" style="margin-top: 5px;" readonly="" v-model="duration">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex flex-fill align-content-start p-3" style="padding-left: 0px;padding-right: 0px;margin-top: -10px;width: auto;">
-                                        <div class="px-2">
-                                            <h6 class="mb-0">Start Date :&nbsp;</h6><input type="date" v-model="editStartDate">
-                                        </div>
-                                        <div class="d-flex align-items-start p-3" style="padding-top: 0px;padding-left: 0px;margin-top: -15px;padding-right: 0px;padding-bottom: 0px;">
-                                            <h6 class="mb-0">Start Time :<input type="time" v-model="editStartTime">&nbsp;</h6>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex align-items-center p-3" style="margin-top: -10px;">
-                                        <div class="px-2">
-                                            <h6 class="mb-0">Note :&nbsp;</h6><textarea style="padding-right: 0px;padding-left: 0px;width: 300px;height: 100px;margin-top: 5px;"></textarea>
-                                        </div>
-                                    </div>
+                   <div class="container position-relative" style="padding-left: 0px;padding-right: 0px;">
+                      <div class="row text-start d-flex justify-content-center align-items-center" style="margin-left: 0px;padding-right: 0px;margin-right: 0px;">
+                          <div class="col-lg-12">
+                            <div>
+                                <div style="margin-top: 10px;margin-bottom: 10px;">
+                                  <label class="form-label fw-semibold">Name :&nbsp;</label>
+                                  <input class="form-control" type="text" style="margin-left: 10px;" disabled="" v-model="name">
                                 </div>
-                                <div class="d-flex flex-fill justify-content-center align-items-center m-auto p-3" style="margin-top: -10px;margin-bottom: 10px;">
-                                    <!-- have file -->
-                                    <div v-if="changeFile==false && editFileName!=undefined" class="flex-fill px-2">
-                                        <h6 class="mb-0">File :&nbsp;</h6>
-                                        <span> {{ eventFile }} </span>
+
+                                <div style="margin-top: 10px;margin-bottom: 10px;">
+                                  <label class="form-label fw-semibold">Email :&nbsp;</label>
+                                  <input class="form-control" type="text" style="margin-left: 10px;" disabled="" v-model="eMail">
+                                </div>
+                                
+                                <div style="margin-top: 10px;margin-bottom: 10px;">
+                                  <label class="form-label fw-semibold">Category :&nbsp;</label>
+                                  <input class="form-control" type="text" style="margin-left: 10px;" disabled="" v-model="category">
+                                </div>
+                            </div>
+                                <div style="margin-top: 10px;margin-bottom: 10px;">
+                                  <label class="form-label fw-semibold">Duration :&nbsp;</label>
+                                  <input class="form-control" type="text" style="margin-left: 10px;" disabled="" v-model="duration">
+                                </div>
+
+                                <div style="margin-top: 10px;margin-bottom: 10px;">
+                                  <label class="form-label fw-semibold">Start Date :&nbsp;</label>
+                                  <input class="form-control" style="margin-left: 10px;" type="date" v-model="editStarDate" :min="date" >
+                                </div>
+
+                                <div style="margin-top: 10px;margin-bottom: 10px;">
+                                  <label class="form-label fw-semibold">Start Time :&nbsp;</label>
+                                  <input class="form-control" style="margin-left: 10px;" type="time" v-model="editStartTime">
+                                </div>
+
+                                <div style="margin-top: 10px;margin-bottom: 10px;">
+                                  <label class="form-label fw-semibold">Note :&nbsp;</label>
+                                </div>
+                                <textarea class="form-control-lg" style="margin-top: -10px;" v-model="editNote"></textarea>
+
+                                <div style="margin-top: 10px;margin-bottom: 10px;">
+                                  <!-- have file -->
+                                    <div v-if="changeFile==false && editFileName!=undefined" class="flex-fill">
+                                        <h6 class="form-label fw-semibold">File :&nbsp;</h6>
+                                        <span class="form-control" style="margin-top: 10px;margin-bottom: 10px;"> {{ eventFile }} </span>
                                     </div>
                                     <!-- not have file   -->
-                                    <div v-if="changeFile==true || editFileName==undefined" class="flex-fill px-2">
-                                        <h6 class="mb-0">Add File :&nbsp;</h6>
-                                        <input @change="editFileChanged($event)" class="flex-fill" type="file" style="margin-top: 5px;" readonly="">
+                                    <div v-if="changeFile==true || editFileName==undefined" class="flex-fill">
+                                        <h6 class="form-label fw-semibold"> Add File :&nbsp;</h6>
+                                        <input @change="editFileChanged($event)" class="flex-fill form-control" type="file" style="margin-top: 5px;" readonly="">
                                         <p>The file size cannot be larger than 10 MB.</p>
                                     </div>
                                     <div class="d-sm-flex">
                                       <button class="btn btn-primary btn-sm" type="button" style="margin-right: 5px;" @click="openChangeFile">Change File</button>
                                       <button class="btn btn-danger btn-sm" type="button" @click="deleteFile">Delete File</button>
                                     </div>
-                                    
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                  <button class="btn btn-light" type="button" data-bs-dismiss="modal">Cancel</button>
-                  <button class="btn btn-dark" type="button" style="background: #20c997;" data-bs-target="#confirmToEdit" data-bs-toggle="modal">Save</button>
-                </div>
-            </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button class="btn btn-light" type="button" data-bs-dismiss="modal">Cancel</button>
+                    <button class="btn btn-primary" type="button" style="background: #20c997;" data-bs-target="#confirmToEdit" data-bs-toggle="modal">Save</button>
+                  </div>
+              </div>
         </div>
     </div>
 

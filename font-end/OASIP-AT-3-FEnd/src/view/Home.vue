@@ -28,7 +28,7 @@ setInterval(async () => {
 </script>
 
 <template>
-  <body style="height: 647px;" class="mh-100 mw-100">
+  <body class="mh-100 mw-100">
     <section class="position-relative py-4 py-xl-5">
         <div class="container">
             <div class="rounded border-0 d-flex flex-column justify-content-center align-items-center p-4 py-5" style="background: linear-gradient(rgba(0,123,255,0.2), rgba(0,123,255,0.2)), center / cover;height: 500px;">

@@ -411,14 +411,14 @@ const calTime = (hour, minute, addTime) => {
         </div>
 
         <!-- have data -->
-        <div v-else-if="isNotNull == true" class="row row-cols-md-2 row-cols-xl-3 justify-content-center" style="margin-top: -40px;">
+        <div v-else-if="isNotNull == true" class="row row-cols-md-3 row-cols-xl-3 justify-content-center" style="margin-top: -40px;">
             <div class="col-md-7 col-lg-7">
                 <div class="card"><img class="card-img-top w-100 d-block fit-cover" style="height: 200px;" src="../assets/maewzomUser.jpg" width="454" height="200">
                     <div class="card-body flex-fill p-4">
                         <p class="text-end text-primary card-text mb-0">ID : {{id}}</p>
                         <h4 class="card-title" style="margin-top: 15px;">Username : {{ name }}</h4>
                         <div class="flex-fill" style="margin-top: 5px;">
-                          <strong>E-mail :</strong>
+                          <strong>E-mail : </strong>
                           <span style="margin-left: 10px;">{{ email }}</span>
                         </div>
 

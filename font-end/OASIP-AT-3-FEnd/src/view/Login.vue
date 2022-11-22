@@ -105,9 +105,11 @@ const checkMatchTODB = async () => {
                 <div class="col-md-6 col-lg-8 col-xl-6">
                     <div class="card mb-5" style="padding-bottom: 17px; padding-top: 17px; background: #eef0f2;">
                         <div class="card-body d-flex flex-column align-items-center" style="margin-bottom: 0px;padding-bottom: 0px;padding-top: 0px;padding-right: 50px;padding-left: 50px;">
-                            <div class="bs-icon-xl bs-icon-circle bs-icon-semi-white bs-icon my-4"><svg xmlns="http://www.w3.org/2000/svg" width="3em" height="3em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-person text-dark">
-                                    <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z"></path>
-                                </svg></div>
+                            <div class="bs-icon-xl bs-icon-circle bs-icon-semi-white bs-icon my-4">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="3em" height="3em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-person text-dark">
+                                 <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z"></path>
+                              </svg>
+                            </div>
                             
                             <!-- form log in -->
                             <div class="w-75 text-center" style="margin-bottom: 30px;">
@@ -172,7 +174,7 @@ const checkMatchTODB = async () => {
                     </div>
 
                     <!-- back button -->
-                    <button @click="cancel()" class="btn btn-danger float-right d-lg-flex justify-content-end align-items-end align-content-end align-self-end me-auto" 
+                    <button @click="cancel()" class="btn btn-danger float-end d-lg-flex justify-content-end align-items-end align-content-end align-self-end me-auto" 
                             type="button" style="margin-top: -20px">
                       Back
                     </button>
@@ -181,7 +183,6 @@ const checkMatchTODB = async () => {
         </div>
     </section>
 
-  <!-- --------------------------- -->
     <!-- for submit  -->
     <div class="modal fade" role="dialog" tabindex="-1" id="submit">
       <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
