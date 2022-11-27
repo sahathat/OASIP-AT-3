@@ -57,6 +57,54 @@ const getUserEmail = () => {
     userName.value = name
 }
 
+//user
+//GET users
+// const userList = ref([]);
+// const getUser = async () => {
+//   const key = localStorage.getItem('key')
+//   // const user_role = localStorage.getItem('role').substring()
+
+//   const res = await fetch(userLink, {
+//     method: "GET",
+//     headers: {
+//             "Authorization":'Bearer ' + key ,
+//             "Accept": 'application/json',
+//             "content-type": "application/json",
+//         }
+//   });
+//   if (res.status === 200 ) {
+//     userList.value = await res.json();
+//   } else if (res.status === 401 && localStorage.getItem('token')==='accessToken') {
+//     console.log('test...')
+//     const resForRefresh = await fetch(refreshLink, {
+//       headers: {
+//         Authorization: "Bearer " + localStorage.getItem('key'),
+//         isRefreshToken: true ,
+//       },
+//     })
+//       const jwt = await resForRefresh.json()
+//       console.log(jwt)
+//       if(resForRefresh.status === 200){
+//         // set localStorage
+//         localStorage.setItem('key',jwt.token)
+//         localStorage.setItem('token','refreshToken')
+//         getUser()
+//       }
+//     }else if(res.status === 401 && localStorage.getItem('token')==='refreshToken'){
+//         localStorage.removeItem('key')
+//         localStorage.removeItem('token')
+//         goHome()
+//         console.log('เข้า')
+//     }
+// };
+// const goUserInfo= (input) =>
+//   myRouter.push({
+//     name: "UserInfo",
+//     params: {
+//       id: input.id,
+//     },
+// });
+
 //show navbar2
 onBeforeMount(async () => {
     isHaveKey()
@@ -78,10 +126,10 @@ setInterval(async () => {
   <router-view></router-view> -->
 <body>
     <nav class="navbar nav-pills nav-fill navbar-dark navbar-expand-md bg-dark flex-fill justify-content-center align-items-center align-content-center py-3">
-        <div class="container-fluid">
+        <div class="container-fluid" style="margin-left: 60px; margin-right: 30px;padding-right: 30px;padding-left: 30px;">
 
           <!-- icon -->
-          <a class="navbar-brand d-flex align-items-center mx-10" href="#" style="margin-left: 60px; margin-right: 30px;padding-right: 30px;padding-left: 30px;">
+          <a class="navbar-brand d-flex align-items-center mx-10" href="#">
             <img src="./assets/icon.png" width="48" height="43" @click="goHome">
             <span class="w-100 text-white" style="font-size:15px; margin-right: 5px;margin-left: 5px;padding-right: 10px;padding-left: 10px;">
               <BaseDate :isTime='true' />
@@ -96,7 +144,11 @@ setInterval(async () => {
           </button>
 
           <!-- username -->
-          <span v-if="haveKey==true && userRole!=='guest'" class="ms-auto text-white">{{ userName }} </span>
+          <span v-if="haveKey==true && userRole!=='guest'" class="ms-auto text-white">
+            <!-- <a @click="goUserInfo(user)"> -->
+              {{ userName }} 
+            <!-- </a> -->
+          </span>
 
           <!-- menu -->
           <div v-show="haveKey==true && userRole!=='guest'" class="ms-auto collapse navbar-collapse text-center justify-content-end align-items-end" id="navcol-5">

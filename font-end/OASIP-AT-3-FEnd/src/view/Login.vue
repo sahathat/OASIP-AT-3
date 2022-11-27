@@ -2,12 +2,13 @@
 import { computed } from "@vue/reactivity";
 import { onBeforeMount, onUpdated, ref } from "vue";
 import { useRoute,useRouter } from "vue-router";
+import Swal from 'sweetalert2'
 
 const { params } = useRoute();
 const myRouoter = useRouter();
 const goHome = () => myRouoter.push({ name: "Home" });
 const goBooking = () => myRouoter.push({ name: "Booking" });
-const goSignup = () => myRouoter.push({ name: "CreateUser" });
+const goReservationList = () => myRouoter.push({ name: "ReservationList" });
 const goResetPassword = () => myRouoter.push({ name: "ResetPassword" });
 
 const email = ref("");
@@ -78,16 +79,15 @@ const checkMatchTODB = async () => {
     localStorage.setItem('role',jwt.role)
 
     const role = localStorage.getItem('role')
-    console.log(localStorage.getItem('role').substring(6,role.length-1))
+    // console.log(localStorage.getItem('role').substring(6,role.length-1))
     
-    status.value = res.status
-    statusMessage.value = res.status == 200 ? 'Login Successful !' && goHome() :
-        res.status == 401 ? 'Password Incorrect !' :
-        res.status == 404 ? 'A user with the specified email DOES NOT exist and allow the user to edit the email' : ''
+    if(res.status==200){ 
+      Swal.fire('Sign in Successful !', '','success')
+      goReservationList()
+    }
+    else if(res.status==401) Swal.fire('Sign in Fail !', 'Password Incorrect','error')
+    else if(res.status==404) Swal.fire('Sign in Fail !', 'A user with the specified email DOES NOT exist and allow the user to edit the email','warning')
 }
-
-
-
 
 </script>
 
@@ -117,9 +117,6 @@ const checkMatchTODB = async () => {
                                 <div class="mb-3">
                                   <input v-model="email" class="form-control" type="email" name="email" placeholder="Email" 
                                           required :style="[ isEmailEmpty == false ? 'border:red' : '',]">
-                                  <!-- <span v-if="email == ''">
-                                    enter your email !!
-                                  </span> -->
                                 </div>
 
                                 <!-- password input -->
@@ -153,7 +150,6 @@ const checkMatchTODB = async () => {
                                     </svg>
                                   </span>
                                 </div>
-                                <!-- <span v-if="password == ''" > enter your password !! </span> -->
 
                                 <!-- forgot pw link -->
                                 <div class="mb-3">
@@ -201,7 +197,7 @@ const checkMatchTODB = async () => {
       </div>
     </div>
 
-      <!-- for alert -->
+    <!-- for alert -->
       <!-- warning alert-->
       <div class="alert-area">
         <div v-if="email == ''" class="alert warning text-sm">

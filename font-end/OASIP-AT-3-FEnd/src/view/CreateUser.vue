@@ -2,6 +2,7 @@
 import { computed } from "@vue/reactivity";
 import { onBeforeMount, onUpdated, ref } from "vue";
 import { useRoute,useRouter } from "vue-router";
+import Swal from 'sweetalert2'
 
 const { params } = useRoute();
 const myRouoter = useRouter();
@@ -174,20 +175,22 @@ const createUser = async () => {
     status.value = 201
     addSuccess.value = true;
     createStatus = true;
-    statusMessage.value = 'Create new user success'
+    // statusMessage.value = 'Create new user success'
     isStatus.value = true;
-    console.log(addSuccess.value)
+    Swal.fire('Sign up Successful !', 'Please, verify your email address to continue','success')
+
+    // console.log(addSuccess.value)
     setTimeout(() => (addSuccess.value = false), 5000);
   } else {
     status.value = res.status
     addSuccess.value = false;
     createStatus = false;
     isStatus.value = false;
+    Swal.fire('Sign up Fail !', 'Sorry, try to sign up again','error')
   }
   return createStatus;
 };
 
-// ขาดแจ้งเตือนตอนadd ว่าได้หรือไม่
 //GET user
 const getUser = async () => {
   const key = localStorage.getItem('key')
@@ -297,7 +300,7 @@ onBeforeMount(async () => {
                                 <div class="mb-3">
                                   <label class="form-label fw-semibold">Confirm Password :</label>
                                   <small class="float-end align-self-end">{{ confirmPassword.length }}/{{ confirmPasswordLength }} charecters</small>
-                                    <!-- hide password -->
+                                  <!-- hide password -->
                                   <div v-if="!showConfirmPassword" class="d-lg-flex align-items-lg-center">
                                     <input v-model="confirmPassword" class="form-control" type="password" placeholder="enter password" style="margin-right: 5px;">
                                     <svg @click="toggleShowConfirm" class="bi bi-eye-slash-fill d-lg-flex justify-content-lg-end" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" style="font-size: 21px;">

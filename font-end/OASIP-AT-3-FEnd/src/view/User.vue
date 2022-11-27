@@ -1,6 +1,7 @@
 <script setup>
 import { useRoute, useRouter } from "vue-router";
 import { onBeforeMount, ref , computed} from "vue";
+import Swal from 'sweetalert2'
 
 const { params } = useRoute();
 
@@ -243,7 +244,8 @@ const removeUser = async () => {
     }
   });
   if (res.status === 200) {
-    console.log("delete successfully");
+    // console.log("delete successfully");
+    Swal.fire('Delete Successful !', 'The user has been deleted.','success')
     goUserList();
   }
   // refresh token ----------------------------- //
@@ -270,7 +272,8 @@ const removeUser = async () => {
         console.log('เข้า')
     }
     // ------------------------------------------------- // 
-    else console.log("error");
+    else Swal.fire('Delete Fail !', 'Please try again.','error')
+    // console.log("error");
 };
 
 // assign to edit attribute
@@ -318,6 +321,7 @@ const edit =async()=>{
         isEdit.value = false;
         canEdit=true
         editSuccess.value=true
+        Swal.fire('Edit Successful !', 'The User Information has been modified.','success')
        }
        // refresh token ----------------------------- //
       else if (res.status === 401 && localStorage.getItem('token')==='accessToken') {
@@ -346,6 +350,7 @@ const edit =async()=>{
     else {
         canEdit=false
         editSuccess.value=false
+        Swal.fire('Edit Fail !', 'Please try to edit again.','error')
     }
     return canEdit
 }

@@ -3,6 +3,7 @@ import { computed } from "@vue/reactivity";
 import { onBeforeMount, onUpdated, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import vueFilePond from "vue-filepond";
+import Swal from 'sweetalert2'
 
 // Create component
 // const FilePond = vueFilePond(
@@ -282,7 +283,7 @@ const submitt = () => {
       validateIsPast.value = false;
     } else if (overlap()) {
       validateBetweenDate.value = true;
-      //  alert(`event is overlap`)
+      Swal.fire('Booking Appointment Fail!', `${betweenDateWarning.value}.`,'error')
     } else if (addBooking()) {
       name.value = "";
       eMail.value = "";
@@ -354,6 +355,7 @@ const addBooking = async () => {
     addSuccess.value = true;
     createStatus = true;
     isStatus.value = true;
+    Swal.fire('Booking Appointment Successful!', 'The booking has been completed. You can check it on the reservation list page.','success')
     isLogin()
     
     event.value = await res.json()
@@ -377,6 +379,7 @@ const addBooking = async () => {
   } else if (res.status === 400) {
     validateBetweenDate.value = true;
     isStatus.value = false;
+    Swal.fire('Booking Appointment Fail!', 'Failed to booking the Appointment. Please, try again','error')
   }
   // refresh token ----------------------------------------------------------- //
     else if (res.status === 401 && localStorage.getItem('token')==='accessToken') {

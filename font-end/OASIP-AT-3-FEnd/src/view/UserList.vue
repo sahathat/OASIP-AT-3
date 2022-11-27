@@ -10,7 +10,7 @@ const userLink = "http://localhost:8443/api/userList";
 const refreshLink = "http://localhost:8443/api/users/refresh";
 
 const { params } = useRoute();
-const myRouoter = useRouter();
+const myRouter = useRouter();
 const goHome = () => myRouoter.push({ name: "Home" });
 const goCreateUser = ()=>myRouter.push({name:'CreateUser'})
 
@@ -54,7 +54,6 @@ const getUser = async () => {
 };
 
 //router
-const myRouter = useRouter();
 const goUserInfo= (input) =>
   myRouter.push({
     name: "UserInfo",

@@ -1,6 +1,7 @@
 <script setup>
 import { useRoute, useRouter } from "vue-router";
 import { onBeforeMount, ref } from "vue";
+import Swal from 'sweetalert2'
 
 const db = "http://localhost:5000/booking";
 // const categoryLink = `${import.meta.env.BASE_URL}api/categories`;
@@ -202,7 +203,8 @@ const edit =async()=>{
         isEdit.value = false;
         canEdit=true
         editSuccess.value=true
-        console.log(`editSuccess = ${editSuccess.value}`)
+        Swal.fire('Edit Successful !', 'The Category Detail has been modified.','success')
+        // console.log(`editSuccess = ${editSuccess.value}`)
       } 
       // refresh token ----------------------------------------------------------- //
       else if (res.status === 401 && localStorage.getItem('token')==='accessToken') {
@@ -231,6 +233,7 @@ const edit =async()=>{
       else {
               canEdit=false
               editSuccess.value=false
+              Swal.fire('Edit Fail!', 'Please try to edit again.','error')
               // console.log(`editSuccess = ${editSuccess.value}`)
        }
        return canEdit
@@ -243,7 +246,6 @@ const editSuccess=ref()
 const submitt = async () => {
     await edit()
     console.log(editSuccess.value)
-    goCategoriesList()
     getCategory()
 };
 
@@ -295,37 +297,35 @@ const submitt = async () => {
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="container position-relative">
-                        <div class="row text-start d-flex justify-content-center align-items-center" style="margin-left: 0px;padding-right: 0px;margin-right: 0px;">
-                            <div class="col-md-6 col-lg-11 col-xl-4">
-                                <div class="d-flex flex-column justify-content-center align-items-center h-100">
-                                    <div class="d-flex align-items-center p-3">
+                   <div class="container position-relative" style="padding-left: 0px;padding-right: 0px;">
+                      <div class="row text-start d-flex justify-content-center align-items-center" style="margin-left: 0px;padding-right: 0px;margin-right: 0px;">
+                          <div class="col-lg-12">
+                                    <div style="margin-top: 20px;">
                                         <div class="px-2">
                                             <h6 class="mb-0">Clinic Name :&nbsp;</h6>
-                                            <input v-model="editCategoryName" type="text" style="margin-top: 5px;">
+                                            <input v-model="editCategoryName" type="text" class="form-control" style="margin-top: 5px;">
                                         </div>
                                     </div>
-                                    <div class="d-flex align-items-center p-3" style="margin-top: -10px;">
+                                    <div style="margin-top: 20px;">
                                         <div class="px-2">
                                             <h6 class="mb-0">Lecturer Owner :&nbsp;</h6>
-                                            <input type="text" style="margin-top: 5px;">
+                                            <input type="text" class="form-control" style="margin-top: 5px;">
                                         </div>
                                     </div>
-                                    <div class="d-flex align-items-center p-3" style="margin-top: -10px;">
+                                    <div style="margin-top: 20px;">
                                         <div class="px-2">
                                             <h6 class="mb-0">Duration :&nbsp;</h6>
-                                            <input type="number" style="margin-top: 5px;" v-model="editCategoryDuration">
+                                            <input type="number" style="margin-top: 5px;" class="form-control" v-model="editCategoryDuration">
                                             <span class="float-end"> minutes </span>
                                         </div>
                                     </div>
-                                    <div class="d-flex align-items-center p-3" style="margin-top: -10px;">
+                                    <div style="margin-top: 20px;">
                                         <div class="px-2">
                                             <h6 class="mb-0">Description :&nbsp;</h6>
-                                            <textarea style="padding-right: 0px;padding-left: 0px;width: 200px;height: 100px;margin-top: 5px;" v-model="editCategoryDescription"></textarea>
+                                            <textarea style="padding-right: 10px;padding-left: 10px;width: 350px;height: 100px;margin-top: 5px;" class="form-control" v-model="editCategoryDescription"></textarea>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
                         </div>
                     </div>
                 </div>

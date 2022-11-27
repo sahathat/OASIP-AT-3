@@ -1,6 +1,7 @@
 <script setup>
 import { useRoute, useRouter } from "vue-router";
 import { onBeforeMount, ref } from "vue";
+import Swal from 'sweetalert2'
 import 'boxicons'
 
 const { params } = useRoute();
@@ -239,7 +240,8 @@ const removeInfo = async () => {
         }
   })
   if (res.status === 200) {
-    console.log("delete successfully");
+    Swal.fire('Delete Successful !', 'The booking has been deleted.','success')
+    // console.log("delete successfully");
     goReservation();
   } 
   // refresh token ----------------------------------------------------------- //
@@ -266,7 +268,7 @@ const removeInfo = async () => {
         // console.log('เข้า')
       } 
       // ----------------------------------------------------------------------- //
-      else console.log("error");
+      else Swal.fire('Delete Fail !', 'Please try again.','error')
 };
 
 // assign to edit attribute
@@ -386,6 +388,7 @@ const editEvent =async()=>{
         startDate.value = editDetailNote.eventStartTime.substring(0, 10);
         startTime.value = editDetailNote.eventStartTime.substring(11, 16);
         noteT.value = editDetailNote.eventNotes;
+        Swal.fire('Edit Successful !', 'The booking has been modified.','success')
         // eventFile.value = editDetailNote.eventFile
 
         isEdit.value = false;
@@ -419,6 +422,7 @@ const editEvent =async()=>{
         else {
               canEdit.value=false
               editSuccess.value=false
+              Swal.fire('Edit Fail!', 'Please try to edit again.','error')
        }
        getDetail()
        return canEdit.value
@@ -628,7 +632,8 @@ const calTime = (hour, minute, addTime) => {
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header" style="background: #f0ac72;">
-                    <h4 class="modal-title">Edit Reservation Detail :&nbsp;</h4><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h4 class="modal-title">Edit Reservation Detail :&nbsp;</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                    <div class="container position-relative" style="padding-left: 0px;padding-right: 0px;">
@@ -637,38 +642,41 @@ const calTime = (hour, minute, addTime) => {
                             <div>
                                 <div style="margin-top: 10px;margin-bottom: 10px;">
                                   <label class="form-label fw-semibold">Name :&nbsp;</label>
-                                  <input class="form-control" type="text" style="margin-left: 10px;" disabled="" v-model="name">
+                                  <small class="float-end align-self-end"> {{ name.length }}/{{ nameLength }} charecters </small>
+                                  <input class="form-control" type="text" disabled="" v-model="name">
                                 </div>
 
                                 <div style="margin-top: 10px;margin-bottom: 10px;">
                                   <label class="form-label fw-semibold">Email :&nbsp;</label>
-                                  <input class="form-control" type="text" style="margin-left: 10px;" disabled="" v-model="eMail">
+                                  <small class="float-end align-self-end"> {{ eMail.length }}/{{ emailLength }} charecters </small>
+                                  <input class="form-control" type="text" disabled="" v-model="eMail">
                                 </div>
                                 
                                 <div style="margin-top: 10px;margin-bottom: 10px;">
                                   <label class="form-label fw-semibold">Category :&nbsp;</label>
-                                  <input class="form-control" type="text" style="margin-left: 10px;" disabled="" v-model="category">
+                                  <input class="form-control" type="text" disabled="" v-model="category">
                                 </div>
                             </div>
                                 <div style="margin-top: 10px;margin-bottom: 10px;">
                                   <label class="form-label fw-semibold">Duration :&nbsp;</label>
-                                  <input class="form-control" type="text" style="margin-left: 10px;" disabled="" v-model="duration">
+                                  <input class="form-control" type="text" disabled="" v-model="duration">
                                 </div>
 
                                 <div style="margin-top: 10px;margin-bottom: 10px;">
                                   <label class="form-label fw-semibold">Start Date :&nbsp;</label>
-                                  <input class="form-control" style="margin-left: 10px;" type="date" v-model="editStarDate" :min="date" >
+                                  <input class="form-control" type="date" v-model="editStarDate" :min="date" >
                                 </div>
 
                                 <div style="margin-top: 10px;margin-bottom: 10px;">
                                   <label class="form-label fw-semibold">Start Time :&nbsp;</label>
-                                  <input class="form-control" style="margin-left: 10px;" type="time" v-model="editStartTime">
+                                  <input class="form-control" type="time" v-model="editStartTime">
                                 </div>
 
                                 <div style="margin-top: 10px;margin-bottom: 10px;">
                                   <label class="form-label fw-semibold">Note :&nbsp;</label>
+                                  <small class="float-end align-self-end">{{ editNote.length }}/{{ noteLength }} charecters</small>
                                 </div>
-                                <textarea class="form-control-lg" style="margin-top: -10px;" v-model="editNote"></textarea>
+                                <textarea class="form-control-lg" style="margin-top: -10px;width: 390px;" v-model="editNote"></textarea>
 
                                 <div style="margin-top: 10px;margin-bottom: 10px;">
                                   <!-- have file -->

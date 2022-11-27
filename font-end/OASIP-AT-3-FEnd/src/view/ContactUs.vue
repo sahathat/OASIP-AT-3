@@ -5,11 +5,9 @@
 <template>
 <body>
     <div class="container py-4 py-xl-5">
-        <div class="row g-0 mb-4 mb-lg-5" style="margin-top: 10px;margin-left: 0px;margin-right: 0px;margin-bottom: 0px;padding-bottom: 0px;">
+        <div class="row g-0 mb-4 mb-lg-3" style="margin-top: 10px;margin-left: 0px;margin-right: 0px;margin-bottom: 0px;padding-bottom: 0px;">
             <div class="col-md-8 col-lg-11 col-xl-6 text-center mx-auto">
-                <h2 style="padding-bottom: 0px;">Our Team</h2>
-                <p class="w-lg-50" style="margin-bottom: 1px;padding-bottom: 0px;"> เขียนโค้ดเหมือนโกรธโค้ด  เขียนหลายทีจนโค้ดโหด </p>
-                <p class="w-lg-50" style="margin-bottom: 1px;padding-bottom: 0px;"> เขียนแบบนี่แหละที่จารย์โปรด   เขียนจนแทบกระโดดหนี... </p>
+                <h2 style="padding-bottom: 0px;">Our Team : AT-3</h2>
             </div>
         </div>
         <div class="row gy-4 row-cols-md-4 align-items-center align-content-center align-self-center m-auto" style="padding-top: 0px;padding-bottom: 0px;">

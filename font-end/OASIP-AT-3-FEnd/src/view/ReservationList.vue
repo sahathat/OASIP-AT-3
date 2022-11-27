@@ -351,17 +351,19 @@ const reset = () => {
         <div class="col align-items-end">
             <nav class="navbar navbar-light navbar-expand-md flex-fill align-items-center" style="background: #e0e4f8;padding-left: 0px;padding-right: 0px;">
                 <div class="container-fluid">
+                  
                   <button data-bs-toggle="collapse" class="navbar-toggler text-dark" data-bs-target="#navcol-1">
                     <span class="visually-hidden"></span>
                     <span class="navbar-toggler-icon"></span>
                   </button>
 
                   <!-- filter menu -->
-                    <div class="collapse navbar-collapse fw-semibold" id="navcol-1" style="margin-left: 30px;margin-right: 30px;"><strong class="flex-fill" style="margin-left: 0px;">Filter Booking :&nbsp;</strong>
-                        <ul class="navbar-nav justify-content-center align-items-center" style="width: 600px;padding-left: 0px;">
+                    <div class="collapse navbar-collapse fw-semibold" id="navcol-1" style="margin-left: 30px;margin-right: 30px;">
+                        <strong class="flex-fill" style="margin-left: 30px;">Filter Booking :&nbsp;</strong>
+                        <ul class="navbar-nav justify-content-end align-items-start" style="padding-left: 0px; margin-right: 10px; margin-bottom: 10px;">
                             <!-- status -->
-                            <li class="nav-item m-auto">
-                              <a class="nav-link active fw-semibold link-dark m-auto" href="#" style="width: auto;padding-bottom: 0px;padding-top: 0px;padding-left: 0px;padding-right: 0px;">Status</a>
+                            <li class="nav-item" style="margin-left: 10px;">
+                              <a class="nav-link active fw-semibold link-dark m-auto" href="#" style="width: auto;padding-bottom: 0px;padding-top: 0px;padding-left: 0px;padding-right: 0px;">Status :</a>
                               <select v-model="fStatus">
                                     <optgroup label="Select Status">
                                         <option value="" selected="">All</option>
@@ -372,8 +374,8 @@ const reset = () => {
                             </li>
                             
                             <!-- category -->
-                            <li class="nav-item m-auto">
-                              <a class="nav-link active fw-semibold link-dark m-auto" href="#" style="width: auto;padding-bottom: 0px;padding-top: 0px;padding-left: 0px;padding-right: 0px;">Category</a>
+                            <li class="nav-item" style="margin-left: 10px;">
+                              <a class="nav-link active fw-semibold link-dark m-auto" href="#" style="width: auto;padding-bottom: 0px;padding-top: 0px;padding-left: 0px;padding-right: 0px;">Category :</a>
                               <select v-model="fCategory">
                                     <optgroup label="Select Category">
                                         <option value="" selected="">All</option>
@@ -383,13 +385,13 @@ const reset = () => {
                                     </optgroup>
                               </select>
                             </li>
-                            <li class="nav-item m-auto" style="width: auto;">
-                              <a class="nav-link fw-semibold link-dark m-auto" href="#" style="width: auto;padding-bottom: 0px;padding-top: 0px;padding-left: 0px;padding-right: 0px;">Start date&nbsp;</a>
+                            <li class="nav-item" style="margin-left: 10px;">
+                              <a class="nav-link fw-semibold link-dark m-auto" href="#" style="width: auto;padding-bottom: 0px;padding-top: 0px;padding-left: 0px;padding-right: 0px;">Start date : &nbsp;</a>
                               <input class="form-control-sm" type="date" v-model="fStartDate"></li>
                         </ul>
+                    <button class="btn btn-light my-auto" type="reset" style="margin-right: 10px;" @click="reset">Reset</button>
+                    <button class="btn btn-dark my-auto" type="button" style="margin-right: 20px;" @click="search">Search</button>
                     </div>
-                    <button class="btn btn-light" type="reset" style="margin-right: 10px;" @click="reset">Reset</button>
-                    <button class="btn btn-dark" type="button" style="margin-right: 20px;" @click="search">Search</button>
                 </div>
             </nav>
         </div>
