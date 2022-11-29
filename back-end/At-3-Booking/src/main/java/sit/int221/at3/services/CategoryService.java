@@ -11,16 +11,16 @@ import org.springframework.web.server.ResponseStatusException;
 import sit.int221.at3.dtos.category.CategoryDto;
 import sit.int221.at3.dtos.category.CategoryUpdateDto;
 import sit.int221.at3.dtos.event.EventDto;
-import sit.int221.at3.entities.Category;
-import sit.int221.at3.entities.Event;
-import sit.int221.at3.entities.LecturerMapping;
-import sit.int221.at3.entities.Role;
+import sit.int221.at3.entities.*;
 import sit.int221.at3.repositories.CategoryRepository;
 import sit.int221.at3.repositories.EventRepository;
 import sit.int221.at3.repositories.LecturerMappingRepository;
 import sit.int221.at3.utils.ListMapper;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CategoryService {
@@ -43,8 +43,8 @@ public class CategoryService {
 
     private final List<SimpleGrantedAuthority> student = List.of(new SimpleGrantedAuthority(String.valueOf("ROLE_" + Role.student)));
 
-    public List<CategoryDto> getCategoryAll(String param, Authentication authentication){
-        List<Category> categoryList = categoryRepository.findAll(Sort.by(param).descending());
+    public List<CategoryDto> getCategoryAll(Authentication authentication){
+        List<Category> categoryList = categoryRepository.findAll();
         // check if user have lecturer role
         if (lecturer.equals(authentication.getAuthorities())) {
             // call lecturer mapping for filter lecturer email by authentication email
@@ -57,7 +57,11 @@ public class CategoryService {
             // add item when filter by categories in lecturer mapping
             lecturerMappingList.forEach(lm -> categoryList.add(lm.getCategory()));
         }
-        return listMapper.mapList(categoryList,CategoryDto.class,modelMapper);
+
+        List<Category> finalCategoryList = new ArrayList<>(categoryList).stream()
+                .sorted(Comparator.comparing(Category::getId)).collect(Collectors.toList());
+
+        return listMapper.mapList(finalCategoryList,CategoryDto.class,modelMapper);
     }
 
     // guest only
