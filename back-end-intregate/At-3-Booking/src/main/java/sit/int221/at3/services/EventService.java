@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import sit.int221.at3.dtos.event.BlindEventDto;
 import sit.int221.at3.dtos.event.EventCreateDto;
 import sit.int221.at3.dtos.event.EventDto;
 import sit.int221.at3.dtos.event.EventUpdateDto;
@@ -91,6 +92,12 @@ public class EventService {
         return listMapper.mapList(events, EventDto.class, modelMapper);
     }
 
+    public List<BlindEventDto> getBlindEventAll(String params) {
+        // use List event sorted by datetime parameter by descendant order
+        List<Event> events = eventRepository.findAll(Sort.by(params).descending());
+        return listMapper.mapList(events, BlindEventDto.class, modelMapper);
+    }
+
     public EventDto getEventById(Integer id, Authentication authentication) {
         // find event id
         Event event = eventRepository.findById(id).orElseThrow(
@@ -113,6 +120,15 @@ public class EventService {
         }
 
         return modelMapper.map(event, EventDto.class);
+    }
+
+    public BlindEventDto getBlindEventById(Integer id) {
+        // find event id
+        Event event = eventRepository.findById(id).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, id + " is not exist please find new id if exist.")
+        );
+
+        return modelMapper.map(event, BlindEventDto.class);
     }
 
     public List<EventDto> getEventUpcoming(){

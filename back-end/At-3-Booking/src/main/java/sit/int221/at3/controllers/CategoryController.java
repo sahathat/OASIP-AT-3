@@ -26,8 +26,8 @@ public class CategoryController {
 
     // /api/categories [GET]
     @GetMapping("")
-    public List<CategoryDto> getCategoryAll(@RequestParam(defaultValue = "id") String params, Authentication authentication) {
-        return categoryService.getCategoryAll(params, authentication);
+    public List<CategoryDto> getCategoryAll(Authentication authentication) {
+        return categoryService.getCategoryAll(authentication);
     }
 
     // /api/categories/{id} [GET]

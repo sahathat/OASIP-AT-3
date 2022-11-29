@@ -2,8 +2,10 @@ package sit.int221.at3.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import sit.int221.at3.dtos.category.CategoryDto;
+import sit.int221.at3.dtos.event.BlindEventDto;
 import sit.int221.at3.dtos.event.EventCreateDto;
 import sit.int221.at3.dtos.lecturerMapping.ShowLecturerDto;
 import sit.int221.at3.entities.Event;
@@ -28,10 +30,14 @@ public class GuestController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/events")
-    @ResponseStatus(HttpStatus.CREATED)
-    public Event create(@Valid @RequestBody EventCreateDto newEvent) throws MessagingException {
-        return eventService.save(newEvent);
+    @GetMapping("/events")
+    public List<BlindEventDto> getBlindEventAll(@RequestParam(defaultValue = "eventStartTime") String params) {
+        return eventService.getBlindEventAll(params);
+    }
+
+    @GetMapping("/events/{id}")
+    public BlindEventDto getBlindEventAll(@PathVariable("id") Integer id) {
+        return eventService.getBlindEventById(id);
     }
 
     @GetMapping("/categories")
