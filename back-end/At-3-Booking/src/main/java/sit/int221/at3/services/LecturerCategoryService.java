@@ -59,7 +59,16 @@ public class LecturerCategoryService {
         Category newCategory = categoryRepository.findById(mapping.getCategoryId()).orElseThrow(()->{
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,"this mapping category id does not exist");
         });
+
         LecturerMapping newMapping = findByIdToMapOwner(categoryId, mapping.getEmail());
+
+        // check if newMapping has same by other categories
+        List<LecturerMapping> emailMappings = lecturerMappingRepository.getLecturerMappingByEmail(mapping.getEmail());
+        emailMappings.forEach(lm -> {
+            if(lm.getCategory().equals(newCategory)) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "this category id have been exist");
+            }
+        });
 
         // map List and save
         newMapping.setCategory(newCategory);
