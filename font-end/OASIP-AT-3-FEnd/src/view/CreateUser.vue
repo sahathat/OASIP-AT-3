@@ -37,10 +37,12 @@ const validationPassword = () => {
 }
 
 const db = "http://localhost:5000/booking";
-// const userLink= `${import.meta.env.BASE_URL}api/userList`;
-// const signupLink= `${import.meta.env.BASE_URL}api/users/signup`;
-const userLink = 'http://localhost:8443/api/userList';
-const signupLink = 'http://localhost:8443/api/users/signup';
+// //for vm
+// const forLink = '${import.meta.env.BASE_URL}'
+//for localhost
+const forLink = 'http://localhost:8443/'
+const userLink= `${forLink}api/userList`;
+const signupLink= `${forLink}api/users/signup`;
 
 
 
@@ -158,6 +160,7 @@ const status = ref(0)
 const isStatus = ref(undefined);
 const createUser = async () => {
   let createStatus = undefined;
+    console.log(name.value)
   const res = await fetch(signupLink, {
     method: "POST",
     headers: {
@@ -181,6 +184,8 @@ const createUser = async () => {
 
     // console.log(addSuccess.value)
     setTimeout(() => (addSuccess.value = false), 5000);
+  } else if (res.status === 400) {
+    Swal.fire('Sign up Fail !', `This name is exist`,'error')
   } else {
     status.value = res.status
     addSuccess.value = false;

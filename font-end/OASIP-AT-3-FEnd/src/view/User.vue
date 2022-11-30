@@ -6,10 +6,14 @@ import Swal from 'sweetalert2'
 const { params } = useRoute();
 
 const db = "http://localhost:5000/booking";
-// const userLink = `${import.meta.env.BASE_URL}api/userList`;
-// const refreshLink = `${import.meta.env.BASE_URL}api/users/refresh`;
-const userLink = "http://localhost:8443/api/userList";
-const refreshLink = "http://localhost:8443/api/users/refresh";
+
+// //for vm
+// const forLink = '${import.meta.env.BASE_URL}'
+//for localhost
+const forLink = 'http://localhost:8443/'
+const userLink = `${forLink}api/userList`;
+const refreshLink = `${forLink}api/users/refresh`;
+
 
 // ขาดเช็คชื่อ-เมล์ซ้ำ
 const id = params.id;
@@ -25,6 +29,7 @@ const isNotNull = ref(false);
 const myRouoter = useRouter();
 const goUserList = () => myRouoter.push({ name: "UserList" });
 const goHome = () => myRouoter.push({ name: "Home" });
+const goConfirmResetPassword = () => myRouoter.push({ name: "SendEmail" });
 
 const roles = ['admin','lecturer','student']
 
@@ -483,7 +488,14 @@ const calTime = (hour, minute, addTime) => {
                                                 <optgroup label="Select role">
                                                     <option v-for="(eachRole, index) in roles" :key="index" :value="eachRole"> {{ eachRole }} </option>
                                                 </optgroup>
-                                            </select></div>
+                                          </select>
+                                        </div>
+
+                                        <!-- reset password -->
+                                        <div style="margin-top: 10px;margin-bottom: 10px;">
+                                          <label class="form-label fw-semibold"> Reset Password &nbsp; </label>
+                                          <span class="font-thin text-decoration-underline" @click="goConfirmResetPassword" data-bs-dismiss="modal"> click here !</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

@@ -10,12 +10,14 @@ const myRouoter = useRouter();
 const goHome = () => myRouoter.push({ name: "Home" });
 
 const db = "http://localhost:5000/booking";
-// const categoryLink = `${import.meta.env.BASE_URL}api/categories`;
-// const refreshLink = `${import.meta.env.BASE_URL}api/users/refresh`;
-// const categoryOwnerLink = `${import.meta.env.BASE_URL}api/mappings`;
-const categoryLink = "http://localhost:8443/api/categories";
-const refreshLink  = "http://localhost:8443/api/users/refresh";
-const categoryOwnerLink  = "http://localhost:8443/api/mappings";
+// //for vm
+// const forLink = '${import.meta.env.BASE_URL}'
+//for localhost
+const forLink = 'http://localhost:8443/'
+const categoryLink = `${forLink}api/categories`;
+const refreshLink = `${forLink}api/users/refresh`;
+const categoryOwnerLink = `${forLink}api/mappings`;
+
 
 const userRole = ref('guest')
 const checkRole = () => {

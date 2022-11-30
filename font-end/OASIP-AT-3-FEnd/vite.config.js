@@ -10,9 +10,10 @@ export default defineConfig({
       '/api':{
         // target: 'http://intproj21.sit.kmutt.ac.th',
         target: 'http://10.4.56.83:8081',
+        // target: 'http://localhost:8443',
         changeOrigin:true,
         secure:false,
-        // rewrite:  (path)=>path.replace(/^\/api/,'')
+        rewrite:  (path)=>path.replace(/^\/api/,'')
       },
     },
   },

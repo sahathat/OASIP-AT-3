@@ -50,20 +50,16 @@ const checkRole = () => {
 
 const db = "http://localhost:5000/booking";
 // //for vm
-// const eventLink = `${import.meta.env.BASE_URL}api/events`;
-// const categoryLink = `${import.meta.env.BASE_URL}api/categories`;
-// const eventLinkForGuest = `${import.meta.env.BASE_URL}api/guests/events`;
-// const categoryLinkForGuest = `${import.meta.env.BASE_URL}api/guests/categories`;
-// const refreshLink = `${import.meta.env.BASE_URL}api/users/refresh`;
-// const fileLink = `${import.meta.env.BASE_URL}api/files/events`;
-
+// const forLink = '${import.meta.env.BASE_URL}'
 //for localhost
-const eventLink = "http://localhost:8443/api/events";
-const categoryLink = "http://localhost:8443/api/categories";
-const eventLinkForGuest = "http://localhost:8443/api/guests/events";
-const categoryLinkForGuest = "http://localhost:8443/api/guests/categories";
-const refreshLink = "http://localhost:8443/api/users/refresh";
-const fileLink = "http://localhost:8443/api/files/events";
+const forLink = 'http://localhost:8443/'
+
+const eventLink = `${forLink}api/events`;
+const categoryLink = `${forLink}api/categories`;
+const eventLinkForGuest = `${forLink}api/guests/events`;
+const categoryLinkForGuest = `${forLink}api/guests/categories`;
+const refreshLink = `${forLink}api/users/refresh`;
+const fileLink = `${forLink}api/files/events`;
 
 const eventList = ref([]);
 const categoryList = ref([]);

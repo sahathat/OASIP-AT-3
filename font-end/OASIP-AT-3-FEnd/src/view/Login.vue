@@ -9,7 +9,7 @@ const myRouoter = useRouter();
 const goHome = () => myRouoter.push({ name: "Home" });
 const goBooking = () => myRouoter.push({ name: "Booking" });
 const goReservationList = () => myRouoter.push({ name: "ReservationList" });
-const goResetPassword = () => myRouoter.push({ name: "ResetPassword" });
+const goConfirmResetPassword = () => myRouoter.push({ name: "SendEmail" });
 
 const email = ref("");
 const password = ref("");
@@ -153,7 +153,7 @@ const checkMatchTODB = async () => {
 
                                 <!-- forgot pw link -->
                                 <div class="mb-3">
-                                    <a><p class="fs-6 fw-lighter text-muted font-italic" @click="goResetPassword"> Forgot your password? </p></a>
+                                    <a><p class="fs-6 fw-lighter text-muted font-italic" @click="goConfirmResetPassword"> Forgot your password? </p></a>
                                     
                                     <!-- submit button -->
                                     <button class="btn btn-dark d-block w-100" style="margin-bottom: 16px;padding-top: 10px;padding-bottom: 10px;" data-bs-target="#submit" data-bs-toggle="modal">

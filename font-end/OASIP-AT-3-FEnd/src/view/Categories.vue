@@ -4,10 +4,13 @@ import { onBeforeMount, ref } from "vue";
 import Swal from 'sweetalert2'
 
 const db = "http://localhost:5000/booking";
-// const categoryLink = `${import.meta.env.BASE_URL}api/categories`;
-// const refreshLink = `${import.meta.env.BASE_URL}api/users/refresh`;
-const categoryLink = "http://localhost:8443/api/categories";
-const refreshLink = "http://localhost:8443/api/users/refresh";
+// //for vm
+// const forLink = '${import.meta.env.BASE_URL}'
+//for localhost
+const forLink = 'http://localhost:8443/'
+const categoryLink = `${forLink}api/categories`;
+const refreshLink = `${forLink}api/users/refresh`;
+
 
 const { params } = useRoute();
 const myRouoter = useRouter();
