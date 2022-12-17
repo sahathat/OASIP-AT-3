@@ -5,6 +5,7 @@ import { onBeforeMount, ref } from "vue";
 const myRouter = useRouter();
 const goLogin = () => myRouter.push({ name: "Login" });
 const goBooking = () => myRouter.push({ name: "Booking" });
+const goReservationList =()=>myRouter.push({name:'ReservationList'})
 
 const userRole = ref('guest')
 const checkRole = () => {
@@ -15,6 +16,7 @@ const checkRole = () => {
         else if(role.substring(6,role.length-1)=='student') userRole.value = 'student'
     }
     else userRole.value = 'guest'
+    // console.log(userRole.value)
     return userRole.value
 }
 onBeforeMount(async () => {
@@ -40,15 +42,14 @@ setInterval(async () => {
                             <p class="mb-4">Booking appointment by yourself!<br></p>
 
                             <!-- button -->
-                            <button v-if="checkRole=='guest'" class="btn btn-primary fs-5 me-2 py-2 px-4" type="button" @click="goLogin">Start</button>
-                            <button v-if="checkRole!=='guest'" class="btn btn-primary fs-5 me-2 py-2 px-4" type="button" @click="goBooking">Start</button>
-                            <button v-if="checkRole=='guest'" class="btn btn-light fs-5 py-2 px-4 ml-2" type="button" @click="goBooking">
-                              Start as Guest
+                            <!-- <button v-if="checkRole=='guest'" class="btn btn-primary fs-5 me-2 py-2 px-4" type="button" @click="goLogin">Start</button> -->
+                            <button v-if="userRole!=='guest'" class="btn btn-primary fs-5 me-2 py-2 px-4" type="button" @click="goBooking">Start</button>
+                            <button v-if="userRole=='guest'" class="btn btn-primary fs-5 py-2 px-4 ml-2 my-3" type="button" @click="goReservationList">
+                              View Reservation
                             </button>
                         </div>
                     </div>
                 </div>
-                <!-- <img class="ms-auto" src="../assets/test3.png" width="200" height="205" style="margin-left: 600px; margin-top: -80px;"> -->
             </div>
         </div>
     </section>

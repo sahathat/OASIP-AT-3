@@ -15,14 +15,34 @@ const db = "http://localhost:5000/booking";
 //for localhost
 const forLink = 'http://localhost:8443/'
 const eventLink = `${forLink}api/events`;
+const eventGuestLink = `${forLink}api/guests/events`;
 const categoryLink = `${forLink}api/categories`;
 const refreshLink = `${forLink}api/users/refresh`;
 
+const userRole = ref('guest')
+const checkRole = () => {
+    // const getRole = localStorage.getItem('role')
+    // const role = getRole.substring(6,getRole.length-1)
+    const role = localStorage.getItem('role')
+    // console.log(role.substring(6,role.length-1))
+    if(role !== null){
+        if(role.substring(6,role.length-1)=='admin') userRole.value = 'admin'
+        else if(role.substring(6,role.length-1)=='lecturer') userRole.value = 'lecturer'
+        else if(role.substring(6,role.length-1)=='student') userRole.value = 'student'
+    }
+    else userRole.value = 'guest'
+    console.log(userRole.value)
+    return userRole.value
+}
 
 //GET event
 const getEvent = async () => {
   const key = localStorage.getItem('key')
-  const res = await fetch(eventLink, {
+  let link = ''
+  if(userRole.value=='guest') link = eventGuestLink
+  else if(userRole.value!=='guest') link = eventLink
+  console.log(link)
+  const res = await fetch(link, {
     method: "GET",
     headers: {
             "Authorization":'Bearer ' + key ,
@@ -97,6 +117,47 @@ const getCategory = async () => {
     // ----------------------------------------- //
 };
 
+//blind category
+const blindEvent = ref(false)
+const getBlindEvent = async () => {
+  const key = localStorage.getItem('key')
+  const res = await fetch(eventGuestLink, {
+    method: "GET",
+    headers: {
+            "Authorization":'Bearer ' + key ,
+            "Accept": 'application/json',
+            "content-type": "application/json",
+        }
+  });
+  if (res.status === 200) {
+    eventList.value = await res.json();
+    filterReservationList.value = eventList.value
+    blindEvent.value = true
+    console.log(blindEvent.value)
+  } else if (res.status === 401 && localStorage.getItem('token')==='accessToken') {
+    console.log('test...')
+    const resForRefresh = await fetch(refreshLink, {
+      headers: {
+        Authorization: "Bearer " + key ,
+        isRefreshToken: true ,
+      },
+    })
+      const jwt = await resForRefresh.json()
+      console.log(jwt)
+      if(resForRefresh.status === 200){
+        // set localStorage
+        localStorage.setItem('key',jwt.token)
+        localStorage.setItem('token','refreshToken')
+        getEvent()
+      }
+    }else if(res.status === 401 && localStorage.getItem('token')==='refreshToken'){
+        localStorage.removeItem('key')
+        localStorage.removeItem('token')
+        goHome()
+        // console.log('เข้า')
+    }
+};
+
 //router
 const myRouter = useRouter();
 const goReservation = (input) =>
@@ -108,6 +169,7 @@ const goReservation = (input) =>
   });
 
 onBeforeMount(async () => {
+  checkRole();
   await getEvent();
   await getCategory();
 });
@@ -343,6 +405,7 @@ const reset = () => {
   fStatus.value = "";
   fCategory.value = "";
   filterReservationList.value = eventList.value;
+  blindEvent.value = false
 };
 </script>
 
@@ -389,10 +452,12 @@ const reset = () => {
                             </li>
                             <li class="nav-item" style="margin-left: 10px;">
                               <a class="nav-link fw-semibold link-dark m-auto" href="#" style="width: auto;padding-bottom: 0px;padding-top: 0px;padding-left: 0px;padding-right: 0px;">Start date : &nbsp;</a>
-                              <input class="form-control-sm" type="date" v-model="fStartDate"></li>
+                              <input class="form-control-sm" type="date" v-model="fStartDate">
+                            </li>
                         </ul>
-                    <button class="btn btn-light my-auto" type="reset" style="margin-right: 10px;" @click="reset">Reset</button>
+                    <button class="btn btn-dark my-auto" type="button" style="margin-right: 20px;" @click="getBlindEvent">All Events</button>
                     <button class="btn btn-dark my-auto" type="button" style="margin-right: 20px;" @click="search">Search</button>
+                    <button class="btn btn-light my-auto" type="reset" style="margin-right: 10px;" @click="reset">Reset</button>
                     </div>
                 </div>
             </nav>
@@ -402,11 +467,11 @@ const reset = () => {
         <table class="table">
             <thead>
                 <tr>
-                    <th>NAME</th>
+                    <th v-if="userRole!=='guest' && blindEvent==false">NAME</th>
                     <th>START DATE</th>
                     <th>DURATION</th>
                     <th>CATEGORY</th>
-                    <th>MORE DETAIL</th>
+                    <th v-if="userRole!=='guest' && blindEvent==false">MORE DETAIL</th>
                 </tr>
             </thead>
             <tbody>
@@ -414,11 +479,11 @@ const reset = () => {
                     :key="Booking.id"
                     class="text-center border-y border-t-0 dark:border-gray-700"
                 >
-                    <td> {{ Booking.bookingName }} </td>
+                    <td v-if="userRole!=='guest' && blindEvent==false"> {{ Booking.bookingName }} </td>
                     <td> <h6>{{ Booking.eventStartTime.substring(11, 16) }} </h6> {{ Booking.eventStartTime.substring(0, 10) }}</td>
                     <td> {{ Booking.eventDuration }} Min. </td>
                     <td> {{ Booking.categoryName }} </td>
-                    <td><button class="btn btn-primary" type="button" @click="goReservation(Booking)"> Detail</button>&nbsp;</td>
+                    <td v-if="userRole!=='guest' && blindEvent==false"><button  class="btn btn-primary" type="button" @click="goReservation(Booking)"> Detail</button>&nbsp;</td>
                 </tr>
                 <tr></tr>
             </tbody>

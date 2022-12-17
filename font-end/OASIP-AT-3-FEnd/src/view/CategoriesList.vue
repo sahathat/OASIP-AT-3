@@ -1,6 +1,9 @@
 <script setup>
 import { ref, onBeforeMount, onUpdated } from "vue";
 import { useRoute,useRouter } from "vue-router";
+import Swal from 'sweetalert2'
+
+
 const categoryList = ref([]);
 const categoryOwnerList = ref([]);
 const categoryCheck = ref(false);
@@ -15,9 +18,9 @@ const db = "http://localhost:5000/booking";
 //for localhost
 const forLink = 'http://localhost:8443/'
 const categoryLink = `${forLink}api/categories`;
+const allCategoryLink = `${forLink}api/guests/categories`;
 const refreshLink = `${forLink}api/users/refresh`;
-const categoryOwnerLink = `${forLink}api/mappings`;
-
+const mappingLink = `${forLink}api/mappings`;
 
 const userRole = ref('guest')
 const checkRole = () => {
@@ -31,7 +34,7 @@ const checkRole = () => {
     return userRole.value
 }
 
-//GET category
+//GET category by role
 const getCategory = async () => {
   const key = localStorage.getItem('key')
   const res = await fetch(categoryLink, {
@@ -68,10 +71,48 @@ const getCategory = async () => {
     }
 };
 
+//GET all category
+const allCategoryList = ref([])
+const getAllCategory = async () => {
+  const key = localStorage.getItem('key')
+  const res = await fetch(allCategoryLink, {
+    method: "GET",
+    headers: {
+            "Authorization":'Bearer ' + key ,
+            "Accept": 'application/json',
+            "content-type": "application/json",
+        }
+  });
+  if (res.status === 200) {
+    allCategoryList.value = await res.json();
+  } else if (res.status === 401 && localStorage.getItem('token')==='accessToken') {
+    console.log('test...')
+    const resForRefresh = await fetch(refreshLink, {
+      headers: {
+        Authorization: "Bearer " + key,
+        isRefreshToken: true ,
+      },
+    })
+      const jwt = await resForRefresh.json()
+      console.log(jwt)
+      if(resForRefresh.status === 200){
+        // set localStorage
+        localStorage.setItem('key',jwt.token)
+        localStorage.setItem('token','refreshToken')
+        getCategory()
+      }
+    }else if(res.status === 401 && localStorage.getItem('token')==='refreshToken'){
+        localStorage.removeItem('key')
+        localStorage.removeItem('token')
+        goHome()
+        // console.log('เข้า')
+    }
+};
+
 //GET category owner
 // const getCategoryOwner = async () => {
 //   const key = localStorage.getItem('key')
-//   const res = await fetch(categoryOwnerLink, {
+//   const res = await fetch(`${categoryOwnerLink}/${categoryList.value.id}/users`, {
 //     method: "GET",
 //     headers: {
 //             "Authorization":'Bearer ' + key ,
@@ -81,6 +122,8 @@ const getCategory = async () => {
 //   });
 //   if (res.status === 200) {
 //     categoryOwnerList.value = await res.json();
+//     console.log(categoryOwnerList.value)
+
 //   } else if (res.status === 401 && localStorage.getItem('token')==='accessToken') {
 //     console.log('test...')
 //     const resForRefresh = await fetch(refreshLink, {
@@ -96,8 +139,6 @@ const getCategory = async () => {
 //         localStorage.setItem('key',jwt.token)
 //         localStorage.setItem('token','refreshToken')
 //         getCategory()
-//         getCategoryOwner()
-//         console.log(categoryOwnerList.value)
 //       }
 //     }else if(res.status === 401 && localStorage.getItem('token')==='refreshToken'){
 //         localStorage.removeItem('key')
@@ -106,6 +147,34 @@ const getCategory = async () => {
 //         // console.log('เข้า')
 //     }
 // };
+
+//add new owner category
+const loginEmail = localStorage.getItem('email')
+const newOwnerEmail = ref(loginEmail)
+const newOwnerCategory = ref()
+const addOwnerCategory = async () => {
+  const key = localStorage.getItem('key')
+  const res = await fetch(mappingLink, {
+    method: "POST",
+    headers: {
+      "Authorization":'Bearer ' + key ,
+      "Accept": 'application/json',
+      "content-type": "application/json",
+    },
+    body: JSON.stringify({
+      email: newOwnerEmail.value,
+      categoryId: newOwnerCategory.value,
+    }),
+  });
+  
+  if (res.status === 200) {
+    Swal.fire('Add New Owner Category Successful !', '','success')
+  } else if (res.status === 400) {
+    Swal.fire('Fail !', `This category id have been exist`,'error')
+  } else {
+    Swal.fire('Fail !', 'Sorry, try again','error')
+  }
+};
 
 //router
 const myRouter = useRouter();
@@ -133,24 +202,28 @@ onUpdated(async () => {
 <template>
 <body>
     <!-- not have permissions -->
-    <div v-if="userRole!=='admin' && userRole!=='lecturer'" class="container py-4 py-xl-5" style="margin-bottom: 0px;">
+    <div v-if="userRole=='guest'" class="container py-4 py-xl-5" style="margin-bottom: 0px;">
         <h1 class="text-center">Categories</h1>
         <p class="fs-4 text-center">Only admins and lecturers can view this page.</p>
     </div>
 
     <!-- have permissions -->
-    <div v-if="userRole=='admin' || userRole=='lecturer'" class="container py-4 py-xl-5" style="margin-bottom: 0px;">
+    <div v-if="userRole=='admin' || userRole=='lecturer' || userRole=='student'" class="container py-4 py-xl-5" style="margin-bottom: 0px;">
         <h1 class="text-center">Categories</h1>
-        <p class="text-center">The total of Clinic are {{ categoryList.length }} categories</p>
+        <p class="text-center" style="margin-left: 15px;">
+          The total of Clinic are {{ categoryList.length }} categories
+          <img v-if="userRole=='admin'|| userRole=='lecturer'" @click="getAllCategory" src="../assets/add-button.png" type="button" width="40" height="40" style="margin-top: -15px; margin-left: 15px;" data-bs-target="#addOwner" data-bs-toggle="modal">
+        </p>
     </div>
 
     <!-- have clinic -->
-    <div v-if="categoryList.length !== 0 && (userRole=='admin' || userRole=='lecturer')" class="container py-4 py-xl-5" style="margin-top: -64px;">
+    <div v-if="categoryList.length !== 0 && (userRole=='admin' || userRole=='lecturer'|| userRole=='student')" class="container py-4 py-xl-5" style="margin-top: -64px;">
         <div class="row gy-4 row-cols-1 row-cols-md-2 row-cols-xl-3" style="padding-left: 50px;padding-right: 50px;margin-top: 0px;">
             <div v-for="cat in categoryList" :key="cat.id" class="col-lg-3">
                 <div>
                   <img class="rounded img-fluid d-block w-100 fit-cover" style="height: 200px;" src="../assets/clinic/3.png">
                     <div class="py-4">
+                        
                         <h4> {{ cat.eventCategoryName }} </h4>
                         <!-- owner -->
                         <h6> Owner :  <span class="text-base"> {{ cat.eventCategoryDescription }} </span> </h6>
@@ -166,6 +239,68 @@ onUpdated(async () => {
             </div>
         </div>
     </div>
+
+    <!-- to add owner clinic -->
+    <div class="modal fade" role="dialog" tabindex="-1" id="addOwner">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header" style="background: #f0ac72;">
+                        <h4 class="modal-title"> Add Owner Clinic:&nbsp;</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container position-relative" style="padding-left: 0px;padding-right: 0px;">
+                            <div class="row text-start d-flex justify-content-center align-items-center" style="margin-left: 0px;padding-right: 0px;margin-right: 0px;">
+                                <div class="col-lg-12">
+                                    <div>
+                                      <!-- input email -->
+                                        <div style="margin-top: 10px;margin-bottom: 10px;">
+                                          <label class="form-label fw-semibold">Email :&nbsp;</label>
+                                          <input v-if="userRole=='admin'" v-model="newOwnerEmail" type="email" placeholder="email" name="email" class="form-control">
+                                          <input v-if="userRole=='lecturer'" v-model="newOwnerEmail" type="email" placeholder="email" name="email" class="form-control" :disabled=true>
+                                        </div>
+
+                                        <!-- input clinic -->
+                                        <div style="margin-top: 10px;margin-bottom: 10px;">
+                                          <label class="form-label fw-semibold">Category :&nbsp;</label>
+                                          <select v-model="newOwnerCategory" class="form-control">
+                                                <optgroup label="Select category">
+                                                    <option v-for="cat in allCategoryList" :key="cat.id" :value="cat.id"> {{ cat.eventCategoryName }} </option>
+                                                </optgroup>
+                                          </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button class="btn btn-light" type="button" data-bs-dismiss="modal">Cancel</button>
+                      <button class="btn btn-primary" type="button" style="background: #20c997;" data-bs-target="#confirmToAdd" data-bs-toggle="modal">Submit</button>
+                    </div>
+                </div>
+            </div>
+    </div>
+
+    <!-- for confirm to add owner  -->
+    <div class="modal fade" role="dialog" tabindex="-1" id="confirmToAdd">
+      <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+          <div class="modal-content">
+              <div class="modal-header text-bg-warning" style="padding-top: 10px;padding-bottom: 10px;padding-left: 20px;padding-right: 20px;">
+                <h4 class="modal-title fs-3">Are you sure ?</h4><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <p class="fs-6">Are you sure to add new owner clinic?</p>
+              </div>
+              <div class="modal-footer" style="padding-bottom: 5px;padding-top: 5px;">
+                <button class="btn btn-primary btn-sm" type="button" @click="addOwnerCategory" data-bs-dismiss="modal" data-bs-target="#">Yes</button>
+                <button class="btn btn-danger btn-sm" type="button" data-bs-dismiss="modal" data-bs-target="#">Cancel</button>
+              </div>
+          </div>
+      </div>
+    </div>
+        
+        
 </body>
 </template>
 

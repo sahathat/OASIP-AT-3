@@ -12,6 +12,7 @@ const db = "http://localhost:5000/booking";
 //for localhost
 const forLink = 'http://localhost:8443/'
 const eventLink = `${forLink}api/events`;
+const eventGuestLink = `${forLink}api/guests/events`;
 const refreshLink = `${forLink}api/users/refresh`;
 const fileLink = `${forLink}api/files/events`;
 
@@ -49,9 +50,9 @@ const checkRole = () => {
 }
 
 onBeforeMount(async()=>{
+       checkRole()
        await  getEvent()
        await getDetail()
-       checkRole()
        fileUrl.value = await downloadFile(detailBooking.value.id);
        console.log(fileUrl.value);
       //  console.log(detailBooking.value.eventFile);
@@ -139,7 +140,10 @@ setInterval(clock, 1000);
 //GET event
 const getEvent = async () => {
   const key = localStorage.getItem('key')
-  const res = await fetch(eventLink, {
+  let link = ''
+  if(userRole.value=='guest') link = eventGuestLink
+  else if(userRole.value!=='guest') link = eventLink
+  const res = await fetch(link, {
     method: "GET",
     headers: {
             "Authorization":'Bearer ' + key ,
@@ -179,7 +183,6 @@ const getEvent = async () => {
 // get value
 const getDetail = async () => {
   const key = localStorage.getItem('key')
-
   const res = await fetch(`${eventLink}/${params.id}`,{
     method: 'GET',
     headers: {
@@ -371,6 +374,7 @@ const editFileToDB = async() => {
 }
 const editEvent =async()=>{
         const key = localStorage.getItem('key')
+
         console.log(editStartTime.value)
         console.log(editStartDate.value)
         console.log(editNote.value)
@@ -597,12 +601,12 @@ const calTime = (hour, minute, addTime) => {
                     <!-- show details -->
                     <div class="card-body flex-fill p-4">
                         <p class="text-primary card-text mb-0 float-end">ID : {{ id }} </p>
-                        <h4 class="card-title" style="margin-top: 30px;">Name : {{ name }} </h4>
-                        <div>
+                        <h4 v-if="userRole!=='guest'" class="card-title" style="margin-top: 30px;">Name : {{ name }} </h4>
+                        <div v-if="userRole!=='guest'">
                           <strong>E-mail :</strong>
                           <span style="margin-left: 10px;">{{ eMail }}</span>
                         </div>
-                        <div class="flex-fill" style="margin-top: 5px;">
+                        <div class="flex-fill" style="margin-top: 25px;">
                           <strong>Start Date :</strong><span style="margin-left: 10px;"> {{ startDate }} </span>
                           <strong style="margin-left: 20px;">Start Time :</strong><span style="margin-left: 10px;"> {{ startTime }} </span>
                         </div>
@@ -610,10 +614,10 @@ const calTime = (hour, minute, addTime) => {
                           <strong>Category :</strong><span style="margin-left: 10px;">{{ category }}</span>
                           <strong style="margin-left: 9px;">Duration :</strong><span style="margin-left: 5px;"> {{ duration }} Min.</span>
                         </div>
-                        <div v-if="(noteT !== null && noteT !== '')" style="margin-top: 5px; margin-right: 10px;"><strong>Note :</strong>
+                        <div v-if="(noteT !== null && noteT !== '' && userRole!=='guest')" style="margin-top: 5px; margin-right: 10px;"><strong>Note :</strong>
                             <span style="margin-left: 10px;"> {{ noteT }}</span>
                         </div>
-                        <div v-if="eventFile !== undefined" style="margin-top: 5px;">
+                        <div v-if="(eventFile !== undefined && userRole!=='guest')" style="margin-top: 5px;">
                           <strong>Attachment File :</strong>
                           <span style="margin-left: 10px;"> {{ eventFile }} </span>
                           <a :href="fileUrl" :download="id" style="margin-left: 15px;">
@@ -621,8 +625,8 @@ const calTime = (hour, minute, addTime) => {
                           </a>  
                         </div>
                         <div class="d-sm-flex d-md-flex d-lg-flex flex-fill justify-content-center justify-content-sm-end justify-content-lg-center" style="margin-top: 20px;margin-bottom: 0px;">
-                          <button class="btn btn-warning" type="button" style="margin-right: 10px;" data-bs-target="#editEvent" data-bs-toggle="modal"  @click="editInfo">Edit</button>
-                          <button class="btn btn-danger" type="button" style="margin-right: 10px;" data-bs-target="#confirmToRemove" data-bs-toggle="modal">Remove</button>
+                          <button v-if="userRole!=='guest'" class="btn btn-warning" type="button" style="margin-right: 10px;" data-bs-target="#editEvent" data-bs-toggle="modal"  @click="editInfo">Edit</button>
+                          <button v-if="userRole!=='guest'" class="btn btn-danger" type="button" style="margin-right: 10px;" data-bs-target="#confirmToRemove" data-bs-toggle="modal">Remove</button>
                           <button class="btn btn-secondary" type="button" @click="goReservation">Back</button>
                         </div>
                     </div>
@@ -632,7 +636,7 @@ const calTime = (hour, minute, addTime) => {
     </div>
 
     <!-- edit event -->
-    <div class="modal fade" role="dialog" tabindex="-1" id="editEvent">
+    <div v-if="userRole!=='guest'" class="modal fade" role="dialog" tabindex="-1" id="editEvent">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header" style="background: #f0ac72;">
@@ -668,7 +672,7 @@ const calTime = (hour, minute, addTime) => {
 
                                 <div style="margin-top: 10px;margin-bottom: 10px;">
                                   <label class="form-label fw-semibold">Start Date :&nbsp;</label>
-                                  <input class="form-control" type="date" v-model="editStarDate" :min="date" >
+                                  <input class="form-control" type="date" v-model="editStartDate" :min="date" >
                                 </div>
 
                                 <div style="margin-top: 10px;margin-bottom: 10px;">
@@ -712,7 +716,7 @@ const calTime = (hour, minute, addTime) => {
     </div>
 
     <!-- for confirm to remove event  -->
-    <div class="modal fade" role="dialog" tabindex="-1" id="confirmToRemove">
+    <div v-if="userRole!=='guest'" class="modal fade" role="dialog" tabindex="-1" id="confirmToRemove">
       <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
           <div class="modal-content">
               <div class="modal-header text-bg-warning" style="padding-top: 10px;padding-bottom: 10px;padding-left: 20px;padding-right: 20px;">
@@ -730,7 +734,7 @@ const calTime = (hour, minute, addTime) => {
     </div>
 
     <!-- for confirm to edit event  -->
-    <div class="modal fade" role="dialog" tabindex="-1" id="confirmToEdit">
+    <div v-if="userRole!=='guest'" class="modal fade" role="dialog" tabindex="-1" id="confirmToEdit">
       <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
           <div class="modal-content">
               <div class="modal-header text-bg-warning" style="padding-top: 10px;padding-bottom: 10px;padding-left: 20px;padding-right: 20px;">

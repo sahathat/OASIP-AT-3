@@ -32,6 +32,7 @@ const isHaveKey = () => {
     const key = localStorage.getItem('key')
     if(key==null || key==undefined) haveKey.value = false
     else if(key!==null && key!==undefined) haveKey.value = true
+    // console.log(haveKey.value)
     return haveKey.value
 }
 
@@ -57,53 +58,6 @@ const getUserEmail = () => {
     userName.value = name
 }
 
-//user
-//GET users
-// const userList = ref([]);
-// const getUser = async () => {
-//   const key = localStorage.getItem('key')
-//   // const user_role = localStorage.getItem('role').substring()
-
-//   const res = await fetch(userLink, {
-//     method: "GET",
-//     headers: {
-//             "Authorization":'Bearer ' + key ,
-//             "Accept": 'application/json',
-//             "content-type": "application/json",
-//         }
-//   });
-//   if (res.status === 200 ) {
-//     userList.value = await res.json();
-//   } else if (res.status === 401 && localStorage.getItem('token')==='accessToken') {
-//     console.log('test...')
-//     const resForRefresh = await fetch(refreshLink, {
-//       headers: {
-//         Authorization: "Bearer " + localStorage.getItem('key'),
-//         isRefreshToken: true ,
-//       },
-//     })
-//       const jwt = await resForRefresh.json()
-//       console.log(jwt)
-//       if(resForRefresh.status === 200){
-//         // set localStorage
-//         localStorage.setItem('key',jwt.token)
-//         localStorage.setItem('token','refreshToken')
-//         getUser()
-//       }
-//     }else if(res.status === 401 && localStorage.getItem('token')==='refreshToken'){
-//         localStorage.removeItem('key')
-//         localStorage.removeItem('token')
-//         goHome()
-//         console.log('เข้า')
-//     }
-// };
-// const goUserInfo= (input) =>
-//   myRouter.push({
-//     name: "UserInfo",
-//     params: {
-//       id: input.id,
-//     },
-// });
 
 //show navbar2
 onBeforeMount(async () => {
@@ -154,32 +108,32 @@ setInterval(async () => {
           <div v-show="haveKey==true && userRole!=='guest'" class="ms-auto collapse navbar-collapse text-center justify-content-end align-items-end" id="navcol-5">
                 <ul class="navbar-nav ms-auto">
                     <!-- menu: home -->
-                    <li v-if="userRole=='admin' || userRole=='student' || userRole=='lectuere'" class="nav-item">
+                    <li v-if="userRole=='admin' || userRole=='student' || userRole=='lecturer'" class="nav-item" type="button">
                         <a class="nav-link" @click="goHome">Home</a>
                     </li>
 
                     <!-- menu: booking -->
-                    <li v-if="userRole=='admin' || userRole=='student'" class="nav-item">
+                    <li v-if="userRole=='admin' || userRole=='student'" class="nav-item" type="button">
                         <a class="nav-link" @click="goBooking">Booking</a>
                     </li>
 
                     <!-- menu: reservation -->
-                    <li v-if="userRole=='admin' || userRole=='student' || userRole=='lectuere'" class="nav-item">
+                    <li v-if="userRole=='admin' || userRole=='student' || userRole=='lecturer'" class="nav-item" type="button">
                         <a class="nav-link" @click="goReservationList">Reservation</a>
                     </li>
 
                     <!-- menu: categories -->
-                    <li v-if="userRole=='admin' || userRole=='lectuere'" class="nav-item">
+                    <li v-if="userRole=='admin' || userRole=='lecturer' || userRole=='student'"  class="nav-item" type="button">
                         <a class="nav-link" @click="goCategoriesList">Categories</a>
                     </li>
 
                     <!-- menu: users -->
-                    <li v-if="userRole=='admin'" class="nav-item">
+                    <li v-if="userRole=='admin'" class="nav-item" type="button">
                         <a class="nav-link" @click="goUserList">Users</a>
                     </li>
 
                     <!-- menu: contact -->
-                    <li v-if="userRole=='admin' || userRole=='student' || userRole=='lectuere'" class="nav-item">
+                    <li v-if="userRole=='admin' || userRole=='student' || userRole=='lecturer'" class="nav-item" type="button">
                         <a class="nav-link" @click="goContactUs">Contact</a>
                     </li>
                 </ul>
@@ -204,7 +158,8 @@ setInterval(async () => {
       <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
           <div class="modal-content">
               <div class="modal-header text-bg-warning" style="padding-top: 10px;padding-bottom: 10px;padding-left: 20px;padding-right: 20px;">
-                <h4 class="modal-title fs-3">Are you sure ?</h4><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h4 class="modal-title fs-3">Are you sure ?</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div class="modal-body">
                 <p class="fs-6">Are you sure to sign out ?</p>
@@ -231,7 +186,6 @@ ul li {
       text-align: center;
       font-family: arvo;
     }
-
 /* signout */
 /* .signout {
   background: #fff;

@@ -737,6 +737,11 @@ onUpdated(async () => {
           <strong class="block">Sorry!</strong> Can't create booking.
         </div>
 
+        <div v-if="fileName.size>10000000" class="alert warning text-sm">
+          <!-- <span class="closebtn" @click="isStatus = true">x</span> -->
+          <strong class="block">Warning!</strong> The file size cannot be larger than 10 MB.
+        </div>
+
         <div
           v-if="
             getStatus == false ||

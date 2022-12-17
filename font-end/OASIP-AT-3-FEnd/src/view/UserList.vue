@@ -66,8 +66,6 @@ const goUserInfo= (input) =>
 
 const userRole = ref('guest')
 const checkRole = () => {
-    // const getRole = localStorage.getItem('role')
-    // const role = getRole.substring(6,getRole.length-1)
     const role = localStorage.getItem('role')
     // console.log(role.substring(6,role.length-1))
     if(role !== null){
@@ -97,7 +95,8 @@ onUpdated(async () => {
         <div class="col-lg-12 col-xxl-12 justify-content-center align-items-center">
             <div class="container py-4 py-xl-5" style="margin-bottom: 0px;">
                 <h1 class="text-center">User List</h1>
-                <p class="text-center">The total of users are {{ userList.length }} users</p>
+                <p class="text-center" style="margin-left: 15px;">The total of users are {{ userList.length }} users
+                <img @click="goCreateUser" src="../assets/add-user.png" type="button" width="40" height="40" style="margin-top: -15px; margin-left: 15px;"></p>
             </div>
         </div>
     </div>

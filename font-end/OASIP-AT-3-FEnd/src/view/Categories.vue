@@ -277,22 +277,26 @@ const submitt = async () => {
     </div>
 
     <!-- have data : show category detail  -->
-    <div v-else-if="isNotNull == true" class="w-50 card-group justify-content-center align-items-center align-content-center align-self-center my-auto mx-auto" style="margin-left: 100px;margin-right: 100px;margin-bottom: 20px;margin-top: 20px;">
+    <div v-else-if="isNotNull == true"  class="card-group justify-content-center align-items-center align-content-center align-self-center mx-auto" style="margin-left: 100px;margin-right: 100px;margin-bottom: 20px;margin-top: 20px;filter: sepia(0%);width: 450px;height: auto;">
         <div class="card">
-            <img class="card-img-top w-100 d-block" width="554" height="100" src="../assets/consult.png">
-            <div class="card-body text-center" style="background: #b0f2ff;">
-                <h4 class="text-center card-title"> {{ name }} </h4>
-                <p class="card-text">Owner :</p>
-                <p class="card-text">Description : {{ description }}</p>
-                <p class="card-text">Duration : {{ duration }} minutes </p>
+            <div class="card-body text-center" style="background: #baead6;">
+                <h3 class="fw-bold text-center card-title" style="margin-top: 10px;margin-bottom: 10px; padding-left: 50px;padding-right: 50px;">{{ name }}</h3>
+                <div style="padding-left: 20px;padding-right: 20px;padding-top: 15px;padding-bottom: 20px;">
+                    <p class="fw-bold text-start">Owner :</p>
+                    <p class="fw-semibold text-start" style="padding-left: 20px;padding-right: 20px;">Paragraph</p>
+                    <p class="fw-bold text-start">Description :</p>
+                    <p class="fw-semibold text-start" style="padding-left: 20px;padding-right: 20px;">{{ description }}</p>
+                    <p class="fw-bold text-start">Duration :</p>
+                    <p class="fw-semibold text-start" style="padding-left: 20px;padding-right: 20px;"><span class="fw-bold" style="font-size: 18px;">{{ duration }}</span> minutes</p>
+                </div>
                 <button class="btn btn-light btn-sm float-end" type="button" style="margin-left: 10px;" @click="goCategoriesList()">Back</button>
-                <button class="btn btn-primary btn-sm float-end" type="button" data-bs-target="#editDetail" data-bs-toggle="modal" @click="editInfo">Edit</button>
+                <button v-if="userRole!=='student' && userRole!=='guest'" class="btn btn-primary btn-sm float-end" type="button" data-bs-target="#editDetail" data-bs-toggle="modal" @click="editInfo">Edit</button>
             </div>
         </div>
     </div>
 
     <!-- edit details -->
-    <div class="modal fade" role="dialog" tabindex="-1" id="editDetail">
+    <div v-if="userRole!=='student' && userRole!=='guest'" class="modal fade" role="dialog" tabindex="-1" id="editDetail">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header" style="background: #f0ac72;">
