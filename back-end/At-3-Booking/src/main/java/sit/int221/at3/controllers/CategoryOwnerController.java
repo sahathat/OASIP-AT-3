@@ -24,82 +24,60 @@ public class CategoryOwnerController {
     @Autowired
     private UserRepository userRepository;
 
-    private final List<SimpleGrantedAuthority> lecturer = List.of(new SimpleGrantedAuthority(String.valueOf("ROLE_" + Role.lecturer)));
-
     private final List<SimpleGrantedAuthority> admin = List.of(new SimpleGrantedAuthority(String.valueOf("ROLE_" + Role.admin)));
 
     @PostMapping("")
     public LecturerMapping mapCategoryOwner(@RequestBody CategoryMappingDto categoryMappingDto, Authentication authentication) {
-        // lecturer case
-        if(authentication.getAuthorities().equals(lecturer)){
-            if(authentication.getName().equals(categoryMappingDto.getEmail())){
-                return lecturerCategoryService.save(categoryMappingDto);
-            } else {
-                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "email must matching");
-            }
         // admin case
-        } else if(authentication.getAuthorities().equals(admin)){
+        if(authentication.getAuthorities().equals(admin)){
             try {
                 User user = userRepository.findByEmail(categoryMappingDto.getEmail());
                 if(user.getRole() == Role.lecturer){
                     return lecturerCategoryService.save(categoryMappingDto);
                 } else {
-                    throw new ResponseStatusException(HttpStatus.FORBIDDEN, "admin cannot add category owner");
+                    throw new ResponseStatusException(HttpStatus.FORBIDDEN, "admin cannot config category owner in email other roles except lecturer only");
                 }
             } catch (NullPointerException ex) {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "this email does not exist");
             }
         }
-        return null;
+        throw new ResponseStatusException(HttpStatus.FORBIDDEN, "other role except admin cannot config category owner");
     }
 
     @PutMapping("/{categoryId}")
     public LecturerMapping configMapCategoryOwner(@PathVariable Integer categoryId ,@RequestBody CategoryMappingDto categoryMappingDto, Authentication authentication) {
 
-            // lecturer case
-            if(authentication.getAuthorities().equals(lecturer)){
-                if(authentication.getName().equals(categoryMappingDto.getEmail())){
-                    return lecturerCategoryService.update(categoryId,categoryMappingDto);
-                } else {
-                    throw new ResponseStatusException(HttpStatus.FORBIDDEN, "email must matching");
-                }
-            // admin case
-            } else if(authentication.getAuthorities().equals(admin)){
-                try {
-                User user = userRepository.findByEmail(categoryMappingDto.getEmail());
-                    if(user.getRole() == Role.lecturer){
-                        return lecturerCategoryService.update(categoryId,categoryMappingDto);
-                    } else {
-                        throw new ResponseStatusException(HttpStatus.FORBIDDEN, "admin cannot update category owner");
-                    }
-                } catch (NullPointerException ex) {
-                    throw new ResponseStatusException(HttpStatus.NOT_FOUND, "this email does not exist");
-                }
-            }
-        return null;
-    }
-
-    @DeleteMapping("/{categoryId}")
-    public void deleteMapCategoryOwner(@PathVariable Integer categoryId ,@RequestBody CategoryMappingDto categoryMappingDto, Authentication authentication) {
-        // lecturer case
-        if(authentication.getAuthorities().equals(lecturer)){
-            if(authentication.getName().equals(categoryMappingDto.getEmail())){
-                lecturerCategoryService.delete(categoryId,categoryMappingDto);
-            } else {
-                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "email must matching");
-            }
-            // admin case
-        } else if(authentication.getAuthorities().equals(admin)){
+        // admin case
+        if(authentication.getAuthorities().equals(admin)){
             try {
                 User user = userRepository.findByEmail(categoryMappingDto.getEmail());
                 if(user.getRole() == Role.lecturer){
-                    lecturerCategoryService.delete(categoryId,categoryMappingDto);
+                    return lecturerCategoryService.update(categoryId,categoryMappingDto);
                 } else {
-                    throw new ResponseStatusException(HttpStatus.FORBIDDEN, "admin cannot delete category owner");
+                    throw new ResponseStatusException(HttpStatus.FORBIDDEN, "admin cannot config category owner in email other roles except lecturer only");
                 }
             } catch (NullPointerException ex) {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "this email does not exist");
             }
         }
+        throw new ResponseStatusException(HttpStatus.FORBIDDEN, "other role except admin cannot config category owner");
+    }
+
+    @DeleteMapping("/{categoryId}")
+    public void deleteMapCategoryOwner(@PathVariable Integer categoryId ,@RequestBody CategoryMappingDto categoryMappingDto, Authentication authentication) {
+        // admin case
+        if(authentication.getAuthorities().equals(admin)){
+            try {
+                User user = userRepository.findByEmail(categoryMappingDto.getEmail());
+                if(user.getRole() == Role.lecturer){
+                    lecturerCategoryService.delete(categoryId,categoryMappingDto);
+                } else {
+                    throw new ResponseStatusException(HttpStatus.FORBIDDEN, "admin cannot config category owner in email other roles except lecturer only");
+                }
+            } catch (NullPointerException ex) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "this email does not exist");
+            }
+        }
+        throw new ResponseStatusException(HttpStatus.FORBIDDEN, "other role except admin cannot config category owner");
     }
 }
