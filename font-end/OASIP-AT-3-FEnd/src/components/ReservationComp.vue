@@ -572,7 +572,7 @@ const calTime = (hour, minute, addTime) => {
 <template>
 <body>
   <!-- have data -->
-  <div class="container rounded bg-white mt-1 mb-2">
+  <div v-if="isNotNull==true" class="container rounded bg-white mt-1 mb-2">
     <div class="row">
         <div class="col-md-3 border-right">
             <div class="d-flex flex-column align-items-center text-center p-3 py-5"></div>
@@ -663,7 +663,7 @@ const calTime = (hour, minute, addTime) => {
   </div>
 
   <!-- no have data -->
-  <div v-if="isNotNull == false" class="row row-cols-md-2 row-cols-xl-3 justify-content-center" style="margin-top: -40px;">
+  <div v-else-if="isNotNull == false" class="row row-cols-md-2 row-cols-xl-3 justify-content-center" style="margin-top: -40px;">
     <div class="col-lg-6">
       <section class="py-4 py-xl-5">
           <div class="container">
