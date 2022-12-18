@@ -13,7 +13,7 @@ import CreateUser from '../view/CreateUser.vue'
 import Login from '../view/Login.vue'
 import SendEmail from '../view/SendEmail.vue'
 import ResetPassword from '../view/ResetPassword.vue'
-// import Confirm from '../view/ConfirmUser.vue'
+import ScheduleTime from '../view/ScheduleTime.vue'
 
 // import store from '../store/store'
 // import { IS_USER_AUTHENTICATION_GETTER } from '../store/storeconstants'
@@ -48,8 +48,12 @@ const routes=[
         name:'ReservationList',
         component: ReservationList,
         meta: { auth:true }
-    },
-    {
+    },{
+        path:'/schedule-view',
+        name:'ScheduleView',
+        component: ScheduleTime,
+        meta: { auth:false }
+    },{
 
         path:'/categories/:id',
         name:'Categories',

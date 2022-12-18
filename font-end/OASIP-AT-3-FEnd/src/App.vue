@@ -10,6 +10,7 @@ const myRouter = useRouter()
 const goHome = ()=>myRouter.push({name:'Home'})
 const goBooking = ()=>myRouter.push({name:'Booking'})
 const goReservationList =()=>myRouter.push({name:'ReservationList'})
+const goScheduleView =()=>myRouter.push({name:'ScheduleView'})
 const goCategoriesList =()=>myRouter.push({name:'CategoriesList'})
 const goUserList = ()=>myRouter.push({name:'UserList'})
 const goContactUs = ()=>myRouter.push({name:'ContactUs'})
@@ -120,6 +121,10 @@ setInterval(async () => {
                     <!-- menu: reservation -->
                     <li v-if="userRole=='admin' || userRole=='student' || userRole=='lecturer'" class="nav-item" type="button">
                         <a class="nav-link" @click="goReservationList">Reservation</a>
+                    </li>
+
+                    <li v-if="userRole=='guest' || userRole=='student'" class="nav-item" type="button">
+                        <a class="nav-link" @click="goScheduleView">Schedule View</a>
                     </li>
 
                     <!-- menu: categories -->
