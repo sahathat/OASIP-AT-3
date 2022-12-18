@@ -161,9 +161,9 @@ const checkMatchTODB = async () => {
                                     </button>
 
                                     <!-- login with ms -->
-                                    <button class="btn btn-primary d-block w-100" style="margin-bottom: 16px;padding-top: 10px;padding-bottom: 10px;">
+                                    <!-- <button class="btn btn-primary d-block w-100" style="margin-bottom: 16px;padding-top: 10px;padding-bottom: 10px;">
                                         Login with Microsoft
-                                    </button>
+                                    </button> -->
                                 </div>
                             </div>
                         </div>

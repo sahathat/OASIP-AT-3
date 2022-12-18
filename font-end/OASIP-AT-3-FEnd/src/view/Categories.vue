@@ -25,6 +25,7 @@ const duration = ref("");
 const categoryList=ref([])
 const isNotNull = ref(false);
 const categoryDetail = ref({})
+const lecturerOnCategory = ref([])
 
 const userRole = ref('guest')
 const checkRole = () => {
@@ -123,7 +124,20 @@ const getDetail = async () => {
       description.value = categoryDetail.value.eventCategoryDescription;
       duration.value = categoryDetail.value.eventCategoryDuration;
     }
+
+    const res1 = await fetch(`${categoryLink}/${params.id}/users`, {
+    method: "GET",
+    headers: {
+            "Authorization":'Bearer ' + key ,
+            "Accept": 'application/json',
+            "content-type": "application/json",
+        }
+    });
+    lecturerOnCategory.value = await res1.json();
+    console.log(lecturerOnCategory.value)
   } 
+
+
   // refresh token ------------------------------------------------------ //
   else if (res.status === 401 && localStorage.getItem('token')==='accessToken') {
     console.log('test...')
@@ -288,6 +302,16 @@ const submitt = async () => {
                     <p class="fw-semibold text-start" style="padding-left: 20px;padding-right: 20px;">{{ description }}</p>
                     <p class="fw-bold text-start">Duration :</p>
                     <p class="fw-semibold text-start" style="padding-left: 20px;padding-right: 20px;"><span class="fw-bold" style="font-size: 18px;">{{ duration }}</span> minutes</p>
+                    <p class="fw-bold text-start">Lecturer owners :</p>
+                    <p class="fw-semibold text-start" style="padding-left: 20px;padding-right: 20px;">
+                      <ol>
+                        <li v-for="lecturer in lecturerOnCategory">
+                          <span class="fw-bold" style="font-size: 18px;">{{ lecturer.name }} <br></span>
+                          <span class="fw-semibold" style="font-size: 16px;">email: {{ lecturer.email }} <br></span>
+                        </li>
+                      </ol>
+
+                    </p>
                 </div>
                 <button class="btn btn-light btn-sm float-end" type="button" style="margin-left: 10px;" @click="goCategoriesList()">Back</button>
                 <button v-if="userRole!=='student' && userRole!=='guest'" class="btn btn-primary btn-sm float-end" type="button" data-bs-target="#editDetail" data-bs-toggle="modal" @click="editInfo">Edit</button>

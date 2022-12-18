@@ -33,6 +33,10 @@ const detailBooking = ref({});
 const eventList=ref([])
 const isNotNull = ref(false);
 
+const nameLength = ref(100)
+const emailLength = ref(100)
+const noteLength = ref(500)
+
 const myRouoter = useRouter();
 const goReservation = () => myRouoter.push({ name: "ReservationList" });
 const goHome = () => myRouoter.push({ name: "Home" });
@@ -650,13 +654,13 @@ const calTime = (hour, minute, addTime) => {
                             <div>
                                 <div style="margin-top: 10px;margin-bottom: 10px;">
                                   <label class="form-label fw-semibold">Name :&nbsp;</label>
-                                  <small class="float-end align-self-end"> {{ name.length }}/{{ nameLength }} charecters </small>
+                                  <small class="float-end align-self-end"> {{ name.length }}/{{ nameLength }} characters </small>
                                   <input class="form-control" type="text" disabled="" v-model="name">
                                 </div>
 
                                 <div style="margin-top: 10px;margin-bottom: 10px;">
                                   <label class="form-label fw-semibold">Email :&nbsp;</label>
-                                  <small class="float-end align-self-end"> {{ eMail.length }}/{{ emailLength }} charecters </small>
+                                  <small class="float-end align-self-end"> {{ eMail.length }}/{{ emailLength }} characters </small>
                                   <input class="form-control" type="text" disabled="" v-model="eMail">
                                 </div>
                                 
@@ -682,7 +686,7 @@ const calTime = (hour, minute, addTime) => {
 
                                 <div style="margin-top: 10px;margin-bottom: 10px;">
                                   <label class="form-label fw-semibold">Note :&nbsp;</label>
-                                  <small class="float-end align-self-end">{{ editNote.length }}/{{ noteLength }} charecters</small>
+                                  <small class="float-end align-self-end">{{ editNote.length }}/{{ noteLength }} characters</small>
                                 </div>
                                 <textarea class="form-control-lg" style="margin-top: -10px;width: 390px;" v-model="editNote"></textarea>
 
