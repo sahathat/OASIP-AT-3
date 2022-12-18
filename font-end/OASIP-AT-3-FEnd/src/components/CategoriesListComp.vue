@@ -14,7 +14,7 @@ const goHome = () => myRouoter.push({ name: "Home" });
 
 const db = "http://localhost:5000/booking";
 // //for vm
-const forLink = '${import.meta.env.BASE_URL}'
+const forLink = import.meta.env.BASE_URL
 //for localhost
 // const forLink = 'http://localhost:8443/'
 const categoryLink = `${forLink}api/categories`;

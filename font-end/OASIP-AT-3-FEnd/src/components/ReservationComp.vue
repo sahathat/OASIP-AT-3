@@ -8,17 +8,13 @@ const { params } = useRoute();
 
 const db = "http://localhost:5000/booking";
 // //for vm
-const forLink = '${import.meta.env.BASE_URL}'
+const forLink = import.meta.env.BASE_URL
 //for localhost
 // const forLink = 'http://localhost:8443/'
 const eventLink = `${forLink}api/events`;
 const eventGuestLink = `${forLink}api/guests/events`;
 const refreshLink = `${forLink}api/users/refresh`;
 const fileLink = `${forLink}api/files/events`;
-
-// const eventLink = "http://localhost:8443/api/events";
-// const refreshLink = "http://localhost:8443/api/users/refresh";
-// const fileLink = "http://localhost:8443/api/files/events";
 
 const id = params.id;
 const name = ref("");
@@ -572,7 +568,7 @@ const calTime = (hour, minute, addTime) => {
 <template>
 <body>
   <!-- have data -->
-  <div v-if="isNotNull==true" class="container rounded bg-white mt-1 mb-2">
+  <div class="container rounded bg-white mt-1 mb-2">
     <div class="row">
         <div class="col-md-3 border-right">
             <div class="d-flex flex-column align-items-center text-center p-3 py-5"></div>
@@ -649,10 +645,10 @@ const calTime = (hour, minute, addTime) => {
       <div class="col-md-2 mt-5">
             <div class="p-3 py-5">
                 <div class="col-md-12">
-                  <button v-if="userRole!=='guest'" class="btn btn-warning w-100" type="button" data-bs-target="#editEvent" data-bs-toggle="modal"  @click="editInfo">Edit</button>
+                  <button v-if="userRole!=='guest' && userRole!=='lecturer'" class="btn btn-warning w-100" type="button" data-bs-target="#editEvent" data-bs-toggle="modal"  @click="editInfo">Edit</button>
                 </div><br>
                 <div class="col-md-12">
-                  <button v-if="userRole!=='guest'" class="btn btn-danger w-100" type="button" data-bs-target="#confirmToRemove" data-bs-toggle="modal">Remove</button>
+                  <button v-if="userRole!=='guest' && userRole!=='lecturer'" class="btn btn-danger w-100" type="button" data-bs-target="#confirmToRemove" data-bs-toggle="modal">Remove</button>
                 </div><br>
                 <div class="col-md-12">
                   <button class="btn btn-secondary w-100" type="button" @click="goReservation">Back</button>
@@ -663,7 +659,7 @@ const calTime = (hour, minute, addTime) => {
   </div>
 
   <!-- no have data -->
-  <div v-else-if="isNotNull == false" class="row row-cols-md-2 row-cols-xl-3 justify-content-center" style="margin-top: -40px;">
+  <div v-if="isNotNull == false" class="row row-cols-md-2 row-cols-xl-3 justify-content-center" style="margin-top: -40px;">
     <div class="col-lg-6">
       <section class="py-4 py-xl-5">
           <div class="container">

@@ -5,7 +5,7 @@ import { onBeforeMount, ref } from "vue";
 const myRouter = useRouter();
 const goLogin = () => myRouter.push({ name: "Login" });
 const goBooking = () => myRouter.push({ name: "Booking" });
-const goReservationList =()=>myRouter.push({name:'ReservationList'})
+const goScheduleView =()=>myRouter.push({name:'ScheduleView'})
 
 const userRole = ref('guest')
 const checkRole = () => {
@@ -44,7 +44,7 @@ setInterval(async () => {
                             <!-- button -->
                             <!-- <button v-if="checkRole=='guest'" class="btn btn-primary fs-5 me-2 py-2 px-4" type="button" @click="goLogin">Start</button> -->
                             <button v-if="userRole!=='guest'" class="btn btn-primary fs-5 me-2 py-2 px-4" type="button" @click="goBooking">Start</button>
-                            <button v-if="userRole=='guest'" class="btn btn-primary fs-5 py-2 px-4 ml-2 my-3" type="button" @click="goReservationList">
+                            <button v-if="userRole=='guest'" class="btn btn-primary fs-5 py-2 px-4 ml-2 my-3" type="button" @click="goScheduleView">
                               View Reservation
                             </button>
                         </div>

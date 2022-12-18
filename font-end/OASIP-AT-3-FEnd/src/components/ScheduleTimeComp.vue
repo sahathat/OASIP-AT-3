@@ -7,11 +7,11 @@ const filterReservationList = ref([]);
 
 const db = "http://localhost:5000/booking";
 // //for vm
-const forLink = '${import.meta.env.BASE_URL}'
+const forLink = import.meta.env.BASE_URL
 //for localhost
 // const forLink = 'http://localhost:8443/'
-const eventGuestLink = `${forLink}api/guests/events`;
-const categoryLink = `${forLink}api/categories`;
+const eventGuestLink = `${import.meta.env.BASE_URL}api/guests/events`;
+const categoryLink = `${forLink}api/guests/categories`;
 
 const userRole = ref('guest')
 const checkRole = () => {
@@ -360,7 +360,6 @@ const reset = () => {
                               <input class="form-control-sm" type="date" v-model="fStartDate">
                             </li>
                         </ul>
-                    <button class="btn btn-dark my-auto" type="button" style="margin-right: 20px;" @click="getBlindEvent">All Events</button>
                     <button class="btn btn-dark my-auto" type="button" style="margin-right: 20px;" @click="search">Search</button>
                     <button class="btn btn-light my-auto" type="reset" style="margin-right: 10px;" @click="reset">Reset</button>
                     </div>

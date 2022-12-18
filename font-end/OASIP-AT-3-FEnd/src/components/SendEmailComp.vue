@@ -12,7 +12,7 @@ const goSignup = () => myRouoter.push({ name: "CreateUser" });
 const goSignin = () => myRouoter.push({ name: "Login" });
 
 // //for vm
-const forLink = '${import.meta.env.BASE_URL}'
+const forLink = import.meta.env.BASE_URL
 //for localhost
 // const forLink = 'http://localhost:8443/'
 const resetPasswordLink = `${forLink}api/users/verify`;
