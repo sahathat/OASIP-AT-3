@@ -9,23 +9,23 @@
     "backend": "json-server --watch ./data/db.json --port 5000"
   },
   "dependencies": {
+    "bootstrap": "^5.2.3",
     "boxicons": "^2.1.4",
     "filepond": "^4.30.4",
     "json-server": "^0.17.0",
     "startbootstrap-bare": "^5.0.8",
-    "sweetalert2": "^11.4.8",
+    "sweetalert2": "^11.6.15",
     "vue": "^3.2.25",
     "vue-filepond": "^7.0.3",
     "vue-router": "^4.0.14"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^2.3.1",
-    "autoprefixer": "^10.4.5",
-    "bootstrap": "^5.2.2",
+    "autoprefixer": "^10.4.13",
     "jquery": "^3.6.1",
     "popper.js": "^1.16.1",
-    "postcss": "^8.4.13",
-    "tailwindcss": "^3.0.24",
+    "postcss": "^8.4.20",
+    "tailwindcss": "^3.2.4",
     "vite": "^2.9.5"
   }
 }

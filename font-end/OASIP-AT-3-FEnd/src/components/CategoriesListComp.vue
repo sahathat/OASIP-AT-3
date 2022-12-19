@@ -71,86 +71,8 @@ const getCategory = async () => {
     }
 };
 
-//GET all category
-const allCategoryList = ref([])
-const getAllCategory = async () => {
-  const key = localStorage.getItem('key')
-  const res = await fetch(allCategoryLink, {
-    method: "GET",
-    headers: {
-            "Authorization":'Bearer ' + key ,
-            "Accept": 'application/json',
-            "content-type": "application/json",
-        }
-  });
-  if (res.status === 200) {
-    allCategoryList.value = await res.json();
-  } else if (res.status === 401 && localStorage.getItem('token')==='accessToken') {
-    console.log('test...')
-    const resForRefresh = await fetch(refreshLink, {
-      headers: {
-        Authorization: "Bearer " + key,
-        isRefreshToken: true ,
-      },
-    })
-      const jwt = await resForRefresh.json()
-      console.log(jwt)
-      if(resForRefresh.status === 200){
-        // set localStorage
-        localStorage.setItem('key',jwt.token)
-        localStorage.setItem('token','refreshToken')
-        getCategory()
-      }
-    }else if(res.status === 401 && localStorage.getItem('token')==='refreshToken'){
-        localStorage.removeItem('key')
-        localStorage.removeItem('token')
-        goHome()
-        // console.log('เข้า')
-    }
-};
-
-//GET category owner
-// const getCategoryOwner = async () => {
-//   const key = localStorage.getItem('key')
-//   const res = await fetch(`${categoryOwnerLink}/${categoryList.value.id}/users`, {
-//     method: "GET",
-//     headers: {
-//             "Authorization":'Bearer ' + key ,
-//             "Accept": 'application/json',
-//             "content-type": "application/json",
-//         }
-//   });
-//   if (res.status === 200) {
-//     categoryOwnerList.value = await res.json();
-//     console.log(categoryOwnerList.value)
-
-//   } else if (res.status === 401 && localStorage.getItem('token')==='accessToken') {
-//     console.log('test...')
-//     const resForRefresh = await fetch(refreshLink, {
-//       headers: {
-//         Authorization: "Bearer " + key,
-//         isRefreshToken: true ,
-//       },
-//     })
-//       const jwt = await resForRefresh.json()
-//       console.log(jwt)
-//       if(resForRefresh.status === 200){
-//         // set localStorage
-//         localStorage.setItem('key',jwt.token)
-//         localStorage.setItem('token','refreshToken')
-//         getCategory()
-//       }
-//     }else if(res.status === 401 && localStorage.getItem('token')==='refreshToken'){
-//         localStorage.removeItem('key')
-//         localStorage.removeItem('token')
-//         goHome()
-//         // console.log('เข้า')
-//     }
-// };
-
 //add new owner category
-const loginEmail = localStorage.getItem('email')
-const newOwnerEmail = ref(loginEmail)
+const newOwnerEmail = ref('')
 const newOwnerCategory = ref()
 const addOwnerCategory = async () => {
   const key = localStorage.getItem('key')
@@ -169,6 +91,8 @@ const addOwnerCategory = async () => {
   
   if (res.status === 200) {
     Swal.fire('Add New Owner Category Successful !', '','success')
+    newOwnerEmail.value = ''
+    newOwnerCategory.value = 0
   } else if (res.status === 400) {
     Swal.fire('Fail !', `This category id have been exist`,'error')
   } else {
@@ -212,7 +136,7 @@ onUpdated(async () => {
         <h1 class="text-center">Categories</h1>
         <p class="text-center" style="margin-left: 15px;">
           The total of Clinic are {{ categoryList.length }} categories
-          <img v-if="userRole=='admin'|| userRole=='lecturer'" @click="getAllCategory" src="../assets/add-button.png" type="button" width="40" height="40" style="margin-top: -15px; margin-left: 15px;" data-bs-target="#addOwner" data-bs-toggle="modal">
+          <img v-if="userRole=='admin'" @click="getAllCategory" src="../assets/add-button.png" type="button" width="40" height="40" style="margin-top: -15px; margin-left: 15px;" data-bs-target="#addOwner" data-bs-toggle="modal">
         </p>
     </div>
 
@@ -221,7 +145,12 @@ onUpdated(async () => {
         <div class="row gy-4 row-cols-1 row-cols-md-2 row-cols-xl-3" style="padding-left: 50px;padding-right: 50px;margin-top: 0px;">
             <div v-for="cat in categoryList" :key="cat.id" class="col-lg-3">
                 <div>
-                  <img class="rounded img-fluid d-block w-100 fit-cover" style="height: 200px;" :src="`src/assets/clinic/${cat.id}.png`">
+                  <!-- <img class="rounded img-fluid d-block w-100 fit-cover" style="height: 200px;" :src="`../../assets/clinic/${cat.id}.png`"> -->
+                  <img class="rounded img-fluid d-block w-100 fit-cover" style="height: 200px;" src="../assets/clinic/1.png" v-if="cat.id==1">
+                  <img class="rounded img-fluid d-block w-100 fit-cover" style="height: 200px;" src="../assets/clinic/2.png" v-if="cat.id==2">
+                  <img class="rounded img-fluid d-block w-100 fit-cover" style="height: 200px;" src="../assets/clinic/3.png" v-if="cat.id==3">
+                  <img class="rounded img-fluid d-block w-100 fit-cover" style="height: 200px;" src="../assets/clinic/4.png" v-if="cat.id==4">
+                  <img class="rounded img-fluid d-block w-100 fit-cover" style="height: 200px;" src="../assets/clinic/5.png" v-if="cat.id==5">
                     <div class="py-4">     
                         <h3> {{ cat.eventCategoryName }} </h3>
                         
@@ -253,8 +182,7 @@ onUpdated(async () => {
                                       <!-- input email -->
                                         <div style="margin-top: 10px;margin-bottom: 10px;">
                                           <label class="form-label fw-semibold">Email :&nbsp;</label>
-                                          <input v-if="userRole=='admin'" v-model="newOwnerEmail" type="email" placeholder="email" name="email" class="form-control">
-                                          <input v-if="userRole=='lecturer'" v-model="newOwnerEmail" type="email" placeholder="email" name="email" class="form-control" :disabled=true>
+                                          <input v-if="userRole=='admin'" v-model="newOwnerEmail" type="email" placeholder="Enter Lecturer Email" name="email" class="form-control">
                                         </div>
 
                                         <!-- input clinic -->
@@ -262,7 +190,7 @@ onUpdated(async () => {
                                           <label class="form-label fw-semibold">Category :&nbsp;</label>
                                           <select v-model="newOwnerCategory" class="form-control">
                                                 <optgroup label="Select category">
-                                                    <option v-for="cat in allCategoryList" :key="cat.id" :value="cat.id"> {{ cat.eventCategoryName }} </option>
+                                                    <option v-for="cat in categoryList" :key="cat.id" :value="cat.id"> {{ cat.eventCategoryName }} </option>
                                                 </optgroup>
                                           </select>
                                         </div>

@@ -345,7 +345,6 @@ const addBooking = async () => {
     createStatus = true;
     isStatus.value = true;
     Swal.fire('Booking Appointment Successful!', 'The booking has been completed. You can check it on the reservation list page.','success')
-    isLogin()
     
     event.value = await res.json()
     console.log(event.value.id)
@@ -363,8 +362,12 @@ const addBooking = async () => {
       body: data
     });
     console.log(resFile.status)
-    setTimeout(() => (addSuccess.value = false), 5000);
-
+    setTimeout(() => (addSuccess.value = false), 5000); 
+    
+    // if (resFile.status === 500) {
+    //   Swal.fire('Add File Fail!', 'The file size cannot be larger than 10 MB','success')
+    // }
+    
   } else if (res.status === 400) {
     validateBetweenDate.value = true;
     isStatus.value = false;
@@ -559,8 +562,8 @@ onUpdated(async () => {
                 <div class="row mt-3">
                     <div class="col-md-8">
                       <label class="labels fw-semibold">Category : </label>
-                      <select v-model="category" class="form-select" required="">
-                          <optgroup label="Select category" default>
+                      <select v-model="category" class="form-select" required>
+                          <optgroup label="Select category">
                               <option v-for="cat in categoryList" :key="cat.id" :value="cat.eventCategoryName">
                                     {{ cat.eventCategoryName }}
                               </option>

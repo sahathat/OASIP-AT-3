@@ -311,8 +311,7 @@ const toDeleteOwner = async (email) => {
 //add new owner category
 const toAddOwner = ref(false)
 const toAddOwnerCategory = () => { toAddOwner.value = true }
-const loginEmail = localStorage.getItem('email')
-const newOwnerEmail = ref(loginEmail)
+const newOwnerEmail = ref('')
 const addOwnerCategory = async (id) => {
   const key = localStorage.getItem('key')
   const res = await fetch(mappingLink, {
@@ -330,6 +329,7 @@ const addOwnerCategory = async (id) => {
   
   if (res.status === 200) {
     Swal.fire('Add New Owner Category Successful !', '','success')
+    newOwnerEmail.value = ''
     getDetail()
   } else if (res.status === 400) {
     Swal.fire('Fail !', `This category id have been exist`,'error')
@@ -459,7 +459,7 @@ const submitt = async () => {
                                     </div>
                                     <div style="margin-top: 20px;">
                                       <button v-if="toAddOwner==false" class="btn btn-secondary w-100" type="button" @click="toAddOwnerCategory"> + </button>
-                                      <input v-if="toAddOwner==true" v-model="newOwnerEmail" type="text" class="form-control" style="margin-top: 5px;">
+                                      <input v-if="toAddOwner==true" v-model="newOwnerEmail" type="email" name="email" class="form-control" style="margin-top: 5px;" placeholder="Enter Lecturer Email">
                                       <button v-if="toAddOwner==true" class="btn btn-secondary mt-2 w-100" type="button" @click="addOwnerCategory(id)"> Add </button>
                                     </div>
                                     <div style="margin-top: 20px;">

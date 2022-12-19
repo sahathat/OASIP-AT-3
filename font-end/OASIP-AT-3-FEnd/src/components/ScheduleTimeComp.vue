@@ -10,7 +10,7 @@ const db = "http://localhost:5000/booking";
 const forLink = import.meta.env.BASE_URL
 //for localhost
 // const forLink = 'http://localhost:8443/'
-const eventGuestLink = `${import.meta.env.BASE_URL}api/guests/events`;
+const eventGuestLink = `${forLink}api/guests/events`;
 const categoryLink = `${forLink}api/guests/categories`;
 
 const userRole = ref('guest')
