@@ -40,8 +40,10 @@ public class CategoryOwnerController {
             } catch (NullPointerException ex) {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "this email does not exist");
             }
+        } else {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "other role except admin cannot config category owner");
         }
-        throw new ResponseStatusException(HttpStatus.FORBIDDEN, "other role except admin cannot config category owner");
+
     }
 
     @PutMapping("/{categoryId}")
@@ -59,8 +61,9 @@ public class CategoryOwnerController {
             } catch (NullPointerException ex) {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "this email does not exist");
             }
+        } else {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "other role except admin cannot config category owner");
         }
-        throw new ResponseStatusException(HttpStatus.FORBIDDEN, "other role except admin cannot config category owner");
     }
 
     @DeleteMapping("/{categoryId}")
@@ -77,7 +80,8 @@ public class CategoryOwnerController {
             } catch (NullPointerException ex) {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "this email does not exist");
             }
+        } else {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "other role except admin cannot config category owner");
         }
-        throw new ResponseStatusException(HttpStatus.FORBIDDEN, "other role except admin cannot config category owner");
     }
 }
